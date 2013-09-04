@@ -27,11 +27,11 @@ class statusBar {
   }
 
   void draw(CanvasRenderingContext2D ctx) {
-    ctx.fillStyle = DEF.menuBorderColor;
-    ctx.fillRect(px, py, width, height);
+    _game.guiCanvasCtx.fillStyle = DEF.menuBorderColor;
+    _game.guiCanvasCtx.fillRect(px, py, width, height);
     
-    ctx.fillStyle = DEF.menuBGColor;
-    ctx.fillRect(px+pad, py+pad, width-pad-pad, height-pad-pad);
+    _game.guiCanvasCtx.fillStyle = DEF.menuBGColor;
+    _game.guiCanvasCtx.fillRect(px+pad, py+pad, width-pad-pad, height-pad-pad);
     
     _TextWriter.WriteByRow(ctx,formatName(_gameState.heroName), 1);
     _TextWriter.WriteByRow(ctx,"HP:${formatNumber(_gameState.heroHP)}", 2);
