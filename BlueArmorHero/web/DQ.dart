@@ -18,6 +18,7 @@ part 'layers/quest/itemMenu.dart';
 part 'layers/quest/equip_menu.dart';
 part 'layers/quest/spell_menu.dart';
 part 'layers/quest/itemUsageDecisionMenu.dart';
+part 'layers/quest/MerchantMenu.dart';
 part 'layers/quest/People/Thing.dart';
 part 'layers/quest/People/TreasureChest.dart';
 part 'layers/quest/People/HeroSprite.dart';
@@ -124,8 +125,10 @@ class Game extends LayerManager {
   void startNewGame()
   {
     pushLayer(new MapLayer(this, new overworldMap()));
-    pushLayer(new MapLayer(this, new RadotomeCastle1()));
-    pushLayer(new MapLayer(this, new RadotomeCastle2()));
+    pushLayer(new MapLayer(this, MapData.createMapByName("RadotomeTown")));
+    
+    //pushLayer(new MapLayer(this, new RadotomeCastle1()));
+    //pushLayer(new MapLayer(this, new RadotomeCastle2()));
     
     window.requestAnimationFrame(tick);
   }

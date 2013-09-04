@@ -72,6 +72,41 @@ class RadotomeTown extends MapData {
     return triggers;
   }
   
+  List<Thing> getNPC(Game gm) {
+    
+    void handleTalk(Game gm, HeroSprite talker, NPC talkee) {
+      talkee.ResetToIdle();
+      talkee.characterSprite.setAnimation(DEF.OppositeDirection(talker.direction));
+      gm.AddRequest(new RedrawRequest(gm));
+      gm.AddRequest(new PushRequest(gm, new MsgBox(gm, talkee.name)));  
+    }
+    
+    List<Thing> npcs = new List<Thing>();
+    
+    String heroName = gm.gameState.heroName;
+    
+    npcs.add(new NPC(gm, "Merchant", name:"Merchant1", px:1090, py:1107, behavior_type:NPC.BEHAVIOR_WALKING, talkHandler:handleTalk));
+    npcs.add(new NPC(gm, "Merchant", name:"Merchant2", px:491, py:544, talkHandler:handleTalk));
+    npcs.add(new NPC(gm, "Merchant", name:"Merchant3", px:1167, py:1212, direction:DEF.DIR_LEFT, talkHandler:handleTalk));
+    npcs.add(new NPC(gm, "Knight", name:"Knight1", px:468, py:1234, talkHandler:handleTalk));
+    npcs.add(new NPC(gm, "Knight", name:"Knight2", px:686, py:786, talkHandler:handleTalk));
+    npcs.add(new NPC(gm, "Knight", name:"Knight3", px:979, py:992, talkHandler:handleTalk));
+    npcs.add(new NPC(gm, "Oldman", name:"Oldman1", px:688, py:1281, talkHandler:handleTalk));
+    npcs.add(new NPC(gm, "Oldman", name:"Oldman2", px:1072, py:734, direction:DEF.DIR_RIGHT, talkHandler:handleTalk));
+    npcs.add(new NPC(gm, "Man", name:"Man1", px:591, py:899, behavior_type:NPC.BEHAVIOR_WALKING, talkHandler:handleTalk));
+    npcs.add(new NPC(gm, "Man", name:"Man2", px:1086, py:1309, behavior_type:NPC.BEHAVIOR_WALKING, talkHandler:handleTalk));
+    npcs.add(new NPC(gm, "Man", name:"Man3", px:979, py:739, talkHandler:handleTalk));
+    npcs.add(new NPC(gm, "Girl", name:"Girl1", px:816, py:1142, behavior_type:NPC.BEHAVIOR_WALKING, talkHandler:handleTalk));
+    npcs.add(new NPC(gm, "Woman", name:"Woman1", px:691, py:1087, direction:DEF.DIR_LEFT, talkHandler:handleTalk));
+    npcs.add(new NPC(gm, "Woman", name:"Woman2", px:590, py:1278, direction:DEF.DIR_UP, talkHandler:handleTalk));
+    npcs.add(new NPC(gm, "Nan", name:"Nan1", px:1134, py:544, direction:DEF.DIR_LEFT, talkHandler:handleTalk));
+    npcs.add(new NPC(gm, "Soldier", name:"Soldier1", px:1069, py:867, behavior_type:NPC.BEHAVIOR_WALKING, talkHandler:handleTalk));
+    npcs.add(new NPC(gm, "Soldier", name:"Soldier2", px:1258, py:449, talkHandler:handleTalk));
+    
+    return npcs;
+  }
+  
+
   RadotomeTown() {
     _maxPX = world[0].length;
     _maxPY = world.length;

@@ -23,6 +23,14 @@ abstract class MapData {
     return true;
   }
   
+  void AddTriggerByRange(Map<String,Trigger> triggerContainer, Rect range, Trigger trigger) {
+    for (int r=range.left; r<=range.right; r++) {
+      for (int c=range.top; c<=range.bottom; c++) {
+        triggerContainer["${c}:${r}"] = trigger;
+      }
+    }
+  }
+  
   static MapData createMapByName(String mapName) {
     MapData newMap = null;
     switch(mapName) {

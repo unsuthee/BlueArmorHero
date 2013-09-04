@@ -19,7 +19,7 @@ class NPC extends Thing {
   static const int BEHAVIOR_STANDING = 0;
   static const int BEHAVIOR_WALKING = 1;
   int _behavior;
-
+  
   static const int STATE_IDLE = 0;
   static const int STATE_MOVING = 1;
   
@@ -29,8 +29,14 @@ class NPC extends Thing {
   num waiting_counter;
   num max_waiting_time;
   
-  static const num MAX_WAITING_TIME_MOVING = 500;
-  static const num MAX_WAITING_TIME_STANDING = 2000;
+  static const num MIN_WAITING_TIME_MOVING = 250;
+  static const num MAX_WAITING_TIME_MOVING = 1000;
+  static const num WAITING_TIME_MOVING_RANGE = MAX_WAITING_TIME_MOVING - MIN_WAITING_TIME_MOVING;
+  static const num MIN_WAITING_TIME_STANDING = 1000;
+  static const num WAITING_TIME_STANDING_RANGE = 2000;
+  
+  int offsetX;
+  int offsetY;
   
   NPC(  Game game, 
         String type, 
@@ -39,6 +45,8 @@ class NPC extends Thing {
         int py:0, 
         int direction:DEF.DIR_DOWN,
         int behavior_type:BEHAVIOR_STANDING,
+        int drawingOffsetX: 0,
+        int drawingOffsetY: 0,
         OnTalkHandler talkHandler:null}): super(game,px.toDouble(),py.toDouble()) 
   {
     _talkHandler = talkHandler;
@@ -52,6 +60,9 @@ class NPC extends Thing {
     
     waiting_counter = 0;
     max_waiting_time = 1000;
+    
+    offsetX = drawingOffsetX;
+    offsetY = drawingOffsetY;
   }
   
   void draw(CanvasRenderingContext2D ctx, {int px, int py}) {
@@ -70,12 +81,12 @@ class NPC extends Thing {
             characterSprite.setAnimation(dir);
             _currDirection = dir;
             _currState = STATE_MOVING;
-            max_waiting_time = MAX_WAITING_TIME_MOVING;
+            max_waiting_time = rng.nextInt(WAITING_TIME_MOVING_RANGE.toInt()) + MIN_WAITING_TIME_MOVING;
             break;
           case STATE_MOVING:
             // stop walking
             _currState = STATE_IDLE;
-            max_waiting_time = MAX_WAITING_TIME_STANDING;
+            max_waiting_time = rng.nextInt(WAITING_TIME_STANDING_RANGE.toInt()) + MIN_WAITING_TIME_STANDING;
             break;
         }
         waiting_counter = 0;
@@ -105,12 +116,12 @@ class NPC extends Thing {
   
   void ResetToIdle() {
     _currState = STATE_IDLE;
-    max_waiting_time = MAX_WAITING_TIME_STANDING;
+    max_waiting_time = rng.nextInt(WAITING_TIME_STANDING_RANGE.toInt()) + MIN_WAITING_TIME_STANDING;;
     waiting_counter = 0;
   }
   
   Rect getRect() {
-    return new Rect(_mapPx.toInt(),_mapPy.toInt(),DEF.TILE_SIZE,DEF.TILE_SIZE);
+    return new Rect(_mapPx.toInt()+offsetX,_mapPy.toInt()+offsetY,DEF.TILE_SIZE,DEF.TILE_SIZE);
   }
   
   void OnTalkBegin(Game gm, HeroSprite talker) {
