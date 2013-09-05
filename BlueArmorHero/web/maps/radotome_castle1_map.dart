@@ -42,8 +42,11 @@ class RadotomeCastle1 extends MapData {
   int _defaultTileId = 550; // grass
   int _tilePerRow = 20;
   
-  int getInitPosX() => 767;
-  int getInitPosY() => 638;
+// entrace position: 699:1293
+  int getInitPosX() => 699;
+  int getInitPosY() => 1293;
+  
+  static const List stairPos = const [767,638];
   
   static int stairTriggerPosX = 767;
   static int stairTriggerPosY = 638;  
@@ -61,43 +64,206 @@ class RadotomeCastle1 extends MapData {
     return "TownImage";
   }
   
-  // entrace position: 699:1293
-  
-  //Solidier : Welcome to Radotome Castle! 644:1278 , 751:1278
-  // 938:1010 Sol : When you enter a cave,;it's good to have a torch because caves are filled with the powers of the darkness.
-  // *: And, there are more monsters in caves than out in the countryside.
-  // 1021:1245 old man: When the dragon of darkness spreads its wings,;it marks the arrival of the descendant of Erdrick.
-  // *: May the light shine upon the hero of legend, ${heroname}!"
-  // 618:797 girl : Oh, Princess Gwaelin...;Where could she be?;Could it be that she is dead?"
-  // 751:860 bman: This is Radotome castle.;Many people would gather here, since this place was a paradise.
-  // Then all the demons appeared.;;...[sigh]..."
-  // 431:1107 Merchant: I'm a traveling merchant.;Many of my colleagues were killed by minions of the Dragonlord";
-  // Because of this, I've collected mortifying and sorrowful memories of those times.
-  // 566:1217 kid: Did you hear?
-  // yes: I'm shocked!
-  // no: Rumor has it that there is a town that was destroyed by the demons.
-  
-  // 386:670 Knight: TO gain experience and levels,;you must fight monsters;
-  // When you do that noble {heroname},;you may rise to the next level, and you'll become stronger.
-  // 914:537 sol: A key is necessary to open this door.
-  // Also, I hear that the key will break after just one use.
-  
-  // 624:477 man: My girlfriend and I will be together until the day we die.
-  // But will the day come that my feelings will be shattered by demons?
-  // 594:477 girl: When I am together with my boyfriend...
-  // I forget about the darkness that continues to blanket our world.
-  // However, that is a lie... If the world is destroyed, he says that our love will be too.
-  
-  // 799:607 sol: when you want to rest from your travles, come back.
-  // The king will record your journey for you in the Imperial Scrolls of Honor.
-  
-  // 796:672 Sol: A record of your journey can be written in the Imperial Scrolls of Honor.
-  // When you return from a break, it can be resumed where you left off.
-  
-  // Chancelor: 989:752
-  // woman: 1009:832
-  // merchant: 1136:432
-  // sol: 466:894
+  List<Thing> getNPC(Game gm) {
+    
+    List<Thing> npcs = new List<Thing>();
+    
+    npcs.add(new NPC(gm, "Soldier", name:"Soldier1", px:658, py:1278, direction:DEF.DIR_RIGHT, talkHandler:
+      (Game gm, HeroSprite talker, NPC talkee) {
+        talkee.ResetToIdle();
+        talkee.characterSprite.setAnimation(DEF.OppositeDirection(talker.direction));
+        gm.AddRequest(new RedrawRequest(gm));
+        gm.AddRequest(new PushRequest(gm, new MsgBox(gm, "*: Welcome to Radotome Castle!")));
+      }));
+    
+    npcs.add(new NPC(gm, "Soldier", name:"Soldier2", px:751, py:1278, direction:DEF.DIR_LEFT, talkHandler:
+      (Game gm, HeroSprite talker, NPC talkee) {
+        talkee.ResetToIdle();
+        talkee.characterSprite.setAnimation(DEF.OppositeDirection(talker.direction));
+        gm.AddRequest(new RedrawRequest(gm));
+        gm.AddRequest(new PushRequest(gm, new MsgBox(gm, "*: Welcome to Radotome Castle!")));
+      }));
+    
+    npcs.add(new NPC(gm, "Soldier", name:"Soldier3", px:938, py:1010, behavior_type:NPC.BEHAVIOR_WALKING, direction:DEF.DIR_LEFT, talkHandler:
+      (Game gm, HeroSprite talker, NPC talkee) {
+        talkee.ResetToIdle();
+        talkee.characterSprite.setAnimation(DEF.OppositeDirection(talker.direction));
+        gm.AddRequest(new RedrawRequest(gm));
+        
+        String msg1 = "*: When you enter a cave,;it's good to have a torch because caves are filled with the powers of the darkness.";
+        String msg2 = "*: And, there are more monsters in caves than out in the countryside.";
+        gm.AddRequest(new PushRequest(gm, new MsgBox(gm, "${msg1};${msg2}")));
+      }));
+    
+    npcs.add(new NPC(gm, "Soldier", name:"Soldier4", px:783, py:607, direction:DEF.DIR_LEFT, talkHandler:
+      (Game gm, HeroSprite talker, NPC talkee) {
+        talkee.ResetToIdle();
+        talkee.characterSprite.setAnimation(DEF.OppositeDirection(talker.direction));
+        gm.AddRequest(new RedrawRequest(gm));
+        
+        String msg1 = "*: When you want to rest from your travles, come back.";
+        String msg2 = "*: The king will record your journey for you in the Imperial Scrolls of Honor.";
+        gm.AddRequest(new PushRequest(gm, new MsgBox(gm, "${msg1};${msg2}")));
+      }));
+    
+    npcs.add(new NPC(gm, "Soldier", name:"Soldier5", px:783, py:672, direction:DEF.DIR_LEFT, talkHandler:
+      (Game gm, HeroSprite talker, NPC talkee) {
+        talkee.ResetToIdle();
+        talkee.characterSprite.setAnimation(DEF.OppositeDirection(talker.direction));
+        gm.AddRequest(new RedrawRequest(gm));
+        
+        String msg1 = "*: A record of your journey can be written in the Imperial Scrolls of Honor.";
+        String msg2 = "*: When you return from a break, it can be resumed where you left off.";
+        gm.AddRequest(new PushRequest(gm, new MsgBox(gm, "${msg1};${msg2}")));
+      }));
+    
+    npcs.add(new NPC(gm, "Soldier", name:"Soldier6", px:914, py:537, behavior_type:NPC.BEHAVIOR_WALKING, talkHandler:
+      (Game gm, HeroSprite talker, NPC talkee) {
+        talkee.ResetToIdle();
+        talkee.characterSprite.setAnimation(DEF.OppositeDirection(talker.direction));
+        gm.AddRequest(new RedrawRequest(gm));
+        
+        String msg1 = "*: A key is necessary to open this door.;Also, I hear that the key will break after just one use.";
+        gm.AddRequest(new PushRequest(gm, new MsgBox(gm, "${msg1}")));
+      }));
+    
+    npcs.add(new NPC(gm, "Oldman", name:"Oldman1", px:1007, py:1245, direction:DEF.DIR_LEFT, talkHandler:
+      (Game gm, HeroSprite talker, NPC talkee) {
+        talkee.ResetToIdle();
+        talkee.characterSprite.setAnimation(DEF.OppositeDirection(talker.direction));
+        gm.AddRequest(new RedrawRequest(gm));
+        
+        String msg1 = "*: When the dragon of darkness spreads its wings,;it marks the arrival of the descendant of Erdrick.";
+        String msg2 = "*: May the light shine upon the hero of legend, ${talker.name}!";
+        gm.AddRequest(new PushRequest(gm, new MsgBox(gm, "${msg1};${msg2}")));
+      }));
+    
+    npcs.add(new NPC(gm, "Girl", name:"Girl1", px:618, py:797, behavior_type:NPC.BEHAVIOR_WALKING, talkHandler:
+      (Game gm, HeroSprite talker, NPC talkee) {
+        talkee.ResetToIdle();
+        talkee.characterSprite.setAnimation(DEF.OppositeDirection(talker.direction));
+        gm.AddRequest(new RedrawRequest(gm));
+        
+        String msg1 = "*: Oh, Princess Gwaelin...;Where could she be?;Could it be that she is dead?";
+        gm.AddRequest(new PushRequest(gm, new MsgBox(gm, "${msg1}")));
+      }));
+    
+    npcs.add(new NPC(gm, "Man", name:"Man1", px:751, py:860, behavior_type:NPC.BEHAVIOR_WALKING, talkHandler:
+      (Game gm, HeroSprite talker, NPC talkee) {
+        talkee.ResetToIdle();
+        talkee.characterSprite.setAnimation(DEF.OppositeDirection(talker.direction));
+        gm.AddRequest(new RedrawRequest(gm));
+        
+        String msg1 = "*: This is Radotome castle.;Many people would gather here, since this place was a paradise.";
+        String msg2 = "*:  Then all the demons appeared.;;...[sigh]...";
+        gm.AddRequest(new PushRequest(gm, new MsgBox(gm, "${msg1};${msg2}")));
+      }));
+    
+    npcs.add(new NPC(gm, "Girl", name:"Girl2", px:594, py:477, talkHandler:
+      (Game gm, HeroSprite talker, NPC talkee) {
+        talkee.ResetToIdle();
+        talkee.characterSprite.setAnimation(DEF.OppositeDirection(talker.direction));
+        gm.AddRequest(new RedrawRequest(gm));
+        
+        String msg1 = "*: When I am together with my boyfriend...";
+        String msg2 = "*: I forget about the darkness that continues to blanket our world.";
+        String msg3 = "*: However, that is a lie... If the world is destroyed, he says that our love will be too.";
+        gm.AddRequest(new PushRequest(gm, new MsgBox(gm, "${msg1};${msg2};${msg3}")));
+      }));
+    
+    npcs.add(new NPC(gm, "Man", name:"Man2", px:624, py:477, talkHandler:
+      (Game gm, HeroSprite talker, NPC talkee) {
+        talkee.ResetToIdle();
+        talkee.characterSprite.setAnimation(DEF.OppositeDirection(talker.direction));
+        gm.AddRequest(new RedrawRequest(gm));
+        
+        String msg1 = "*: My girlfriend and I will be together until the day we die.";
+        String msg2 = "*: But will the day come that my feelings will be shattered by demons?";
+        gm.AddRequest(new PushRequest(gm, new MsgBox(gm, "${msg1};${msg2}")));
+      }));
+    
+    npcs.add(new NPC(gm, "Knight", name:"Knight1", px:400, py:668, direction:DEF.DIR_RIGHT, talkHandler:
+      (Game gm, HeroSprite talker, NPC talkee) {
+        talkee.ResetToIdle();
+        talkee.characterSprite.setAnimation(DEF.OppositeDirection(talker.direction));
+        gm.AddRequest(new RedrawRequest(gm));
+        
+        String msg1 = "*: To gain experience and levels,;you must fight monsters";
+        String msg2 = "*: When you do that noble ${talker.name},;you may rise to the next level, and you'll become stronger.";
+        gm.AddRequest(new PushRequest(gm, new MsgBox(gm, "${msg1};${msg2}")));
+      }));
+    
+    npcs.add(new NPC(gm, "Merchant", name:"Merchant1", px:431, py:1107, talkHandler:
+      (Game gm, HeroSprite talker, NPC talkee) {
+        talkee.ResetToIdle();
+        talkee.characterSprite.setAnimation(DEF.OppositeDirection(talker.direction));
+        gm.AddRequest(new RedrawRequest(gm));
+        
+        String msg1 = "*: I'm a traveling merchant.;Many of my colleagues were killed by minions of the Dragonlord";
+        String msg2 = "*: Because of this, I've collected mortifying and sorrowful memories of those times.";
+        gm.AddRequest(new PushRequest(gm, new MsgBox(gm, "${msg1};${msg2}")));
+      }));
+    
+    npcs.add(new NPC(gm, "Boy", name:"boy1", px:566, py:1217, talkHandler:
+      (Game gm, HeroSprite talker, NPC talkee) {
+      talkee.ResetToIdle();
+      talkee.characterSprite.setAnimation(DEF.OppositeDirection(talker.direction));
+      gm.AddRequest(new RedrawRequest(gm));
+      
+      String msg1 = "*: Did you hear?";
+      String yesMsg = "*: I'm shocked!";
+      String noMsg = "*: Rumor has it that there is a town that was destroyed by the demons.";
+      
+      gm.AddRequest(new PushRequest(gm, new YesNoMsgBox(gm,
+          selfDismissOnFinish:false,
+          initMsg:msg1,
+          yesMsg:yesMsg,
+          noMsg:noMsg)));
+    }));
+    
+    npcs.add(new NPC(gm, "Sage", name:"Sage", px:989, py:752, talkHandler:
+      (Game gm, HeroSprite talker, NPC talkee) {
+        talkee.ResetToIdle();
+        talkee.characterSprite.setAnimation(DEF.OppositeDirection(talker.direction));
+        gm.AddRequest(new RedrawRequest(gm));
+        
+        String msg1 = "*: How did you get here?";
+        gm.AddRequest(new PushRequest(gm, new MsgBox(gm, "${msg1}")));
+      }));
+    
+    npcs.add(new NPC(gm, "Merchant", name:"Merchant5", px:1136, py:449, talkHandler:
+      (Game gm, HeroSprite talker, NPC talkee) {
+        talkee.ResetToIdle();
+        talkee.characterSprite.setAnimation(DEF.OppositeDirection(talker.direction));
+        gm.AddRequest(new RedrawRequest(gm));
+        
+        String msg1 = "*: How did you get here?";
+        gm.AddRequest(new PushRequest(gm, new MsgBox(gm, "${msg1}")));
+      }));
+    
+    npcs.add(new NPC(gm, "Woman", name:"Woman4", px:1009, py:832, talkHandler:
+      (Game gm, HeroSprite talker, NPC talkee) {
+        talkee.ResetToIdle();
+        talkee.characterSprite.setAnimation(DEF.OppositeDirection(talker.direction));
+        gm.AddRequest(new RedrawRequest(gm));
+        
+        String msg1 = "*: How did you get here?";
+        gm.AddRequest(new PushRequest(gm, new MsgBox(gm, "${msg1}")));
+      }));
+    
+    npcs.add(new NPC(gm, "Soldier", name:"Soldier9", px:466, py:894, direction:DEF.DIR_UP, talkHandler:
+      (Game gm, HeroSprite talker, NPC talkee) {
+        talkee.ResetToIdle();
+        talkee.characterSprite.setAnimation(DEF.OppositeDirection(talker.direction));
+        gm.AddRequest(new RedrawRequest(gm));
+        
+        String msg1 = "*: How did you get here?";
+        gm.AddRequest(new PushRequest(gm, new MsgBox(gm, "${msg1}")));
+      }));
+    
+    return npcs;
+  }
+
   Map<String,Trigger> getTriggeMap() {
     Map<String,Trigger> triggers = new Map<String,Trigger>();
     Trigger Castle2ndFloorEnterTrigger = new EnterTownTrigger("172:149", townName:"RadotomeCastle2");

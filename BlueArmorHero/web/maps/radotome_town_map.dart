@@ -60,13 +60,6 @@ class RadotomeTown extends MapData {
   
   List<Thing> getNPC(Game gm) {
     
-    void handleTalk(Game gm, HeroSprite talker, NPC talkee) {
-      talkee.ResetToIdle();
-      talkee.characterSprite.setAnimation(DEF.OppositeDirection(talker.direction));
-      gm.AddRequest(new RedrawRequest(gm));
-      gm.AddRequest(new PushRequest(gm, new MsgBox(gm, talkee.name)));  
-    }
-    
     List<Thing> npcs = new List<Thing>();
     
     npcs.add(new NPC(gm, "Merchant", name:"Merchant1", px:1090, py:1107, direction:DEF.DIR_LEFT, talkHandler:

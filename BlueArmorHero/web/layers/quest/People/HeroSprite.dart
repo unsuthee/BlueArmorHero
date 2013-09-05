@@ -19,6 +19,8 @@ class HeroSprite {
   
   String get PositionStr => "${mapPx}:${mapPy}";
   
+  String get name => _game.gameState.heroName;
+  
   Game _game = null;
   MapData _mapData = null;
   MapLayer _layer = null;
