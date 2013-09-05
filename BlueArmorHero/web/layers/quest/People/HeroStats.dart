@@ -184,6 +184,14 @@ class HeroStats {
     return values;
   }
   
+  void RefillHp() {
+    _HP = _MaxHP;
+  }
+  
+  void RefillMp() {
+    _MP = _MaxMP;
+  }
+  
   String _name;
   String get name => _name;
   
