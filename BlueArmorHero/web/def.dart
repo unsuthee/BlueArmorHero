@@ -30,7 +30,8 @@ class DEF {
   
   static const num CURSOR_BLINKING_DURATION = 250;
   
-  static const bool NO_ENCOUNTER = true;
+  static const bool NO_ENCOUNTER = false;
+  static const double HERO_SPEED = (125/1000); // pcx per ms
   
   static int OppositeDirection(int direction)
   {

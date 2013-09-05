@@ -185,7 +185,7 @@ class MapLayer extends Layer {
         }
       }
       if (!didTalk) {
-        _tasks.add(new AnnotateTask(_game,["There is no one to talk."]));
+        _tasks.add(new AnnotateTask(_game,["There is no one in front of you."]));
       }
       _pendingHandleTalk = false;
     }

@@ -5,7 +5,7 @@ class HeroSprite {
   static const int STATE_IDLE = 0;
   static const int STATE_MOVING = 1;
   
-  static double velocity = (150 / 1000); // 10 / 1000 pcx per ms
+  static double velocity = DEF.HERO_SPEED;
  
   // query the hero's actual position on the map
   double _mapPx;
