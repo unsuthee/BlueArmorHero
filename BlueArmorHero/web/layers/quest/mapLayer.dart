@@ -235,20 +235,6 @@ class MapLayer extends Layer {
         _game.AddRequest(new PushRequest(_game, new questMenu(_game,this)));
         break;
       case DEF.KEYBOARD_SECONDARY:
-        /**
-        List itmInfo = [stats.WeaponData["Bamboo Pole"],
-                        stats.WeaponData["Club"],
-                        stats.WeaponData["Copper Sword"],
-                        stats.ArmorData["Clothes"],
-                        stats.ArmorData["Leather Armor"],
-                        stats.ShieldData["Small Shield"]];
-        
-        List itmInfo2 = [stats.ItemData["Herb"],
-                         stats.ItemData["Wings"],
-                         stats.ItemData["Torch"]];
-        _game.AddRequest(new PushRequest(_game, new BuySellMenu(_game,"Weapon",itmInfo)));
-        **/
-        _game.AddRequest(new PushRequest(_game, new InnMenu(_game,0)));
         //LaunchBattle("M_Magician","Forest");
         break;
       case DEF.KEYBOARD_ATL_1: // Talk

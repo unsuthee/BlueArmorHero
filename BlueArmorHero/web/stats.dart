@@ -35,7 +35,8 @@ class stats {
     "Herb"  : new Item("Herb",cost:24),
     "Key"   : new Item("Key",cost:38),
     "Torch"  : new Item("Torch",cost:8),
-    "Wings"  : new Item("Wings",cost:70)
+    "Wings"  : new Item("Wings",cost:70),
+    "Holy Water": new Item("Holy Water",cost:120)
   };
                                         
   static List<int> ExpTable = [0,0,7,23,47,110,
