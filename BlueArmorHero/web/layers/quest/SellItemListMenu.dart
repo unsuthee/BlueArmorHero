@@ -23,7 +23,7 @@ class SellItemListMenu extends Layer {
     Rect decisionBox = new Rect( 4 * DEF.TILE_SIZE, 
         5 * DEF.TILE_SIZE,
         (maxLen-5) * DEF.TILE_SIZE,
-        (items.length-2) * DEF.TILE_SIZE);
+        MATH.max((items.length-2),5) * DEF.TILE_SIZE);
     
     _decisionBox = new DecisionBox.fromList(  _game, 
                                               decisionBox,

@@ -26,6 +26,8 @@ class DecisionBox extends Layer {
     return _items[_cursorIndex];
   }
   
+  Rect get DrawingBox => _drawingBox;
+  
   static Rect GetYesNoMsgBoxRect() {
     return new Rect( 15 * DEF.TILE_SIZE, 
                       4 * DEF.TILE_SIZE,

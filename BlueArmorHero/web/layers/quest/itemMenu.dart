@@ -4,21 +4,12 @@ class itemMenu extends Layer {
   
   Game _game;
   GameState _gameState;
-  TextWriter _TextWriter = null;
+  DecisionBox _decisionBox = null;
   
-  int width = 8 * DEF.TILE_SIZE;
-  int height = 10 * DEF.TILE_SIZE - (DEF.TILE_SIZE >> 2);
   int px = 6 * DEF.TILE_SIZE;
   int py = 4 * DEF.TILE_SIZE;
   int gap = 1;
   int pad = 5;
-  
-  num timeElapse = 0;
-  num blinkDuration = 500;
-  
-  int _cursorPos = 0;
-  
-  bool _isDirty = true;
   
   static const int USE_ACTION = 1;
   static const int DROP_ACTION = 2;
@@ -29,37 +20,28 @@ class itemMenu extends Layer {
     _game = game;
     _gameState = gamestate;
     
-    _TextWriter = new TextWriter();
-    _TextWriter.drawingRect = new Rect(px+pad+gap,py+pad+gap,width-pad-gap,height-pad-gap);
+    _decisionBox = initDecisionBox();
+  }
+  
+  DecisionBox initDecisionBox() {
+    List<Item> items = _game.gameState.Inventory;
+    int maxLen = 0;
+    List itemList = [];
+    for(Item itm in items) {
+      maxLen = MATH.max(itm.name.length, maxLen);
+      itemList.add([itm.name,itm]);
+    }
+
+    Rect decisionBox = new Rect( px,py,(maxLen-5) * DEF.TILE_SIZE, MATH.max((items.length-2),5) * DEF.TILE_SIZE);
+    return new DecisionBox.fromList(_game, decisionBox, itemList);
   }
   
   void setDirty() {
-    _isDirty = true;
+    _decisionBox.setDirty();
   }
   
   void draw(CanvasRenderingContext2D ctx) {
-    
-    if (_isDirty) {
-      _game.guiCanvasCtx.fillStyle = DEF.menuBorderColor;
-      _game.guiCanvasCtx.fillRect(px, py, width, height);
-      
-      _game.guiCanvasCtx.fillStyle = DEF.menuBGColor;
-      _game.guiCanvasCtx.fillRect(px+pad, py+pad, width-pad-pad, height-pad-pad);
-      
-      bool drawCursor = false;
-      if (timeElapse < (blinkDuration / 2)) { 
-        drawCursor = true;
-      }
-
-      int row = 0;
-      for (Item item in _gameState.Inventory) {
-        String cursorStr = (drawCursor && (row == _cursorPos*2)) ? ">" : " ";
-        _TextWriter.WriteByRow(_game.guiCanvasCtx,"${cursorStr}${item.name}", row+1);
-        row+=2;
-      }
-      
-      _isDirty = false;
-    }
+    _decisionBox.draw(ctx);
   }
   
   void activate({Map<String,dynamic> args: null}) { 
@@ -78,10 +60,6 @@ class itemMenu extends Layer {
   }
   
   void update(num delta) {
-    timeElapse += delta;
-    if (timeElapse > blinkDuration) {
-      timeElapse -= blinkDuration;
-    }
     
     if (_gameState.Inventory.isEmpty) {
       _game.guiCanvasCtx.clearRect(0,0,_game.guiCanvas.width,_game.guiCanvas.height);
@@ -90,19 +68,23 @@ class itemMenu extends Layer {
       return;
     }
     
+    _decisionBox.update(delta);
+    
     switch(_currentAction) {
       case USE_ACTION:
-        Item item = _gameState.Inventory[_cursorPos];
-        print("using ${item.name}");
-        _gameState.RemoveItem(item);
-        _cursorPos = 0;
+        List item = _decisionBox.getCurrentSelectedItem();
+        print("using ${item[0]}");
+        _gameState.RemoveItem(item[1]);
+        _decisionBox.cleanup();
+        _decisionBox = initDecisionBox();
         setDirty();
         break;
       case DROP_ACTION:
-        Item item = _gameState.Inventory[_cursorPos];
-        print("droping ${item.name}");
-        _gameState.RemoveItem(item);
-        _cursorPos = 0;
+        List item = _decisionBox.getCurrentSelectedItem();
+        print("droping ${item[0]}");
+        _gameState.RemoveItem(item[1]);
+        _decisionBox.cleanup();
+        _decisionBox = initDecisionBox();
         setDirty();
         break;
     }
@@ -115,17 +97,18 @@ class itemMenu extends Layer {
       case DEF.KEYBOARD_LEFT:
         break;
       case DEF.KEYBOARD_UP:
-        _cursorPos = MATH.max(0, _cursorPos - 1);
+        _decisionBox.MoveCursorUp();
         setDirty();
         break;
       case DEF.KEYBOARD_RIGHT:
         break;
       case DEF.KEYBOARD_DOWN:
-        _cursorPos = MATH.min(_gameState.Inventory.length -1, _cursorPos + 1);
+        _decisionBox.MoveCursorDown();
         setDirty();
         break;
       case DEF.KEYBOARD_PRIMARY:
-        _game.AddRequest(new PushRequest(_game, new DecisionBox.fromList(_game, new Rect(px+width+10,py,100,80), [["Use" ,USE_ACTION],
+        _game.AddRequest(new PushRequest(_game, new DecisionBox.fromList(_game, new Rect(px+_decisionBox.DrawingBox.width+10,py,100,80), 
+                                                                                             [["Use" ,USE_ACTION],
                                                                                               ["Drop"  ,DROP_ACTION],
                                                                                               ["Done"  ,DONE_ACTION]],
                                                                                               allowCancel:true)));
