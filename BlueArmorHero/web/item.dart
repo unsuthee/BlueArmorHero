@@ -8,6 +8,9 @@ class Item {
   bool _isEquip;
   bool get IsEquip => _isEquip;
   
+  bool _isEquipable = false;
+  bool get IsEquipable => _isEquipable;
+  
   int _cost;
   int get cost => _cost;
   
@@ -50,6 +53,7 @@ class Weapon extends Item {
   
   Weapon(String name, {int cost:0, int pow:0}): super(name,cost:cost) {
     _pow = pow;
+    _isEquipable = true;
   }
 
   String getType() {
@@ -74,6 +78,7 @@ class Armor extends Item {
   
   Armor(String name, {int cost:0, int def:0}): super(name,cost:cost) {
     _def = def;
+    _isEquipable = true;
   }
   
   String getType() {
@@ -98,6 +103,7 @@ class Shield extends Item {
   
   Shield(String name, {int cost:0, int def:0}): super(name,cost:cost) {
     _def = def;
+    _isEquipable = true;
   }
   
   String getType() {

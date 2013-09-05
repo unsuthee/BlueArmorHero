@@ -37,7 +37,7 @@ class BuyItemListMenu extends Layer {
     
     Rect decisionBox = new Rect( 4 * DEF.TILE_SIZE, 
         5 * DEF.TILE_SIZE,
-        (horzSpace - 6) * DEF.TILE_SIZE,
+        MATH.max(8,(horzSpace - 6)) * DEF.TILE_SIZE,
         (itemList.length) * DEF.TILE_SIZE);
     
     _decisionBox = new DecisionBox.fromList(  _gm, 
@@ -134,23 +134,29 @@ class BuyItemListMenu extends Layer {
           _state = DISMISSAL_STATE;
         }
         else if (_gm.gameState.heroGold <= toBuyItem.cost) {
-          String msg = "The ${toBuyItem.name}...;Would you like to equip this right now?";
-          String yesMsg = "${_gm.gameState.heroName} equipped ${toBuyItem.name}";
-          String noMsg = "Here you go ${_gm.gameState.heroName}";
-          
-          _gm.AddRequest(new PushRequest(_gm, new YesNoMsgBox(_gm,
-              selfDismissOnFinish:false,
-              initMsg:msg,
-              yesMsg:yesMsg,
-              noMsg:noMsg,
-              yesHandler:(Game gm) {
-                gm.gameState.AddItem(toBuyItem);
-                gm.gameState.Stats.Equip(toBuyItem);
-              },
-              noHandler: (Game gm) {
-                gm.gameState.AddItem(toBuyItem);
-              })));
-          
+          if (toBuyItem.IsEquipable){
+            String msg = "The ${toBuyItem.name}...;Would you like to equip this right now?";
+            String yesMsg = "${_gm.gameState.heroName} equipped ${toBuyItem.name}";
+            String noMsg = "Here you go ${_gm.gameState.heroName}";
+            
+            _gm.AddRequest(new PushRequest(_gm, new YesNoMsgBox(_gm,
+                selfDismissOnFinish:false,
+                initMsg:msg,
+                yesMsg:yesMsg,
+                noMsg:noMsg,
+                yesHandler:(Game gm) {
+                  gm.gameState.AddItem(toBuyItem);
+                  gm.gameState.Stats.Equip(toBuyItem);
+                },
+                noHandler: (Game gm) {
+                  gm.gameState.AddItem(toBuyItem);
+                })));
+          }
+          else {
+            String msg = "Here you go ${_gm.gameState.heroName}";
+            _gm.gameState.AddItem(toBuyItem);
+            _gm.AddRequest(new PushRequest(_gm, new MsgBox(_gm,msg,selfDismissOnFinish:true)));
+          }
           _state = DISMISSAL_STATE;
         }
         else {

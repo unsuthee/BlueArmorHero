@@ -63,6 +63,7 @@ class HeroStats {
   }
   
   Item Equip(Item item) {
+    
     Item unequipItem = null;
     currentWeapon.UnEquip();
     switch(item.getType()) {

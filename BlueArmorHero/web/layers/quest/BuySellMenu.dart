@@ -18,16 +18,9 @@ class BuySellMenu extends Layer {
   List<BattleTask> _tasks = [];
   List itemInfo = null;
   
-  BuySellMenu(Game gm, String shopname) {
+  BuySellMenu(Game gm, String shopname, List itmInfo) {
     _gm = gm;
     _tasks.add(new AnnotateTask(_gm,["This is a ${shopname} shop.;How may I help you?"],selfDismissOnFinish:true));
-    
-    List itmInfo = [stats.WeaponData["Bamboo Pole"],
-                    stats.WeaponData["Club"],
-                    stats.WeaponData["Copper Sword"],
-                    stats.ArmorData["Clothes"],
-                    stats.ArmorData["Leather Armor"],
-                    stats.ShieldData["Small Shield"]];
     itemInfo = itmInfo;
   }
   
