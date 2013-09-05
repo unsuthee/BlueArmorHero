@@ -169,7 +169,7 @@ MapData_createMapByName: function(mapName) {
       newMap = $.RadotomeCastle1$();
       break;
     case "RadotomeCastle2":
-      newMap = null;
+      newMap = $.RadotomeCastle2$();
       break;
     case "RadotomeCastle3":
       newMap = null;
@@ -184,6 +184,28 @@ MapData_createMapByName: function(mapName) {
       newMap = null;
   }
   return newMap;
+},
+
+stats_isPassableTerran: function(tileId) {
+  var t1, tile;
+  t1 = $.getInterceptor$n(tileId);
+  if (t1.$ge(tileId, 0) && t1.$lt(tileId, 140)) {
+    if (tileId >>> 0 !== tileId || tileId >= 140)
+      throw $.ioore(tileId);
+    tile = C.List_OBT[tileId];
+  } else
+    tile = "o";
+  switch (tile) {
+    case "g":
+    case "b":
+    case "f":
+    case "h":
+    case "s":
+    case "w":
+      return true;
+    default:
+      return false;
+  }
 },
 
 CharacterSprite: {"": "Object;_animationSet,_currentAnim",
@@ -245,7 +267,7 @@ CharacterSprite: {"": "Object;_animationSet,_currentAnim",
     return this.draw$4$px$py$size(ctx, px, py, 32);
   },
   update$1: function(delta) {
-    this._currentAnim.update$1($.toInt$0$n(delta));
+    this._currentAnim.update$1($.toInt$0$nx(delta));
   },
   CharacterSprite$1: function(characterName) {
     if ($.CharacterSprite__spriteData == null)
@@ -271,8 +293,7 @@ Game: {"": "LayerManager;canvas>,canvasCtx,bgCanvas<,bgCanvasCtx,guiCanvas<,guiC
   startNewGame$0: function() {
     var t1, t2;
     this.pushLayer$1($.MapLayer$(this, $.overworldMap$()));
-    this.pushLayer$1($.MapLayer$(this, $.RadotomeCastle1$()));
-    this.pushLayer$1($.MapLayer$(this, $.RadotomeCastle2$()));
+    this.pushLayer$1($.MapLayer$(this, $.MapData_createMapByName("RadotomeTown")));
     t1 = window;
     t2 = this.get$tick();
     C.Window_methods._ensureRequestAnimationFrame$0(t1);
@@ -281,7 +302,7 @@ Game: {"": "LayerManager;canvas>,canvasCtx,bgCanvas<,bgCanvasCtx,guiCanvas<,guiC
   LoadImages$0: function() {
     var data, t1, $name, info, imgElement, t2, t3;
     $.ImageCache_ImageCache();
-    data = $.makeLiteralMap(["Overworld", $.makeLiteralMap(["width", 160, "height", 224, "src", "res/overworld.png"]), "TownImage", $.makeLiteralMap(["width", 320, "height", 816, "src", "res/town_tiles.png"]), "Characters", $.makeLiteralMap(["width", 256, "height", 160, "src", "res/characters.png"]), "Fonts", $.makeLiteralMap(["width", 451, "height", 163, "src", "res/fonts.png"]), "TileSet", $.makeLiteralMap(["width", 180, "height", 100, "src", "res/DQRes2.png"]), "Grass", $.makeLiteralMap(["width", 128, "height", 112, "src", "res/bg/bg1.png"]), "Forest", $.makeLiteralMap(["width", 128, "height", 112, "src", "res/bg/bg2.png"]), "Mountain", $.makeLiteralMap(["width", 128, "height", 112, "src", "res/bg/bg3.png"]), "Dessert", $.makeLiteralMap(["width", 128, "height", 112, "src", "res/bg/bg4.png"]), "Swarm", $.makeLiteralMap(["width", 128, "height", 112, "src", "res/bg/bg5.png"]), "Dg1", $.makeLiteralMap(["width", 128, "height", 112, "src", "res/bg/bg6.png"]), "Grave", $.makeLiteralMap(["width", 128, "height", 112, "src", "res/bg/bg7.png"]), "Dg2", $.makeLiteralMap(["width", 128, "height", 112, "src", "res/bg/bg8.png"]), "Ruin", $.makeLiteralMap(["width", 128, "height", 112, "src", "res/bg/bg9.png"]), "Castle1", $.makeLiteralMap(["width", 128, "height", 112, "src", "res/bg/bg10.png"]), "Dg3", $.makeLiteralMap(["width", 128, "height", 112, "src", "res/bg/bg11.png"]), "Castle2", $.makeLiteralMap(["width", 128, "height", 112, "src", "res/bg/bg12.png"]), "M_Slimer", $.makeLiteralMap(["width", 15, "height", 15, "src", "res/mons/slimer.gif"]), "M_RedSlimer", $.makeLiteralMap(["width", 15, "height", 15, "src", "res/mons/redslimer.gif"]), "M_Drakeer", $.makeLiteralMap(["width", 29, "height", 23, "src", "res/mons/drakeer.gif"]), "M_Ghost", $.makeLiteralMap(["width", 32, "height", 36, "src", "res/mons/ghostr.gif"]), "M_Magician", $.makeLiteralMap(["width", 46, "height", 40, "src", "res/mons/magicianr.gif"])]);
+    data = $.makeLiteralMap(["Overworld", $.makeLiteralMap(["width", 160, "height", 224, "src", "res/overworld.png"]), "TownImage", $.makeLiteralMap(["width", 320, "height", 816, "src", "res/town_tiles.png"]), "Characters", $.makeLiteralMap(["width", 256, "height", 160, "src", "res/characters.png"]), "Fonts", $.makeLiteralMap(["width", 451, "height", 163, "src", "res/fonts.png"]), "TileSet", $.makeLiteralMap(["width", 180, "height", 100, "src", "res/DQRes2.png"]), "Grass", $.makeLiteralMap(["width", 128, "height", 112, "src", "res/bg/bg1.png"]), "Forest", $.makeLiteralMap(["width", 128, "height", 112, "src", "res/bg/bg2.png"]), "Mountain", $.makeLiteralMap(["width", 128, "height", 112, "src", "res/bg/bg3.png"]), "Dessert", $.makeLiteralMap(["width", 128, "height", 112, "src", "res/bg/bg4.png"]), "Swarm", $.makeLiteralMap(["width", 128, "height", 112, "src", "res/bg/bg5.png"]), "Dg1", $.makeLiteralMap(["width", 128, "height", 112, "src", "res/bg/bg6.png"]), "Grave", $.makeLiteralMap(["width", 128, "height", 112, "src", "res/bg/bg7.png"]), "Dg2", $.makeLiteralMap(["width", 128, "height", 112, "src", "res/bg/bg8.png"]), "Ruin", $.makeLiteralMap(["width", 128, "height", 112, "src", "res/bg/bg9.png"]), "Castle1", $.makeLiteralMap(["width", 128, "height", 112, "src", "res/bg/bg10.png"]), "Dg3", $.makeLiteralMap(["width", 128, "height", 112, "src", "res/bg/bg11.png"]), "Castle2", $.makeLiteralMap(["width", 128, "height", 112, "src", "res/bg/bg12.png"]), "M_Slimer", $.makeLiteralMap(["width", 15, "height", 15, "src", "res/mons/slimer.gif"]), "M_RedSlimer", $.makeLiteralMap(["width", 15, "height", 15, "src", "res/mons/redslimer.gif"]), "M_Drakeer", $.makeLiteralMap(["width", 29, "height", 23, "src", "res/mons/drakeer.gif"]), "M_Ghost", $.makeLiteralMap(["width", 32, "height", 36, "src", "res/mons/ghostr.gif"]), "M_Magician", $.makeLiteralMap(["width", 46, "height", 40, "src", "res/mons/magicianr.gif"]), "M_Magidrakeer", $.makeLiteralMap(["width", 29, "height", 23, "src", "res/mons/magidrakeer.gif"]), "M_Skeletonr", $.makeLiteralMap(["width", 38, "height", 48, "src", "res/mons/skeletonr.gif"]), "M_Warlockr", $.makeLiteralMap(["width", 46, "height", 40, "src", "res/mons/warlockr.gif"]), "M_Wolfr", $.makeLiteralMap(["width", 53, "height", 46, "src", "res/mons/wolfr.gif"]), "M_Scorpionr", $.makeLiteralMap(["width", 40, "height", 41, "src", "res/mons/scorpionr.gif"]), "M_MetalScorpionr", $.makeLiteralMap(["width", 40, "height", 41, "src", "res/mons/metalscorpionr.gif"])]);
     for (t1 = new $.LinkedHashMapKeyIterable(data)._map, t1 = new $.LinkedHashMapKeyIterator(t1, t1._modifications, null, null), t1._cell = t1._map._first; t1.moveNext$0();) {
       $name = t1._current;
       info = data.$index(data, $name);
@@ -367,22 +388,6 @@ Game: {"": "LayerManager;canvas>,canvasCtx,bgCanvas<,bgCanvasCtx,guiCanvas<,guiC
   get$keyboardUpHandler: function() {
     return new $.BoundClosure$1(this, "keyboardUpHandler$1", null);
   },
-  createMonsterBattler$1: function($name) {
-    switch ($name) {
-      case "M_Slimer":
-        return $.Battler$("Slime", 3, 0, 0, 0, 1, 1, 1, 3, 0, 0, 0, 5, false, null, false, 0.25, 0, false, 0, 15);
-      case "M_RedSlimer":
-        return $.Battler$("Red Slime", 3, 0, 0, 0, 1, 1, 2, 4, 0, 0, 0, 7, false, null, false, 0.25, 0, false, 0, 15);
-      case "M_Drakeer":
-        return $.Battler$("Drakee", 6, 0, 0, 0, 1, 2, 2, 5, 0, 0, 0, 9, false, null, false, 0.25, 0, false, 0, 15);
-      case "M_Ghost":
-        return $.Battler$("Ghost", 8, 0, 0, 0, 4, 3, 3, 6, 0, 0, 0, 11, false, null, false, 0.25, 0, false, 0, 15);
-      case "M_Magician":
-        return $.Battler$("Magician", 12, 0, 0, 0, 1, 4, 9, 10, 0, 0, 0, 11, false, new $.Game_createMonsterBattler_closure(), false, 0.25, 0, false, 0, 0);
-      default:
-        return;
-    }
-  },
   Game$0: function() {
     this.canvas = document.querySelector("#canvas");
     this.canvasCtx = $.get$context2D$x(this.canvas);
@@ -420,24 +425,6 @@ Game$: function() {
 Game_closure: {"": "Closure;this_0",
   call$1: function(me) {
     this.this_0.startNewGame$0();
-  }
-},
-
-Game_createMonsterBattler_closure: {"": "Closure;",
-  call$2: function(atk, def) {
-    var t1;
-    if (C.C__Random.nextInt$1(100) < 50) {
-      t1 = new $.MonsterHurtSpell(null, null, null);
-      t1.attacker = atk;
-      t1.defender = def;
-      t1._isHurtMore = false;
-      return t1;
-    } else {
-      t1 = new $.MonsterAtkAction(null, null);
-      t1.attacker = atk;
-      t1.defender = def;
-      return t1;
-    }
   }
 },
 
@@ -546,34 +533,34 @@ TextWriter: {"": "Object;charIndices,newlineChar,_wrap,_drawingRect,_RowSpace,pa
     msg = write_msg.split(" ");
     t1 = this._drawingRect.top;
     if (typeof t1 !== "number")
-      return this.WriteByRow$3$bailout(1, ctx, t1, row, msg);
+      return this.WriteByRow$3$bailout(1, ctx, msg, row, t1);
     t2 = this.padding;
     ny = t1 + t2;
     lastrow = $.max(1, row);
     if (typeof lastrow !== "number")
-      return this.WriteByRow$3$bailout(2, ctx, 0, 0, msg, t2, ny, lastrow);
+      return this.WriteByRow$3$bailout(2, ctx, msg, 0, 0, ny, t2, lastrow);
     t1 = this._fontHeight;
     ny += (t1 + this._line_space_pcx) * (lastrow - 1);
     if (this._alignment === "Left") {
       t3 = this._drawingRect.left;
       if (typeof t3 !== "number")
-        return this.WriteByRow$3$bailout(3, ctx, t1, 0, msg, t2, ny, lastrow, t3);
+        return this.WriteByRow$3$bailout(3, ctx, msg, 0, t1, ny, t2, lastrow, t3);
       nx = t3 + t2;
       for (t3 = new $.ListIterator(msg, msg.length, 0, null), t4 = this._fontWidth + this.char_space_pcx, t5 = this._scale, t6 = this._wrap; t3.moveNext$0(); nx = nx0) {
         word = t3._liblib$_current;
         if (t6) {
           t7 = $.get$length$asx(word);
           if (typeof t7 !== "number")
-            return this.WriteByRow$3$bailout(4, ctx, t1, 0, 0, t2, ny, lastrow, t3, t4, nx, word, t5, t7, t6);
+            return this.WriteByRow$3$bailout(4, ctx, 0, 0, t1, ny, t2, lastrow, t3, t6, t4, nx, word, t5, t7);
           t7 = nx + t7 * t4;
           t8 = this._drawingRect;
           t8.get$right;
           t9 = t8.left;
           if (typeof t9 !== "number")
-            return this.WriteByRow$3$bailout(5, ctx, t1, 0, 0, t2, ny, lastrow, t3, t4, nx, word, t5, t7, t6, t8, t9);
+            return this.WriteByRow$3$bailout(5, ctx, 0, 0, t1, ny, t2, lastrow, t3, t6, t4, nx, word, t5, t7, t9, t8);
           t8 = t8.width;
           if (typeof t8 !== "number")
-            return this.WriteByRow$3$bailout(6, ctx, t1, 0, 0, t2, ny, lastrow, t3, t4, nx, word, t5, t7, t6, t8, t9);
+            return this.WriteByRow$3$bailout(6, ctx, 0, 0, t1, ny, t2, lastrow, t3, t6, t4, nx, word, t5, t7, t9, t8);
           if (t7 >= t9 + t8) {
             nx = t9 + t2;
             t7 = this._line_space_pcx;
@@ -590,7 +577,7 @@ TextWriter: {"": "Object;charIndices,newlineChar,_wrap,_drawingRect,_RowSpace,pa
     }
     return lastrow;
   },
-  WriteByRow$3$bailout: function(state0, ctx, t1, row, msg, t2, ny, lastrow, t3, t4, nx, word, t5, t7, t6, t8, t9) {
+  WriteByRow$3$bailout: function(state0, ctx, msg, row, t1, ny, t2, lastrow, t3, t6, t4, nx, word, t5, t7, t9, t8) {
     switch (state0) {
       case 0:
         msg = write_msg.split(" ");
@@ -609,8 +596,7 @@ TextWriter: {"": "Object;charIndices,newlineChar,_wrap,_drawingRect,_RowSpace,pa
           throw $.iae(t4);
         ny = $.$add$ns(ny, (t1 + t3) * t4);
       default:
-        var t10;
-        if (state0 === 6 || state0 === 5 || state0 === 4 || state0 === 3 || state0 === 0 && this._alignment === "Left")
+        if (state0 === 7 || state0 === 6 || state0 === 5 || state0 === 4 || state0 === 3 || state0 === 0 && this._alignment === "Left")
           switch (state0) {
             case 0:
               t3 = this._drawingRect.left;
@@ -630,7 +616,7 @@ TextWriter: {"": "Object;charIndices,newlineChar,_wrap,_drawingRect,_RowSpace,pa
                         break L0;
                       word = t3._liblib$_current;
                     default:
-                      if (state0 === 6 || state0 === 5 || state0 === 4 || state0 === 0 && t6)
+                      if (state0 === 7 || state0 === 6 || state0 === 5 || state0 === 4 || state0 === 0 && t6)
                         switch (state0) {
                           case 0:
                             t7 = $.get$length$asx(word);
@@ -645,16 +631,24 @@ TextWriter: {"": "Object;charIndices,newlineChar,_wrap,_drawingRect,_RowSpace,pa
                             t8 = t8.width;
                           case 6:
                             state0 = 0;
-                            t10 = $.getInterceptor$ns(t9);
-                            if ($.$ge$n(t7, t10.$add(t9, t8))) {
-                              nx = t10.$add(t9, t2);
-                              t7 = this._line_space_pcx;
-                              t8 = this._RowSpace;
-                              if (typeof t8 !== "number")
-                                throw $.iae(t8);
-                              ny = $.$add$ns(ny, (t1 + t7) * t8);
-                              lastrow = $.$add$ns(lastrow, t8);
-                            }
+                          case 7:
+                            if (state0 === 7 || state0 === 0 && $.$ge$n(t7, $.$add$ns(t9, t8)))
+                              switch (state0) {
+                                case 0:
+                                  t7 = this._drawingRect.left;
+                                case 7:
+                                  state0 = 0;
+                                  nx = $.$add$ns(t7, t2);
+                                  t7 = this._line_space_pcx;
+                                  t8 = this._RowSpace;
+                                  if (typeof t8 !== "number")
+                                    throw $.iae(t8);
+                                  ny = $.$add$ns(ny, (t1 + t7) * t8);
+                                  t8 = this._RowSpace;
+                                  if (typeof t8 !== "number")
+                                    throw $.iae(t8);
+                                  lastrow = $.$add$ns(lastrow, t8);
+                              }
                         }
                       for (t7 = $.split$1$s(word, ""), t7 = new $.ListIterator(t7, t7.length, 0, null); t8 = $.getInterceptor$ns(nx), t7.moveNext$0();) {
                         this.DrawChar$5(ctx, t7._liblib$_current, nx, ny, t5);
@@ -770,13 +764,13 @@ TextWriter2: {"": "Object;_drawingRect,_RowSpace,_topPadding,_bottomPadding,_lef
     return $.$add$ns(firstRow, row * ((this._fontHeight + t1) * this._RowSpace));
   },
   getPxByIndex$1: function(index) {
-    var firstPos = $.$add$ns(this._drawingRect.get$left(), this._leftPadding);
+    var firstPos = $.$add$ns($.get$left$x(this._drawingRect), this._leftPadding);
     if (index === 0)
       return firstPos;
     return $.$add$ns(firstPos, index * (this._fontWidth + this.char_space_pcx));
   },
   NewPage$0: function() {
-    var t1 = this._drawingRect.get$left();
+    var t1 = $.get$left$x(this._drawingRect);
     if (typeof t1 !== "number")
       return this.NewPage$0$bailout(1, t1);
     this._nx = t1 + this._leftPadding;
@@ -788,7 +782,7 @@ TextWriter2: {"": "Object;_drawingRect,_RowSpace,_topPadding,_bottomPadding,_lef
   NewPage$0$bailout: function(state0, t1) {
     switch (state0) {
       case 0:
-        t1 = this._drawingRect.get$left();
+        t1 = $.get$left$x(this._drawingRect);
       case 1:
         state0 = 0;
         this._nx = $.$add$ns(t1, this._leftPadding);
@@ -799,26 +793,24 @@ TextWriter2: {"": "Object;_drawingRect,_RowSpace,_topPadding,_bottomPadding,_lef
     }
   },
   WriteAll$1: function(ctx) {
-    var t1, t2, t3, t4, isEndOfLine;
+    var t1, t2, isEndOfLine;
     t1 = this._fontHeight;
     t2 = this._charToWrite;
     while (true) {
       if (!!(this._msgToWrite.length === 0 && t2.length === 0))
         break;
       while (true) {
-        t3 = $.$add$ns(this._ny, t1);
-        t4 = this._drawingRect;
-        isEndOfLine = $.$ge$n(t3, $.$sub$n(t4.get$bottom(), this._bottomPadding));
+        isEndOfLine = $.$ge$n($.$add$ns(this._ny, t1), $.$sub$n($.get$bottom$x(this._drawingRect), this._bottomPadding));
         if (!!(this._msgToWrite.length === 0 && t2.length === 0 || isEndOfLine))
           break;
         this.WriteNextChar$1(ctx);
       }
-      this._nx = $.$add$ns(t4.get$left(), this._leftPadding);
+      this._nx = $.$add$ns($.get$left$x(this._drawingRect), this._leftPadding);
       this._ny = $.$add$ns($.get$top$x(this._drawingRect), this._topPadding);
     }
   },
   WriteNextChar$1: function(ctx) {
-    var t1, t2, t3, word, msglen_pcx, t4, t5, t6;
+    var t1, t2, t3, word, msglen_pcx, t4;
     t1 = this._msgToWrite;
     t2 = t1.length;
     if (t2 === 0 && this._charToWrite.length === 0)
@@ -829,7 +821,7 @@ TextWriter2: {"": "Object;_drawingRect,_RowSpace,_topPadding,_bottomPadding,_lef
         throw $.ioore(0);
       word = t1[0];
       if (typeof word !== "string")
-        return this.WriteNextChar$1$bailout(1, ctx, t3, word);
+        return this.WriteNextChar$1$bailout(1, ctx, word, t3);
       for (t1 = word.split(""), t1 = new $.ListIterator(t1, t1.length, 0, null); t1.moveNext$0();)
         t3.push(t1._liblib$_current);
       t3.push(" ");
@@ -839,20 +831,19 @@ TextWriter2: {"": "Object;_drawingRect,_RowSpace,_topPadding,_bottomPadding,_lef
       if (!(t1 === 1 && word === ";")) {
         t1 = this._nx;
         if (typeof t1 !== "number")
-          return this.WriteNextChar$1$bailout(2, ctx, t3, 0, t1, msglen_pcx);
+          return this.WriteNextChar$1$bailout(2, ctx, 0, t3, msglen_pcx, t1);
         t1 += msglen_pcx;
-        t2 = this._drawingRect;
-        t4 = t2.get$right();
-        if (typeof t4 !== "number")
-          return this.WriteNextChar$1$bailout(3, ctx, t3, 0, t1, 0, t2, t4);
-        if (t1 >= t4 - this._rightPadding && this._autoNewline) {
-          t1 = t2.get$left();
+        t2 = $.get$right$x(this._drawingRect);
+        if (typeof t2 !== "number")
+          return this.WriteNextChar$1$bailout(3, ctx, 0, t3, 0, t1, t2);
+        if (t1 >= t2 - this._rightPadding && this._autoNewline) {
+          t1 = $.get$left$x(this._drawingRect);
           if (typeof t1 !== "number")
-            return this.WriteNextChar$1$bailout(4, ctx, t3, 0, t1);
+            return this.WriteNextChar$1$bailout(4, ctx, 0, t3, 0, t1);
           this._nx = t1 + this._leftPadding;
           t1 = this._ny;
           if (typeof t1 !== "number")
-            return this.WriteNextChar$1$bailout(5, ctx, t3, 0, t1);
+            return this.WriteNextChar$1$bailout(5, ctx, 0, t3, 0, t1);
           t2 = this._line_space_pcx;
           if (typeof t2 !== "number")
             throw $.iae(t2);
@@ -862,42 +853,41 @@ TextWriter2: {"": "Object;_drawingRect,_RowSpace,_topPadding,_bottomPadding,_lef
     }
     t1 = this._ny;
     if (typeof t1 !== "number")
-      return this.WriteNextChar$1$bailout(6, ctx, t3, 0, t1);
+      return this.WriteNextChar$1$bailout(6, ctx, 0, t3, 0, t1);
     t2 = this._fontHeight;
-    t4 = t1 + t2;
-    t5 = this._drawingRect;
-    t6 = t5.get$bottom();
-    if (typeof t6 !== "number")
-      return this.WriteNextChar$1$bailout(7, ctx, t3, 0, t4, 0, t2, t6);
-    if (t4 >= t6 - this._bottomPadding)
+    t1 += t2;
+    t4 = $.get$bottom$x(this._drawingRect);
+    if (typeof t4 !== "number")
+      return this.WriteNextChar$1$bailout(7, ctx, 0, t3, 0, t1, t2, t4);
+    if (t1 >= t4 - this._bottomPadding)
       return;
     if (0 >= t3.length)
       throw $.ioore(0);
-    t4 = t3[0];
-    if (typeof t4 !== "string")
-      return this.WriteNextChar$1$bailout(8, ctx, t3, 0, t4, 0, t2);
-    if (t4 === ";") {
-      t1 = t5.get$left();
+    t1 = t3[0];
+    if (typeof t1 !== "string")
+      return this.WriteNextChar$1$bailout(8, ctx, 0, t3, 0, t1, t2);
+    if (t1 === ";") {
+      t1 = $.get$left$x(this._drawingRect);
       if (typeof t1 !== "number")
-        return this.WriteNextChar$1$bailout(9, 0, t3, 0, t1, 0, t2);
+        return this.WriteNextChar$1$bailout(9, 0, 0, t3, 0, t1, t2);
       this._nx = t1 + this._leftPadding;
       t1 = this._ny;
       if (typeof t1 !== "number")
-        return this.WriteNextChar$1$bailout(10, 0, t3, 0, t1, 0, t2);
+        return this.WriteNextChar$1$bailout(10, 0, 0, t3, 0, t1, t2);
       t4 = this._line_space_pcx;
       if (typeof t4 !== "number")
         throw $.iae(t4);
       this._ny = t1 + (t2 + t4) * this._RowSpace;
     } else {
-      this.DrawChar$5(ctx, t4, this._nx, t1, this._scale);
+      this.DrawChar$5(ctx, t1, this._nx, this._ny, this._scale);
       t1 = this._nx;
       if (typeof t1 !== "number")
-        return this.WriteNextChar$1$bailout(11, 0, t3, 0, t1);
+        return this.WriteNextChar$1$bailout(11, 0, 0, t3, 0, t1);
       this._nx = t1 + (this._fontWidth + this.char_space_pcx);
     }
     C.JSArray_methods.removeAt$1(t3, 0);
   },
-  WriteNextChar$1$bailout: function(state0, ctx, t3, word, t1, msglen_pcx, t2, t4) {
+  WriteNextChar$1$bailout: function(state0, ctx, word, t3, msglen_pcx, t1, t2, t4) {
     switch (state0) {
       case 0:
         t1 = this._msgToWrite;
@@ -927,15 +917,14 @@ TextWriter2: {"": "Object;_drawingRect,_RowSpace,_topPadding,_bottomPadding,_lef
                   case 2:
                     state0 = 0;
                     t1 = $.$add$ns(t1, msglen_pcx);
-                    t2 = this._drawingRect;
-                    t4 = t2.get$right();
+                    t2 = $.get$right$x(this._drawingRect);
                   case 3:
                     state0 = 0;
                   default:
-                    if (state0 === 5 || state0 === 4 || state0 === 0 && $.$ge$n(t1, $.$sub$n(t4, this._rightPadding)) && this._autoNewline)
+                    if (state0 === 5 || state0 === 4 || state0 === 0 && $.$ge$n(t1, $.$sub$n(t2, this._rightPadding)) && this._autoNewline)
                       switch (state0) {
                         case 0:
-                          t1 = t2.get$left();
+                          t1 = $.get$left$x(this._drawingRect);
                         case 4:
                           state0 = 0;
                           this._nx = $.$add$ns(t1, this._leftPadding);
@@ -954,7 +943,7 @@ TextWriter2: {"": "Object;_drawingRect,_RowSpace,_topPadding,_bottomPadding,_lef
         state0 = 0;
         t2 = this._fontHeight;
         t1 = $.$add$ns(t1, t2);
-        t4 = this._drawingRect.get$bottom();
+        t4 = $.get$bottom$x(this._drawingRect);
       case 7:
         state0 = 0;
         if ($.$ge$n(t1, $.$sub$n(t4, this._bottomPadding)))
@@ -970,7 +959,7 @@ TextWriter2: {"": "Object;_drawingRect,_RowSpace,_topPadding,_bottomPadding,_lef
         if (state0 === 10 || state0 === 9 || state0 === 0 && $.$eq(t1, ";"))
           switch (state0) {
             case 0:
-              t1 = this._drawingRect.get$left();
+              t1 = $.get$left$x(this._drawingRect);
             case 9:
               state0 = 0;
               this._nx = $.$add$ns(t1, this._leftPadding);
@@ -1167,27 +1156,13 @@ Sprite: {"": "Object;src_x,src_y,src_id",
 },
 
 GameState: {"": "Object;_stats,_inventoryCapacity,_inventory",
-  createHeroBattler$0: function() {
-    var t1, t2, t3, t4, t5, t6, t7, t8, t9, t10;
-    t1 = this._stats;
-    t2 = t1._name;
-    t3 = t1._STR;
-    t4 = t1._AGI;
-    t5 = $.$add$ns(t3, t1.currentWeapon.get$pow());
-    t6 = $.$add$ns($.$add$ns(t4, t1.currentArmor.get$def()), t1.currentShield.get$def());
-    t7 = t1._HP;
-    t8 = 100;
-    t9 = t1._MaxHP;
-    t10 = t1._MaxMP;
-    return $.HeroBattler$(t2, t4, t5, t6, t7, t9, t10, t8, t3, t1._EXP, false);
-  },
   getBattleSpells$0: function() {
     var spells, t1, spell, t2;
     spells = [];
     for (t1 = new $.LinkedHashMapKeyIterable($.get$stats_BattleSpellTable())._map, t1 = new $.LinkedHashMapKeyIterator(t1, t1._modifications, null, null), t1._cell = t1._map._first; t1.moveNext$0();) {
       spell = t1._current;
       t2 = $.get$stats_BattleSpellTable();
-      if ($.$le$n($.$index$asx(t2.$index(t2, spell), 0), 20))
+      if ($.$le$n($.$index$asx(t2.$index(t2, spell), 0), this._stats._Level))
         spells.push(spell);
     }
     return spells;
@@ -1198,7 +1173,7 @@ GameState: {"": "Object;_stats,_inventoryCapacity,_inventory",
     for (t1 = new $.LinkedHashMapKeyIterable($.get$stats_FieldSpellTable())._map, t1 = new $.LinkedHashMapKeyIterator(t1, t1._modifications, null, null), t1._cell = t1._map._first; t1.moveNext$0();) {
       spell = t1._current;
       t2 = $.get$stats_FieldSpellTable();
-      if ($.$le$n($.$index$asx(t2.$index(t2, spell), 0), 20))
+      if ($.$le$n($.$index$asx(t2.$index(t2, spell), 0), this._stats._Level))
         spells.push(spell);
     }
     return spells;
@@ -1211,31 +1186,32 @@ GameState: {"": "Object;_stats,_inventoryCapacity,_inventory",
   },
   GameState$0: function() {
     var t1, t2, t3;
-    t1 = new $.Weapon(null, null, null, null);
-    t1._name = "Nothing";
-    t1._isEquip = false;
-    t1._pow = 0;
-    t2 = new $.Armor(null, null, null, null);
-    t2._name = "Nothing";
-    t2._isEquip = false;
-    t2._def = 0;
-    t3 = new $.Shield(null, null, null, null);
-    t3._name = "Nothing";
-    t3._isEquip = false;
-    t3._def = 0;
-    t3 = new $.HeroStats(t1, t2, t3, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+    t1 = $.get$stats_WeaponData();
+    t1 = t1.$index(t1, "Nothing");
+    t2 = $.get$stats_ArmorData();
+    t2 = t2.$index(t2, "Nothing");
+    t3 = $.get$stats_ShieldData();
+    t3 = new $.HeroStats(t1, t2, t3.$index(t3, "Nothing"), null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
     t3._name = "Suthee";
     t3.initAttributeByName$1("Suthee");
     t3.initEquipment$0();
     this._stats = t3;
-    t3 = new $.Item(null, null, null);
-    t3._name = "Wings";
-    t3._isEquip = false;
-    this.AddItem$1(t3);
-    t3 = new $.Item(null, null, null);
-    t3._name = "Herb";
-    t3._isEquip = false;
-    this.AddItem$1(t3);
+    t3 = $.get$stats_ItemData();
+    this.AddItem$1(t3.$index(t3, "Wings"));
+    t3 = $.get$stats_ItemData();
+    this.AddItem$1(t3.$index(t3, "Wings"));
+    t3 = $.get$stats_ItemData();
+    this.AddItem$1(t3.$index(t3, "Herb"));
+    t3 = $.get$stats_ItemData();
+    this.AddItem$1(t3.$index(t3, "Herb"));
+    t3 = $.get$stats_ItemData();
+    this.AddItem$1(t3.$index(t3, "Herb"));
+    t3 = $.get$stats_WeaponData();
+    this.AddItem$1(t3.$index(t3, "Erdrick's Sword"));
+    t3 = $.get$stats_ArmorData();
+    this.AddItem$1(t3.$index(t3, "Erdrick's Armor"));
+    t3 = $.get$stats_ShieldData();
+    this.AddItem$1(t3.$index(t3, "Silver Shield"));
   },
   static: {
 GameState$: function() {
@@ -1250,17 +1226,37 @@ Item: {"": "Object;_name,_isEquip,_cost",
   get$name: function(_) {
     return this._name;
   },
+  get$IsEquip: function() {
+    return this._isEquip;
+  },
+  get$cost: function() {
+    return this._cost;
+  },
+  power$0: function() {
+    return 0;
+  },
+  defence$0: function() {
+    return 0;
+  },
   Equip$0: function() {
   },
   UnEquip$0: function() {
   },
   getType$0: function() {
     return "Item";
+  },
+  compare$1: function(other) {
+    if (this.getType$0() !== other.getType$0())
+      return false;
+    return this._name === $.get$name$x(other);
   }
 },
 
 Weapon: {"": "Item;_pow,_name,_isEquip,_cost",
   get$pow: function() {
+    return this._pow;
+  },
+  power$0: function() {
     return this._pow;
   },
   getType$0: function() {
@@ -1278,6 +1274,9 @@ Armor: {"": "Item;_def,_name,_isEquip,_cost",
   get$def: function() {
     return this._def;
   },
+  defence$0: function() {
+    return this._def;
+  },
   getType$0: function() {
     return "Armor";
   },
@@ -1291,6 +1290,9 @@ Armor: {"": "Item;_def,_name,_isEquip,_cost",
 
 Shield: {"": "Item;_def,_name,_isEquip,_cost",
   get$def: function() {
+    return this._def;
+  },
+  defence$0: function() {
     return this._def;
   },
   getType$0: function() {
@@ -1366,7 +1368,7 @@ NullLayer: {"": "Layer;",
   }
 },
 
-Battler: {"": "Object;_name,_STR,_ATK,_DEF,_AGI,_CriticalHitChance,_DodgeChance,_HURT_RESIST,_STOP_RESIST,_SLEEP_RESIST,_EXP,_GP,_HasMagicArmor,_GroupFactor,_isDragonLord,_isGolem,_isSleeping,_isStoping,_onGetActionHandler,_HP,_MP,_MaxHP,_MaxMP",
+Battler: {"": "Object;_name,_STR,_ATK,_DEF,_AGI,_CriticalHitChance,_DodgeChance,_HURT_RESIST,_STOP_RESIST,_SLEEP_RESIST,_EXP,_GP,_HasMagicArmor,_GroupFactor,_isDragonLord,_isGolem,_isSleeping,sleepingChance@,_isStoping,_onGetActionHandler,_isFlee,_HP,_MP,_MaxHP,_MaxMP",
   get$name: function(_) {
     return this._name;
   },
@@ -1374,10 +1376,21 @@ Battler: {"": "Object;_name,_STR,_ATK,_DEF,_AGI,_CriticalHitChance,_DodgeChance,
     return this._STR;
   },
   get$Defence: function() {
-    return this._AGI;
+    return this._DEF;
+  },
+  get$SleepResist: function() {
+    return this._SLEEP_RESIST;
   },
   get$HasMagicArmor: function() {
     return this._HasMagicArmor;
+  },
+  get$IsSleeping: function() {
+    return this._isSleeping;
+  },
+  set$IsSleeping: function(v) {
+    this._isSleeping = v;
+    if (this._isSleeping)
+      this.sleepingChance = 100;
   },
   _onGetActionHandler$2: function(arg0, arg1) {
     return this._onGetActionHandler.call$2(arg0, arg1);
@@ -1398,63 +1411,16 @@ Battler: {"": "Object;_name,_STR,_ATK,_DEF,_AGI,_CriticalHitChance,_DodgeChance,
       t1.defender = def;
       return t1;
     }
-  },
-  Battler$21$AGI$ATK$Crit$DEF$Dodge$Exp$Gp$Hp$MaxHp$MaxMp$Mp$STR$dragonLord$getActionHandler$golem$grpFactor$hurtResist$magicArmor$sleepResist$stopResist: function($name, AGI, ATK, Crit, DEF, Dodge, Exp, Gp, Hp, MaxHp, MaxMp, Mp, STR, dragonLord, getActionHandler, golem, grpFactor, hurtResist, magicArmor, sleepResist, stopResist) {
-    this._name = $name;
-    this._STR = STR;
-    this._AGI = AGI;
-    this._CriticalHitChance = Crit;
-    this._DodgeChance = Dodge;
-    this._EXP = Exp;
-    this._GP = Gp;
-    if ($.$le$n(ATK, 0))
-      this._ATK = STR;
-    if ($.$le$n(DEF, 0))
-      this._DEF = AGI;
-    this._HP = Hp;
-    this._MP = Mp;
-    if ($.$eq(MaxHp, 0))
-      this._MaxHP = this._HP;
-    else
-      this._MaxHP = MaxHp;
-    if ($.$eq(MaxMp, 0))
-      this._MaxMP = this._MP;
-    else
-      this._MaxMP = MaxMp;
-    this._HURT_RESIST = hurtResist;
-    this._STOP_RESIST = stopResist;
-    this._SLEEP_RESIST = sleepResist;
-    this._GroupFactor = grpFactor;
-    this._HasMagicArmor = magicArmor;
-    this._isGolem = golem;
-    this._isDragonLord = dragonLord;
-    this._isSleeping = false;
-    this._isStoping = false;
-    this._onGetActionHandler = getActionHandler;
-  },
-  static: {
-Battler$: function($name, AGI, ATK, Crit, DEF, Dodge, Exp, Gp, Hp, MaxHp, MaxMp, Mp, STR, dragonLord, getActionHandler, golem, grpFactor, hurtResist, magicArmor, sleepResist, stopResist) {
-  var t1 = new $.Battler(null, null, null, null, null, 32, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
-  t1.Battler$21$AGI$ATK$Crit$DEF$Dodge$Exp$Gp$Hp$MaxHp$MaxMp$Mp$STR$dragonLord$getActionHandler$golem$grpFactor$hurtResist$magicArmor$sleepResist$stopResist($name, AGI, ATK, Crit, DEF, Dodge, Exp, Gp, Hp, MaxHp, MaxMp, Mp, STR, dragonLord, getActionHandler, golem, grpFactor, hurtResist, magicArmor, sleepResist, stopResist);
-  return t1;
-}}
-
+  }
 },
 
-HeroBattler: {"": "Battler;_name,_STR,_ATK,_DEF,_AGI,_CriticalHitChance,_DodgeChance,_HURT_RESIST,_STOP_RESIST,_SLEEP_RESIST,_EXP,_GP,_HasMagicArmor,_GroupFactor,_isDragonLord,_isGolem,_isSleeping,_isStoping,_onGetActionHandler,_HP,_MP,_MaxHP,_MaxMP",
+HeroBattler: {"": "Battler;_name,_STR,_ATK,_DEF,_AGI,_CriticalHitChance,_DodgeChance,_HURT_RESIST,_STOP_RESIST,_SLEEP_RESIST,_EXP,_GP,_HasMagicArmor,_GroupFactor,_isDragonLord,_isGolem,_isSleeping,sleepingChance,_isStoping,_onGetActionHandler,_isFlee,_HP,_MP,_MaxHP,_MaxMP",
   IsHero$0: function() {
     return true;
   },
   getAction$2: function(atk, def) {
     return;
-  },
-  static: {
-HeroBattler$: function($name, AGI, ATK, DEF, Hp, MaxHp, MaxMp, Mp, STR, XP, magicArmor) {
-  var t1 = new $.HeroBattler(null, null, null, null, null, 32, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
-  t1.Battler$21$AGI$ATK$Crit$DEF$Dodge$Exp$Gp$Hp$MaxHp$MaxMp$Mp$STR$dragonLord$getActionHandler$golem$grpFactor$hurtResist$magicArmor$sleepResist$stopResist($name, AGI, ATK, 32, DEF, 0, XP, 0, Hp, MaxHp, MaxMp, Mp, STR, false, null, false, 1, 0, magicArmor, 0, 0);
-  return t1;
-}}
-
+  }
 },
 
 HeroAtkAction: {"": "BattleAction;attacker,defender",
@@ -1480,19 +1446,19 @@ HeroAtkAction: {"": "BattleAction;attacker,defender",
       t2 = this.attacker;
       if (t1 === 0) {
         t2.get$Attack;
-        minDamage = $.$tdiv$n(t2._STR, 2);
+        minDamage = $.$tdiv$n(t2._ATK, 2);
         t1 = this.attacker;
         t1.get$Attack;
-        maxDamage = t1._STR;
+        maxDamage = t1._ATK;
       } else {
         t2.get$Attack;
-        t1 = t2._STR;
+        t1 = t2._ATK;
         t2 = this.defender;
         t2.get$Agility;
         minDamage = $.$tdiv$n($.$sub$n(t1, $.$tdiv$n(t2._AGI, 2)), 4);
         t2 = this.attacker;
         t2.get$Attack;
-        t2 = t2._STR;
+        t2 = t2._ATK;
         t1 = this.defender;
         t1.get$Agility;
         maxDamage = $.$tdiv$n($.$sub$n(t2, $.$tdiv$n(t1._AGI, 2)), 2);
@@ -1532,15 +1498,14 @@ HeroAtkAction: {"": "BattleAction;attacker,defender",
 
 MonsterAtkAction: {"": "BattleAction;attacker,defender",
   execute$2: function(gm, menu) {
-    var t1, t2, t3, minDamage, maxDamage, range, damage, tasks, msg;
-    t1 = this.attacker;
-    t2 = t1.get$Strength();
-    t3 = this.defender;
-    if ($.$gt$n($.$sub$n(t2, t3.get$Defence()), 0)) {
-      minDamage = $.$tdiv$n($.$sub$n(t1.get$Strength(), $.$tdiv$n(t3.get$Defence(), 2)), 4);
+    var t1, t2, minDamage, maxDamage, range, damage, tasks, msg;
+    t1 = $.$gt$n($.$sub$n(this.attacker.get$Strength(), this.defender.get$Defence()), 0);
+    t2 = this.attacker;
+    if (t1) {
+      minDamage = $.$tdiv$n($.$sub$n(t2.get$Strength(), $.$tdiv$n(this.defender.get$Defence(), 2)), 4);
       maxDamage = $.$tdiv$n($.$sub$n(this.attacker.get$Strength(), $.$tdiv$n(this.defender.get$Defence(), 2)), 2);
     } else {
-      maxDamage = $.$tdiv$n($.$add$ns(t1.get$Strength(), 4), 6);
+      maxDamage = $.$tdiv$n($.$add$ns(t2.get$Strength(), 4), 6);
       minDamage = 0;
     }
     minDamage = $.max(0, minDamage);
@@ -1592,6 +1557,8 @@ HeroFleeAction: {"": "BattleAction;attacker,defender",
     } else {
       t1.get$name;
       msg1 = t1._name + " has ran away from the battle!";
+      t1.set$IsFlee;
+      t1._isFlee = true;
     }
     t1 = new $.AnnotateTask(null, null);
     t1._game = gm;
@@ -1739,21 +1706,15 @@ MonsterHurtSpell: {"": "BattleAction;attacker,defender,_isHurtMore",
 
 SleepSpell: {"": "BattleAction;attacker,defender",
   execute$2: function(gm, menu) {
-    var t1, msg1, t2, msg2, tasks;
-    t1 = this.attacker;
-    t1.get$name;
-    msg1 = t1._name + " cast Stop.";
+    var msg1, t1, t2, msg2, tasks;
+    msg1 = $.S($.get$name$x(this.attacker)) + " cast Sleep.";
     t1 = C.C__Random.nextInt$1(16);
     t2 = this.defender;
-    t2.get$SleepResist;
-    if (t1 + 1 <= t2._SLEEP_RESIST) {
-      $.Primitives_printString("Has no effect.");
+    if (t1 + 1 <= t2.get$SleepResist())
       msg2 = "But it does not work!";
-    } else {
-      $.Primitives_printString("Sleeping is working.");
-      t1 = this.defender;
-      t1.get$name;
-      msg2 = t1._name + " is falling into sleep!";
+    else {
+      msg2 = $.S($.get$name$x(t2)) + " is falling into sleep!";
+      this.defender.set$IsSleeping(true);
     }
     tasks = $.List_List(null);
     t1 = new $.AnnotateTask(null, null);
@@ -1766,7 +1727,7 @@ SleepSpell: {"": "BattleAction;attacker,defender",
 
 FairyFluteItem: {"": "BattleAction;attacker,defender",
   execute$2: function(gm, menu) {
-    var t1, msg1, t2, msg2, tasks;
+    var t1, msg1, msg2, tasks;
     t1 = this.attacker;
     t1.get$name;
     msg1 = t1._name + " is using Fairy flute.";
@@ -1774,20 +1735,13 @@ FairyFluteItem: {"": "BattleAction;attacker,defender",
     t1.get$IsGolem;
     if (t1._isGolem) {
       t1.get$name;
-      t1._name;
-    }
-    t1 = C.C__Random.nextInt$1(16);
-    t2 = this.defender;
-    t2.get$SleepResist;
-    if (t1 + 1 <= t2._SLEEP_RESIST) {
-      $.Primitives_printString("Has no effect.");
-      msg2 = "But it does not work!";
-    } else {
-      $.Primitives_printString("Sleeping is working.");
-      t1 = this.defender;
-      t1.get$name;
       msg2 = t1._name + " is falling into sleep!";
-    }
+      t1.set$IsSleeping;
+      t1._isSleeping = true;
+      if (t1._isSleeping)
+        t1.sleepingChance = 100;
+    } else
+      msg2 = "But nothing happens!";
     tasks = $.List_List(null);
     t1 = new $.AnnotateTask(null, null);
     t1._game = gm;
@@ -1805,19 +1759,19 @@ StopSpell: {"": "BattleAction;attacker,defender",
     msg1 = t1._name + " cast Stop.";
     t1 = this.defender;
     t1.get$HasMagicArmor;
-    if (t1._HasMagicArmor) {
-      $.Primitives_printString("Has no effect.");
+    if (t1._HasMagicArmor)
       msg2 = "But the magic armor prevents the effect of Stop!";
-    } else {
+    else {
       t1 = C.C__Random.nextInt$1(16);
       t2 = this.defender;
       t2.get$StopResist;
-      if (t1 + 1 <= t2._STOP_RESIST) {
-        $.Primitives_printString("Has no effect.");
+      if (t1 + 1 <= t2._STOP_RESIST)
         msg2 = "But it does not work!";
-      } else {
+      else {
         t2.get$name;
         msg2 = t2._name + " is now not be able to cast spell!";
+        t2.set$IsStoping;
+        t2._isStoping = true;
       }
     }
     tasks = $.List_List(null);
@@ -2131,7 +2085,7 @@ BattleItemMenu: {"": "Layer;_game,_battleMenu,_decisionBox,spellCmdBox,_choosenA
         action = null;
       AvailableItems.push([$.S(item), action]);
     }
-    this._decisionBox = $.DecisionBox$fromList(this._game, this.spellCmdBox, AvailableItems);
+    this._decisionBox = $.DecisionBox$fromList(this._game, this.spellCmdBox, AvailableItems, false);
   },
   static: {
 BattleItemMenu$: function(game, menu, items) {
@@ -2142,11 +2096,12 @@ BattleItemMenu$: function(game, menu, items) {
 
 },
 
-battleMenu: {"": "Layer;_game,_gameState,_monster,_background,_bgDirty,bgRect,_liblib2$_state,_HpBarTextWriter,HpbarBox,pad,gap,_heroBattler,_monsterBattler,_BattlersQueue,_tasks",
+battleMenu: {"": "Layer;_game,_gameState,_monster,_background,_bgDirty,bgRect,_liblib2$_state,_HpBarTextWriter,HpbarBox,pad,gap,_heroBattler,_monsterBattler,_BattlersQueue,_tasks,rng",
   IsHeroStartFirst$0: function() {
-    var heroOdd, monsOdd, t1, t2;
-    heroOdd = C.C__Random.nextInt$1(255);
-    monsOdd = C.C__Random.nextInt$1(255);
+    var t1, heroOdd, monsOdd, t2;
+    t1 = this.rng;
+    heroOdd = t1.nextInt$1(255);
+    monsOdd = t1.nextInt$1(255);
     t1 = this._heroBattler;
     t1.get$Agility;
     t1 = $.$mul$n(t1._AGI, heroOdd);
@@ -2242,22 +2197,21 @@ battleMenu: {"": "Layer;_game,_gameState,_monster,_background,_bgDirty,bgRect,_l
     t1 = C.JSString_methods.$add(t2, ";;MP:" + this.formatNumber$1(t1._MP) + " ");
     t2 = this._gameState;
     t2.get$heroLevel;
-    t2._stats;
-    msg = C.JSString_methods.$add(t1, ";;Lv:" + this.formatNumber$1(20));
-    t1 = this._HpBarTextWriter;
-    t1.set$MessageToWrite;
-    t1._msgToWrite = msg.split(" ");
-    t1 = this.HpbarBox;
-    t2 = t1.left;
-    t3 = t1.top;
-    t4 = t1.width;
-    t1 = t1.height;
-    ctx.clearRect(t2, t3, t4, t1);
+    msg = C.JSString_methods.$add(t1, ";;Lv:" + this.formatNumber$1(t2._stats._Level));
+    t2 = this._HpBarTextWriter;
+    t2.set$MessageToWrite;
+    t2._msgToWrite = msg.split(" ");
+    t2 = this.HpbarBox;
+    t1 = t2.left;
+    t3 = t2.top;
+    t4 = t2.width;
+    t2 = t2.height;
+    ctx.clearRect(t1, t3, t4, t2);
     ctx.fillStyle = "#EEEEEE";
-    ctx.fillRect(t2, t3, t4, t1);
+    ctx.fillRect(t1, t3, t4, t2);
     ctx.fillStyle = "#222222";
     t5 = this.pad;
-    ctx.fillRect($.$add$ns(t2, t5), $.$add$ns(t3, t5), $.$sub$n($.$sub$n(t4, t5), t5), $.$sub$n($.$sub$n(t1, t5), t5));
+    ctx.fillRect($.$add$ns(t1, t5), $.$add$ns(t3, t5), $.$sub$n($.$sub$n(t4, t5), t5), $.$sub$n($.$sub$n(t2, t5), t5));
     this._HpBarTextWriter.WriteAll$1(ctx);
   },
   draw$1: function(ctx) {
@@ -2311,7 +2265,7 @@ battleMenu: {"": "Layer;_game,_gameState,_monster,_background,_bgDirty,bgRect,_l
   cleanup$0: function() {
   },
   IsSomeoneKO$0: function() {
-    var t1, tk, ko, t2, t3, t4, grows;
+    var t1, tk, ko, t2, t3, t4, grows, spellName;
     t1 = this._heroBattler;
     t1.get$HP;
     if ($.$le$n(t1._HP, 0)) {
@@ -2346,31 +2300,60 @@ battleMenu: {"": "Layer;_game,_gameState,_monster,_background,_bgDirty,bgRect,_l
         t3._game = t4;
         t3._msg = [t2];
         t1.push(t3);
+        t3 = this._game.get$gameState();
+        t3.get$Stats;
+        t3 = t3._stats;
+        t2 = this._heroBattler;
+        t2.get$HP;
+        t3._HP = t2._HP;
+        t2 = this._game.get$gameState();
+        t2.get$Stats;
+        t2 = t2._stats;
         t3 = this._heroBattler;
-        t3.get$Exp;
-        t2 = t3._EXP;
+        t3.get$MP;
+        t2._MP = t3._MP;
+        t3 = this._game.get$gameState();
+        t3.get$Stats;
+        t3 = t3._stats;
+        t2 = t3.Gold;
         t4 = this._monsterBattler;
-        t4.get$Exp;
-        t4 = $.$add$ns(t2, t4._EXP);
-        t3.set$Exp;
-        t3._EXP = t4;
+        t4.get$Gp;
+        t4 = t4._GP;
+        if (t2 == null)
+          throw t2.$add();
+        t3.Gold = t2 + t4;
         t2 = this._game.get$gameState();
         t2.get$Stats;
         t2 = t2._stats;
         t3 = this._monsterBattler;
         t3.get$Exp;
-        if (!t2.IncrementEXP$1(t3._EXP)) {
+        if (t2.IncrementEXP$1(t3._EXP)) {
           t2 = this._game.get$gameState();
           t2.get$Stats;
           grows = t2._stats.OnLevelUp$0();
           t2 = this._game;
           t3 = t2.get$gameState();
           t3.get$heroLevel;
-          t3._stats;
-          t3 = new $.AnnotateTask(null, null);
-          t3._game = t2;
-          t3._msg = ["You have gained level 20!"];
-          t1.push(t3);
+          t3 = "You have gained level " + $.S(t3._stats._Level) + "!";
+          t4 = new $.AnnotateTask(null, null);
+          t4._game = t2;
+          t4._msg = [t3];
+          t1.push(t4);
+          t2 = $.get$stats_SpellsTable();
+          t3 = this._game.get$gameState();
+          t3.get$heroLevel;
+          if (t2.containsKey$1($.S(t3._stats._Level))) {
+            t2 = $.get$stats_SpellsTable();
+            t3 = this._game.get$gameState();
+            t3.get$heroLevel;
+            spellName = t2.$index(t2, $.S(t3._stats._Level));
+            t3 = this._game;
+            t2 = "Your have learned " + $.S(spellName) + "!";
+            t4 = new $.AnnotateTask(null, null);
+            t4._game = t3;
+            t4._msg = [t2];
+            t1.push(t4);
+          }
           if (0 >= grows.length)
             throw $.ioore(0);
           t2 = grows[0];
@@ -2398,7 +2381,7 @@ battleMenu: {"": "Layer;_game,_gameState,_monster,_background,_bgDirty,bgRect,_l
           t2 = grows[2];
           if ($.$gt$n(t2, 0)) {
             t3 = this._game;
-            t2 = "Your HP is incremented by " + $.S(t2) + ".";
+            t2 = "Your Max HP is incremented by " + $.S(t2) + ".";
             t4 = new $.AnnotateTask(null, null);
             t4._game = t3;
             t4._msg = [t2];
@@ -2409,7 +2392,7 @@ battleMenu: {"": "Layer;_game,_gameState,_monster,_background,_bgDirty,bgRect,_l
           t2 = grows[3];
           if ($.$gt$n(t2, 0)) {
             t3 = this._game;
-            t2 = "Your MP is incremented by " + $.S(t2) + ".";
+            t2 = "Your Max MP is incremented by " + $.S(t2) + ".";
             t4 = new $.AnnotateTask(null, null);
             t4._game = t3;
             t4._msg = [t2];
@@ -2422,8 +2405,24 @@ battleMenu: {"": "Layer;_game,_gameState,_monster,_background,_bgDirty,bgRect,_l
     }
     return ko;
   },
+  IsSomeoneFlee$0: function() {
+    var t1 = this._heroBattler;
+    t1.get$IsFlee;
+    if (t1._isFlee) {
+      this._liblib2$_state = "PlayerLose_State";
+      return true;
+    } else {
+      t1 = this._monsterBattler;
+      t1.get$IsFlee;
+      if (t1._isFlee) {
+        this._liblib2$_state = "PlayerWin_State";
+        return true;
+      }
+    }
+    return false;
+  },
   update$1: function(delta) {
-    var t1, t2, t3, t4;
+    var t1, t2, t3, t4, max;
     t1 = this._tasks;
     t2 = t1.length;
     if (t2 !== 0) {
@@ -2464,17 +2463,49 @@ battleMenu: {"": "Layer;_game,_gameState,_monster,_background,_bgDirty,bgRect,_l
       case "FirstThinking_State":
         if (this.IsSomeoneKO$0())
           break;
+        if (this.IsSomeoneFlee$0())
+          break;
         t2 = this._BattlersQueue;
         t3 = t2.length;
         if (0 >= t3)
           throw $.ioore(0);
         t4 = t2[0];
-        if (t4.IsHero$0()) {
+        if (t4.get$IsSleeping()) {
+          max = 100;
+          t2 = Math.random() * max >>> 0;
+          t3 = this._BattlersQueue;
+          if (0 >= t3.length)
+            throw $.ioore(0);
+          t3 = t3[0];
+          t4 = t3.get$sleepingChance();
+          if (typeof t4 !== "number")
+            throw $.iae(t4);
+          if (t2 < t4) {
+            t3.set$sleepingChance(C.JSNumber_methods.$tdiv(t4, 2));
+            t2 = this._game;
+            t3 = this._BattlersQueue;
+            if (0 >= t3.length)
+              throw $.ioore(0);
+            t3 = $.S($.get$name$x(t3[0])) + " is sleeping!";
+            t4 = new $.AnnotateTask(null, null);
+            t4._game = t2;
+            t4._msg = [t3];
+            t1.push(t4);
+          } else {
+            t2 = this._game;
+            t3 = $.S($.get$name$x(t3)) + " wakes up!";
+            t4 = new $.AnnotateTask(null, null);
+            t4._game = t2;
+            t4._msg = [t3];
+            t1.push(t4);
+          }
+          this._liblib2$_state = "SecondThinking_State";
+        } else if (t4.IsHero$0()) {
           t1 = this._game;
           t2 = new $.BattleCmdMenu(null, null, null, new $.Rect(32, 264, 154, 88), null);
           t2._game = t1;
           t2._battleMenu = this;
-          t2._decisionBox = $.DecisionBox$fromList(t2._game, t2.CmdBarBox, [["Fight", null], ["Flee", null], ["Spell", null], ["Item", null]]);
+          t2._decisionBox = $.DecisionBox$fromList(t2._game, t2.CmdBarBox, [["Fight", null], ["Flee", null], ["Spell", null], ["Item", null]], false);
           t3 = new $.PushRequest(null, null, null);
           t3._game = t1;
           t3._pushLayer = t2;
@@ -2490,16 +2521,48 @@ battleMenu: {"": "Layer;_game,_gameState,_monster,_background,_bgDirty,bgRect,_l
       case "SecondThinking_State":
         if (this.IsSomeoneKO$0())
           break;
+        if (this.IsSomeoneFlee$0())
+          break;
         t2 = this._BattlersQueue;
         if (1 >= t2.length)
           throw $.ioore(1);
         t3 = t2[1];
-        if (t3.IsHero$0()) {
+        if (t3.get$IsSleeping()) {
+          max = 100;
+          t2 = Math.random() * max >>> 0;
+          t3 = this._BattlersQueue;
+          if (1 >= t3.length)
+            throw $.ioore(1);
+          t3 = t3[1];
+          t4 = t3.get$sleepingChance();
+          if (typeof t4 !== "number")
+            throw $.iae(t4);
+          if (t2 < t4) {
+            t3.set$sleepingChance(C.JSNumber_methods.$tdiv(t4, 2));
+            t2 = this._game;
+            t3 = this._BattlersQueue;
+            if (1 >= t3.length)
+              throw $.ioore(1);
+            t3 = $.S($.get$name$x(t3[1])) + " is sleeping!";
+            t4 = new $.AnnotateTask(null, null);
+            t4._game = t2;
+            t4._msg = [t3];
+            t1.push(t4);
+          } else {
+            t2 = this._game;
+            t3 = $.S($.get$name$x(t3)) + " wakes up!";
+            t4 = new $.AnnotateTask(null, null);
+            t4._game = t2;
+            t4._msg = [t3];
+            t1.push(t4);
+          }
+          this._liblib2$_state = "SecondThinking_State";
+        } else if (t3.IsHero$0()) {
           t1 = this._game;
           t2 = new $.BattleCmdMenu(null, null, null, new $.Rect(32, 264, 154, 88), null);
           t2._game = t1;
           t2._battleMenu = this;
-          t2._decisionBox = $.DecisionBox$fromList(t2._game, t2.CmdBarBox, [["Fight", null], ["Flee", null], ["Spell", null], ["Item", null]]);
+          t2._decisionBox = $.DecisionBox$fromList(t2._game, t2.CmdBarBox, [["Fight", null], ["Flee", null], ["Spell", null], ["Item", null]], false);
           t3 = new $.PushRequest(null, null, null);
           t3._game = t1;
           t3._pushLayer = t2;
@@ -2554,38 +2617,9 @@ battleMenu: {"": "Layer;_game,_gameState,_monster,_background,_bgDirty,bgRect,_l
       default:
     }
   },
-  battleMenu$3$background$monster: function(game, background, monster) {
-    var t1, t2, t3, t4, t5, t6;
-    this._game = game;
-    this._gameState = game.get$gameState();
-    this._background = background;
-    this._monster = monster;
-    this._heroBattler = game.get$gameState().createHeroBattler$0();
-    this._monsterBattler = game.createMonsterBattler$1(monster);
-    t1 = this.HpbarBox;
-    t2 = this.pad;
-    t3 = this.gap;
-    t4 = $.$add$ns($.$add$ns(t1.left, t2), t3);
-    t5 = $.$add$ns($.$add$ns(t1.top, t2), t3);
-    t6 = $.$sub$n($.$sub$n(t1.width, t2), t3);
-    t3 = $.$sub$n($.$sub$n(t1.height, t2), t3);
-    t2 = new $.TextWriter2(null, 1, 5, 5, 5, 5, 1, 2, 1, "Left", true, $.makeLiteralMap([]), true, null, 0, 16, 16, null, null, [], []);
-    t2.setupCharIndices$0();
-    t2._drawingRect = new $.Rect(t4, t5, t6, t3);
-    t2.NewPage$0();
-    this._HpBarTextWriter = t2;
-    t2 = this._HpBarTextWriter;
-    t2.set$AutoNewline;
-    t2._autoNewline = false;
-    this._HpBarTextWriter.set$color("#EEEEEE");
-  },
   static: {
 "": "battleMenu_dstPx,battleMenu_dstPy,battleMenu_srcWidth,battleMenu_srcHeight,battleMenu_dstWidth,battleMenu_dstHeight,battleMenu_STATE_TEST,battleMenu_STATE_BEGIN,battleMenu_STATE_FIRST_THINKING,battleMenu_STATE_SECOND_THINKING,battleMenu_STATE_PLAYER_WIN,battleMenu_STATE_PLAYER_LOSE,battleMenu_STATE_PLAYER_FLEE,battleMenu_STATE_MONS_FLEE",
-battleMenu$: function(game, background, monster) {
-  var t1 = new $.battleMenu(null, null, null, null, true, new $.Rect(187, 85, 266, 234), "Begin_State", null, new $.Rect(32, 32, 122, 160), 5, 1, null, null, null, []);
-  t1.battleMenu$3$background$monster(game, background, monster);
-  return t1;
-}}
+}
 
 },
 
@@ -2625,7 +2659,7 @@ BattleSpellMenu: {"": "Layer;_game,_battleMenu,_decisionBox,spellCmdBox,_choosen
     }
   },
   OnKeyboardDown$1: function(e) {
-    var t1, t2, selectedItem, t3, t4;
+    var t1, t2, selectedItem, t3, t4, t5;
     switch ($.get$keyCode$x(e)) {
       case 37:
         break;
@@ -2650,8 +2684,11 @@ BattleSpellMenu: {"": "Layer;_game,_battleMenu,_decisionBox,spellCmdBox,_choosen
         t3 = this._game;
         t4 = t3.get$gameState();
         t4.get$heroMP;
-        t4._stats;
-        if ($.$gt$n(t2, 100)) {
+        t4 = t4._stats;
+        t5 = t4._Level;
+        if (t5 == null)
+          throw t5.$lt();
+        if ($.$gt$n(t2, t5 < 3 ? 0 : t4._MP)) {
           t1 = $.MsgBox$(t3, "You do not have enough MP to cast this spell!", null, true);
           t2 = new $.PushRequest(null, null, null);
           t2._game = t3;
@@ -2783,7 +2820,7 @@ BattleSpellMenu: {"": "Layer;_game,_battleMenu,_decisionBox,spellCmdBox,_choosen
         items.push([$.S(spell), spellCost]);
       }
     }
-    this._decisionBox = $.DecisionBox$fromList(this._game, this.spellCmdBox, items);
+    this._decisionBox = $.DecisionBox$fromList(this._game, this.spellCmdBox, items, false);
   },
   static: {
 BattleSpellMenu$: function(game, menu, spells) {
@@ -2815,7 +2852,7 @@ AnnotateTask: {"": "BattleTask;_game,_msg",
     msg = t1[0];
     C.JSArray_methods.removeAt$1(t1, 0);
     t1 = this._game;
-    t2 = $.MsgBox$(t1, msg, null, false);
+    t2 = $.MsgBox$(t1, msg, null, true);
     t3 = new $.PushRequest(null, null, null);
     t3._game = t1;
     t3._pushLayer = t2;
@@ -2935,21 +2972,19 @@ Layer: {"": "Object;",
   }
 },
 
-DecisionBox: {"": "Layer;_game,_TextWriter,_guiCanvas,_guiCtx,gap,pad,_drawingBox,_liblib2$_state,_waitingCounter,_currentBGColor,isCursorVisible,_items,_cursorIndex,_lastCursorIndex,_bgDirty,_msg",
+DecisionBox: {"": "Layer;_game,_TextWriter,_guiCanvas,_guiCtx,gap,pad,_drawingBox,_liblib2$_state,_waitingCounter,_currentBGColor,isCursorVisible,_items,_cursorIndex,_lastCursorIndex,_bgDirty,_msg,_allowCancel",
   setDirty$0: function() {
     this._bgDirty = true;
   },
   drawBorder$1: function(ctx) {
-    var t1, t2;
-    t1 = this._drawingBox;
+    var t1 = this._drawingBox;
     ctx.clearRect(t1.left, t1.top, t1.width, t1.height);
     ctx.fillStyle = this._currentBGColor;
     t1 = this._drawingBox;
     ctx.fillRect(t1.left, t1.top, t1.width, t1.height);
     ctx.fillStyle = "#222222";
-    t1 = this._drawingBox;
-    t2 = this.pad;
-    ctx.fillRect($.$add$ns(t1.left, t2), $.$add$ns(t1.top, t2), $.$sub$n($.$sub$n(t1.width, t2), t2), $.$sub$n($.$sub$n(t1.height, t2), t2));
+    t1 = this.pad;
+    ctx.fillRect($.$add$ns(this._drawingBox.left, t1), $.$add$ns(this._drawingBox.top, t1), $.$sub$n($.$sub$n(this._drawingBox.width, t1), t1), $.$sub$n($.$sub$n(this._drawingBox.height, t1), t1));
   },
   draw$1: function(ctx) {
     var t1, t2, py, px, t3;
@@ -2959,7 +2994,7 @@ DecisionBox: {"": "Layer;_game,_TextWriter,_guiCanvas,_guiCtx,gap,pad,_drawingBo
       this.drawBorder$1(this._guiCtx);
       t1 = this._TextWriter;
       t1.NewPage$0;
-      t2 = t1._drawingRect.get$left();
+      t2 = $.get$left$x(t1._drawingRect);
       if (typeof t2 !== "number")
         return this.draw$1$bailout1(1, t1, t2);
       t1._nx = t2 + t1._leftPadding;
@@ -2978,15 +3013,15 @@ DecisionBox: {"": "Layer;_game,_TextWriter,_guiCanvas,_guiCtx,gap,pad,_drawingBo
       return;
     this._waitingCounter = 0;
     py = this._TextWriter.getPyByRow$1(this._cursorIndex);
-    t1 = this._TextWriter;
-    t2 = t1.getPxByIndex$1(0);
-    if (typeof t2 !== "number")
-      return this.draw$1$bailout1(3, t1, t2, py);
-    t1.get$fontWidth;
-    px = t2 - t1._fontWidth;
-    t2 = this.isCursorVisible;
+    t1 = this._TextWriter.getPxByIndex$1(0);
+    if (typeof t1 !== "number")
+      return this.draw$1$bailout1(3, t1, 0, py);
+    t2 = this._TextWriter;
+    t2.get$fontWidth;
+    px = t1 - t2._fontWidth;
+    t1 = this.isCursorVisible;
     t3 = this._guiCtx;
-    if (t2) {
+    if (t1) {
       t3.fillStyle = "#222222";
       t1 = this._guiCtx;
       t2 = this._TextWriter;
@@ -2996,8 +3031,8 @@ DecisionBox: {"": "Layer;_game,_TextWriter,_guiCanvas,_guiCtx,gap,pad,_drawingBo
       t1.fillRect(px, py, t3, t2._fontHeight);
       this.isCursorVisible = false;
     } else {
-      t1.get$scale;
-      t1.DrawChar$5(t3, ">", px, py, t1._scale);
+      t2.get$scale;
+      t2.DrawChar$5(t3, ">", px, py, t2._scale);
       this.isCursorVisible = true;
     }
   },
@@ -3013,7 +3048,7 @@ DecisionBox: {"": "Layer;_game,_TextWriter,_guiCanvas,_guiCtx,gap,pad,_drawingBo
               this.drawBorder$1(this._guiCtx);
               t1 = this._TextWriter;
               t1.NewPage$0;
-              t2 = t1._drawingRect.get$left();
+              t2 = $.get$left$x(t1._drawingRect);
             case 1:
               state0 = 0;
               t1._nx = $.$add$ns(t2, t1._leftPadding);
@@ -3032,17 +3067,17 @@ DecisionBox: {"": "Layer;_game,_TextWriter,_guiCanvas,_guiCtx,gap,pad,_drawingBo
           return;
         this._waitingCounter = 0;
         py = this._TextWriter.getPyByRow$1(this._cursorIndex);
-        t1 = this._TextWriter;
-        t2 = t1.getPxByIndex$1(0);
+        t1 = this._TextWriter.getPxByIndex$1(0);
       case 3:
         var px, t3;
         state0 = 0;
-        t1.get$fontWidth;
-        px = $.$sub$n(t2, t1._fontWidth);
-        t2 = this.isCursorVisible;
-        t3 = this._guiCtx;
-        if (t2) {
-          t3.fillStyle = "#222222";
+        t2 = this._TextWriter;
+        t2.get$fontWidth;
+        px = $.$sub$n(t1, t2._fontWidth);
+        t1 = this.isCursorVisible;
+        t2 = this._guiCtx;
+        if (t1) {
+          t2.fillStyle = "#222222";
           t1 = this._guiCtx;
           t2 = this._TextWriter;
           t2.get$fontWidth;
@@ -3051,8 +3086,9 @@ DecisionBox: {"": "Layer;_game,_TextWriter,_guiCanvas,_guiCtx,gap,pad,_drawingBo
           t1.fillRect(px, py, t3, t2._fontHeight);
           this.isCursorVisible = false;
         } else {
+          t1 = this._TextWriter;
           t1.get$scale;
-          t1.DrawChar$5(t3, ">", px, py, t1._scale);
+          t1.DrawChar$5(t2, ">", px, py, t1._scale);
           this.isCursorVisible = true;
         }
     }
@@ -3084,16 +3120,16 @@ DecisionBox: {"": "Layer;_game,_TextWriter,_guiCanvas,_guiCtx,gap,pad,_drawingBo
   clearCursor$1: function(ctx) {
     var py, t1, t2, px;
     py = this._TextWriter.getPyByRow$1(this._cursorIndex);
-    t1 = this._TextWriter;
-    t2 = t1.getPxByIndex$1(0);
-    t1.get$fontWidth;
-    px = $.$sub$n(t2, t1._fontWidth);
+    t1 = this._TextWriter.getPxByIndex$1(0);
+    t2 = this._TextWriter;
+    t2.get$fontWidth;
+    px = $.$sub$n(t1, t2._fontWidth);
     ctx.fillStyle = "#222222";
-    t1 = this._TextWriter;
-    t1.get$fontWidth;
-    t2 = t1._fontWidth;
-    t1.get$fontHeight;
-    ctx.fillRect(px, py, t2, t1._fontHeight);
+    t2 = this._TextWriter;
+    t2.get$fontWidth;
+    t1 = t2._fontWidth;
+    t2.get$fontHeight;
+    ctx.fillRect(px, py, t1, t2._fontHeight);
   },
   MoveCursorUp$0: function() {
     if (this._cursorIndex > 0) {
@@ -3143,6 +3179,22 @@ DecisionBox: {"": "Layer;_game,_TextWriter,_guiCanvas,_guiCtx,gap,pad,_drawingBo
         }
         break;
       case 67:
+        if (this._allowCancel) {
+          t1 = this._guiCtx;
+          t2 = this._drawingBox;
+          t1.clearRect(t2.left, t2.top, t2.width, t2.height);
+          t2 = this._game;
+          t1 = $.makeLiteralMap(["UserSelection", null]);
+          t3 = new $.PopRequest(null, null);
+          t3._game = t2;
+          t3._activateParams = t1;
+          t2.AddRequest$1(t3);
+          t3 = this._game;
+          t2 = new $.RedrawRequest(null);
+          t2._game = t3;
+          t3.AddRequest$1(t2);
+          this._liblib2$_state = "STATE_DONE";
+        }
         break;
       default:
     }
@@ -3164,25 +3216,25 @@ DecisionBox: {"": "Layer;_game,_TextWriter,_guiCanvas,_guiCtx,gap,pad,_drawingBo
       default:
     }
   },
-  DecisionBox$fromList$3: function(game, box, items) {
-    var t1, t2, t3, t4, t5, t6, isFirst, msg, item;
+  DecisionBox$fromList$4$allowCancel: function(game, box, items, allowCancel) {
+    var t1, t2, t3, t4, t5, isFirst, msg, item;
     this._game = game;
     this._guiCanvas = game.get$guiCanvas();
     this._guiCtx = game.get$guiCanvasCtx();
     this._items = items;
+    this._allowCancel = allowCancel;
     this._drawingBox = box;
-    t1 = this._drawingBox;
-    t2 = this.pad;
-    t3 = this.gap;
-    t4 = $.$add$ns($.$add$ns(t1.left, t2), t3);
-    t5 = $.$add$ns($.$add$ns(t1.top, t2), t3);
-    t6 = $.$sub$n($.$sub$n(t1.width, t2), t3);
-    t3 = $.$sub$n($.$sub$n(t1.height, t2), t3);
-    t2 = new $.TextWriter2(null, 1, 5, 5, 5, 5, 1, 2, 1, "Left", true, $.makeLiteralMap([]), true, null, 0, 16, 16, null, null, [], []);
-    t2.setupCharIndices$0();
-    t2._drawingRect = new $.Rect(t4, t5, t6, t3);
-    t2.NewPage$0();
-    this._TextWriter = t2;
+    t1 = this.pad;
+    t2 = this.gap;
+    t3 = $.$add$ns($.$add$ns(this._drawingBox.left, t1), t2);
+    t4 = $.$add$ns($.$add$ns(this._drawingBox.top, t1), t2);
+    t5 = $.$sub$n($.$sub$n(this._drawingBox.width, t1), t2);
+    t2 = $.$sub$n($.$sub$n(this._drawingBox.height, t1), t2);
+    t1 = new $.TextWriter2(null, 1, 5, 5, 5, 5, 1, 2, 1, "Left", true, $.makeLiteralMap([]), true, null, 0, 16, 16, null, null, [], []);
+    t1.setupCharIndices$0();
+    t1._drawingRect = new $.Rect(t3, t4, t5, t2);
+    t1.NewPage$0();
+    this._TextWriter = t1;
     for (t1 = new $.ListIterator(items, items.length, 0, null), isFirst = true, msg = ""; t1.moveNext$0();) {
       item = t1._liblib$_current;
       t2 = $.getInterceptor$asx(item);
@@ -3228,15 +3280,24 @@ DecisionBox_GetYesNoMsgBoxRect: function() {
   return new $.Rect(480, 128, 96, 56);
 },
 
-DecisionBox$fromList: function(game, box, items) {
-  var t1 = new $.DecisionBox(null, null, null, null, 2, 5, null, "STATE_IDLE", 0, "#EEEEEE", false, null, 0, -1, true, null);
-  t1.DecisionBox$fromList$3(game, box, items);
+DecisionBox$fromList: function(game, box, items, allowCancel) {
+  var t1 = new $.DecisionBox(null, null, null, null, 2, 5, null, "STATE_IDLE", 0, "#EEEEEE", false, null, 0, -1, true, null, false);
+  t1.DecisionBox$fromList$4$allowCancel(game, box, items, allowCancel);
   return t1;
 }}
 
 },
 
-YesNoMsgBox: {"": "MsgBox;_yesMsg,_noMsg,isFirstMsg,_game,_TextWriter,_guiCanvas,_guiCtx,width,height,px,py,gap,pad,_liblib2$_state,_waitingCounter,_waitingTime,_currentBGColor,nextIconPx,nextIconPy,isCursorVisible,_selfDismiss,_waitingToDismissTime,_onCompleteMsgHandler",
+YesNoMsgBox: {"": "MsgBox;_yesMsg,_noMsg,isFirstMsg,_yesHandler,_noHandler,_bgDirty,_game,_TextWriter,_guiCanvas,_guiCtx,width,height,px,py,gap,pad,_liblib2$_state,_waitingCounter,_waitingTime,_currentBGColor,nextIconPx,nextIconPy,isCursorVisible,_selfDismiss,_waitingToDismissTime,_onCompleteMsgHandler",
+  _yesHandler$1: function(arg0) {
+    return this._yesHandler.call$1(arg0);
+  },
+  _noHandler$1: function(arg0) {
+    return this._noHandler.call$1(arg0);
+  },
+  setDirty$0: function() {
+    this._bgDirty = true;
+  },
   draw$1: function(ctx) {
     var t1, t2, t3, t4, t5, isEndOfLine;
     t1 = this._liblib2$_state;
@@ -3249,8 +3310,10 @@ YesNoMsgBox: {"": "MsgBox;_yesMsg,_noMsg,isFirstMsg,_game,_TextWriter,_guiCanvas
       if (this._waitingCounter < 250)
         return;
       this._waitingCounter = 0;
-      if (this.isCursorVisible) {
-        $.set$fillStyle$x(ctx, "#222222");
+      t1 = this.isCursorVisible;
+      t2 = this._guiCtx;
+      if (t1) {
+        t2.fillStyle = "#222222";
         t1 = this._guiCtx;
         t2 = this.nextIconPx;
         t3 = this.nextIconPy;
@@ -3262,13 +3325,17 @@ YesNoMsgBox: {"": "MsgBox;_yesMsg,_noMsg,isFirstMsg,_game,_TextWriter,_guiCanvas
         this.isCursorVisible = false;
       } else {
         t1 = this._TextWriter;
-        t2 = this._guiCtx;
         t3 = this.nextIconPx;
         t4 = this.nextIconPy;
         t1.get$scale;
         t1.DrawChar$5(t2, "~", t3, t4, t1._scale);
         this.isCursorVisible = true;
       }
+      return;
+    }
+    if (t1 === "STATE_WAIT_DECISION") {
+      this.drawBorder$1(this._guiCtx);
+      this._liblib2$_state = "STATE_WRITING_2";
       return;
     }
     if (this._waitingCounter < this._waitingTime)
@@ -3280,37 +3347,38 @@ YesNoMsgBox: {"": "MsgBox;_yesMsg,_noMsg,isFirstMsg,_game,_TextWriter,_guiCanvas
     } else {
       t1 = this._TextWriter;
       t1.isFinish$0;
-      t2 = t1._msgToWrite.length === 0;
-      if (t2 && t1._charToWrite.length === 0)
+      if (t1._msgToWrite.length === 0 && t1._charToWrite.length === 0)
         if (this.isFirstMsg) {
           t1 = this._game;
-          t2 = $.DecisionBox$fromList(t1, $.DecisionBox_GetYesNoMsgBoxRect(), [["Yes", this._yesMsg], ["No", this._noMsg]]);
+          t2 = $.DecisionBox$fromList(t1, $.DecisionBox_GetYesNoMsgBoxRect(), [["Yes", this._yesMsg], ["No", this._noMsg]], false);
           t3 = new $.PushRequest(null, null, null);
           t3._game = t1;
           t3._pushLayer = t2;
           t3._params = null;
           t1.AddRequest$1(t3);
           this._liblib2$_state = "STATE_WAIT_DECISION";
-        } else
+        } else if (!this._selfDismiss)
+          this._liblib2$_state = "STATE_DONE";
+        else
           this._liblib2$_state = "STATE_WAIT_TO_DISMISS";
       else {
         t1.isEndPage$0;
-        t3 = t1._ny;
+        t2 = t1._ny;
+        if (typeof t2 !== "number")
+          return this.draw$1$bailout2(1, t1, t2);
+        t2 += t1._fontHeight;
+        t3 = $.get$bottom$x(t1._drawingRect);
         if (typeof t3 !== "number")
-          return this.draw$1$bailout2(1, t1, t2, t3);
-        t3 += t1._fontHeight;
-        t4 = t1._drawingRect.get$bottom();
-        if (typeof t4 !== "number")
-          return this.draw$1$bailout2(2, t1, t2, t3, t4);
-        isEndOfLine = t3 >= t4 - t1._bottomPadding;
-        if (t2 && t1._charToWrite.length === 0 || isEndOfLine)
+          return this.draw$1$bailout2(2, t1, t2, t3);
+        isEndOfLine = t2 >= t3 - t1._bottomPadding;
+        if (t1._msgToWrite.length === 0 && t1._charToWrite.length === 0 || isEndOfLine)
           this._liblib2$_state = "STATE_WAIT_NEXT_PAGE";
         else
-          t1.WriteNextChar$1(this._guiCtx);
+          this._TextWriter.WriteNextChar$1(this._guiCtx);
       }
     }
   },
-  draw$1$bailout2: function(state0, t1, t2, t3, t4) {
+  draw$1$bailout2: function(state0, t1, t2, t3) {
     switch (state0) {
       case 0:
         t1 = this._liblib2$_state;
@@ -3323,8 +3391,10 @@ YesNoMsgBox: {"": "MsgBox;_yesMsg,_noMsg,isFirstMsg,_game,_TextWriter,_guiCanvas
           if (this._waitingCounter < 250)
             return;
           this._waitingCounter = 0;
-          if (this.isCursorVisible) {
-            $.set$fillStyle$x(ctx, "#222222");
+          t1 = this.isCursorVisible;
+          t2 = this._guiCtx;
+          if (t1) {
+            t2.fillStyle = "#222222";
             t1 = this._guiCtx;
             t2 = this.nextIconPx;
             t3 = this.nextIconPy;
@@ -3336,7 +3406,6 @@ YesNoMsgBox: {"": "MsgBox;_yesMsg,_noMsg,isFirstMsg,_game,_TextWriter,_guiCanvas
             this.isCursorVisible = false;
           } else {
             t1 = this._TextWriter;
-            t2 = this._guiCtx;
             t3 = this.nextIconPx;
             t4 = this.nextIconPy;
             t1.get$scale;
@@ -3345,11 +3414,16 @@ YesNoMsgBox: {"": "MsgBox;_yesMsg,_noMsg,isFirstMsg,_game,_TextWriter,_guiCanvas
           }
           return;
         }
+        if (t1 === "STATE_WAIT_DECISION") {
+          this.drawBorder$1(this._guiCtx);
+          this._liblib2$_state = "STATE_WRITING_2";
+          return;
+        }
         if (this._waitingCounter < this._waitingTime)
           return;
         this._waitingCounter = 0;
       default:
-        var t5, isEndOfLine;
+        var t4, t5, isEndOfLine;
         if (state0 === 0 && this._liblib2$_state === "STATE_IDLE") {
           this.drawBorder$1(this._guiCtx);
           this._liblib2$_state = "STATE_WRITING";
@@ -3358,36 +3432,37 @@ YesNoMsgBox: {"": "MsgBox;_yesMsg,_noMsg,isFirstMsg,_game,_TextWriter,_guiCanvas
             case 0:
               t1 = this._TextWriter;
               t1.isFinish$0;
-              t2 = t1._msgToWrite.length === 0;
             default:
-              if (state0 === 0 && t2 && t1._charToWrite.length === 0)
+              if (state0 === 0 && t1._msgToWrite.length === 0 && t1._charToWrite.length === 0)
                 if (this.isFirstMsg) {
                   t1 = this._game;
-                  t2 = $.DecisionBox$fromList(t1, $.DecisionBox_GetYesNoMsgBoxRect(), [["Yes", this._yesMsg], ["No", this._noMsg]]);
+                  t2 = $.DecisionBox$fromList(t1, $.DecisionBox_GetYesNoMsgBoxRect(), [["Yes", this._yesMsg], ["No", this._noMsg]], false);
                   t3 = new $.PushRequest(null, null, null);
                   t3._game = t1;
                   t3._pushLayer = t2;
                   t3._params = null;
                   t1.AddRequest$1(t3);
                   this._liblib2$_state = "STATE_WAIT_DECISION";
-                } else
+                } else if (!this._selfDismiss)
+                  this._liblib2$_state = "STATE_DONE";
+                else
                   this._liblib2$_state = "STATE_WAIT_TO_DISMISS";
               else
                 switch (state0) {
                   case 0:
                     t1.isEndPage$0;
-                    t3 = t1._ny;
+                    t2 = t1._ny;
                   case 1:
                     state0 = 0;
-                    t3 = $.$add$ns(t3, t1._fontHeight);
-                    t4 = t1._drawingRect.get$bottom();
+                    t2 = $.$add$ns(t2, t1._fontHeight);
+                    t3 = $.get$bottom$x(t1._drawingRect);
                   case 2:
                     state0 = 0;
-                    isEndOfLine = $.$ge$n(t3, $.$sub$n(t4, t1._bottomPadding));
-                    if (t2 && t1._charToWrite.length === 0 || isEndOfLine)
+                    isEndOfLine = $.$ge$n(t2, $.$sub$n(t3, t1._bottomPadding));
+                    if (t1._msgToWrite.length === 0 && t1._charToWrite.length === 0 || isEndOfLine)
                       this._liblib2$_state = "STATE_WAIT_NEXT_PAGE";
                     else
-                      t1.WriteNextChar$1(this._guiCtx);
+                      this._TextWriter.WriteNextChar$1(this._guiCtx);
                 }
           }
     }
@@ -3397,11 +3472,17 @@ YesNoMsgBox: {"": "MsgBox;_yesMsg,_noMsg,isFirstMsg,_game,_TextWriter,_guiCanvas
     if (this._liblib2$_state === "STATE_WAIT_DECISION")
       if (args != null && args.containsKey$1("UserSelection")) {
         item = args.$index(args, "UserSelection");
+        t1 = $.getInterceptor$asx(item);
+        if ($.$eq(t1.$index(item, 0), "Yes")) {
+          if (this._yesHandler != null)
+            this._yesHandler$1(this._game);
+        } else if (this._noHandler != null)
+          this._noHandler$1(this._game);
         this.drawBorder$1(this._guiCtx);
-        t1 = this._TextWriter;
-        t2 = $.$index$asx(item, 1);
-        t1.set$MessageToWrite;
-        t1._msgToWrite = $.split$1$s(t2, " ");
+        t2 = this._TextWriter;
+        t1 = t1.$index(item, 1);
+        t2.set$MessageToWrite;
+        t2._msgToWrite = $.split$1$s(t1, " ");
         this._TextWriter.NewPage$0();
         this.isFirstMsg = false;
       }
@@ -3479,7 +3560,22 @@ YesNoMsgBox: {"": "MsgBox;_yesMsg,_noMsg,isFirstMsg,_game,_TextWriter,_guiCanvas
         break;
       default:
     }
-  }
+  },
+  YesNoMsgBox$7$initMsg$noHandler$noMsg$selfDismissOnFinish$yesHandler$yesMsg: function(game, initMsg, noHandler, noMsg, selfDismissOnFinish, yesHandler, yesMsg) {
+    this._yesMsg = yesMsg;
+    this._noMsg = noMsg;
+    this._yesHandler = yesHandler;
+    this._noHandler = noHandler;
+    this.isFirstMsg = true;
+  },
+  static: {
+YesNoMsgBox$: function(game, initMsg, noHandler, noMsg, selfDismissOnFinish, yesHandler, yesMsg) {
+  var t1 = new $.YesNoMsgBox(null, null, null, null, null, true, null, null, null, null, 512, 152, 64, 320, 2, 5, "STATE_IDLE", 0, 5, "#EEEEEE", null, null, false, false, 500, null);
+  t1.MsgBox$4$onCompleteMsgHandler$selfDismissOnFinish(game, initMsg, null, selfDismissOnFinish);
+  t1.YesNoMsgBox$7$initMsg$noHandler$noMsg$selfDismissOnFinish$yesHandler$yesMsg(game, initMsg, noHandler, noMsg, selfDismissOnFinish, yesHandler, yesMsg);
+  return t1;
+}}
+
 },
 
 MsgBox: {"": "Layer;_game,_TextWriter,_guiCanvas,_guiCtx,width*,height*,px,py,gap,pad,_liblib2$_state,_waitingCounter,_waitingTime,_currentBGColor,nextIconPx,nextIconPy,isCursorVisible,_selfDismiss,_waitingToDismissTime,_onCompleteMsgHandler",
@@ -3520,8 +3616,10 @@ MsgBox: {"": "Layer;_game,_TextWriter,_guiCanvas,_guiCtx,width*,height*,px,py,ga
       if (this._waitingCounter < 250)
         return;
       this._waitingCounter = 0;
-      if (this.isCursorVisible) {
-        $.set$fillStyle$x(ctx, "#222222");
+      t1 = this.isCursorVisible;
+      t2 = this._guiCtx;
+      if (t1) {
+        t2.fillStyle = "#222222";
         t1 = this._guiCtx;
         t2 = this.nextIconPx;
         t3 = this.nextIconPy;
@@ -3533,7 +3631,6 @@ MsgBox: {"": "Layer;_game,_TextWriter,_guiCanvas,_guiCtx,width*,height*,px,py,ga
         this.isCursorVisible = false;
       } else {
         t1 = this._TextWriter;
-        t2 = this._guiCtx;
         t3 = this.nextIconPx;
         t4 = this.nextIconPy;
         t1.get$scale;
@@ -3551,30 +3648,29 @@ MsgBox: {"": "Layer;_game,_TextWriter,_guiCanvas,_guiCtx,width*,height*,px,py,ga
     } else {
       t1 = this._TextWriter;
       t1.isFinish$0;
-      t2 = t1._msgToWrite.length === 0;
-      if (t2 && t1._charToWrite.length === 0)
+      if (t1._msgToWrite.length === 0 && t1._charToWrite.length === 0)
         if (this._selfDismiss)
           this._liblib2$_state = "STATE_WAIT_TO_DISMISS";
         else
           this._liblib2$_state = "STATE_DONE";
       else {
         t1.isEndPage$0;
-        t3 = t1._ny;
+        t2 = t1._ny;
+        if (typeof t2 !== "number")
+          return this.draw$1$bailout1(1, t1, t2);
+        t2 += t1._fontHeight;
+        t3 = $.get$bottom$x(t1._drawingRect);
         if (typeof t3 !== "number")
-          return this.draw$1$bailout1(1, t3, t1, t2);
-        t3 += t1._fontHeight;
-        t4 = t1._drawingRect.get$bottom();
-        if (typeof t4 !== "number")
-          return this.draw$1$bailout1(2, t3, t1, t2, t4);
-        isEndOfLine = t3 >= t4 - t1._bottomPadding;
-        if (t2 && t1._charToWrite.length === 0 || isEndOfLine)
+          return this.draw$1$bailout1(2, t1, t2, t3);
+        isEndOfLine = t2 >= t3 - t1._bottomPadding;
+        if (t1._msgToWrite.length === 0 && t1._charToWrite.length === 0 || isEndOfLine)
           this._liblib2$_state = "STATE_WAIT_NEXT_PAGE";
         else
-          t1.WriteNextChar$1(this._guiCtx);
+          this._TextWriter.WriteNextChar$1(this._guiCtx);
       }
     }
   },
-  draw$1$bailout1: function(state0, t3, t1, t2, t4) {
+  draw$1$bailout1: function(state0, t1, t2, t3) {
     switch (state0) {
       case 0:
         t1 = this._liblib2$_state;
@@ -3587,8 +3683,10 @@ MsgBox: {"": "Layer;_game,_TextWriter,_guiCanvas,_guiCtx,width*,height*,px,py,ga
           if (this._waitingCounter < 250)
             return;
           this._waitingCounter = 0;
-          if (this.isCursorVisible) {
-            $.set$fillStyle$x(ctx, "#222222");
+          t1 = this.isCursorVisible;
+          t2 = this._guiCtx;
+          if (t1) {
+            t2.fillStyle = "#222222";
             t1 = this._guiCtx;
             t2 = this.nextIconPx;
             t3 = this.nextIconPy;
@@ -3600,7 +3698,6 @@ MsgBox: {"": "Layer;_game,_TextWriter,_guiCanvas,_guiCtx,width*,height*,px,py,ga
             this.isCursorVisible = false;
           } else {
             t1 = this._TextWriter;
-            t2 = this._guiCtx;
             t3 = this.nextIconPx;
             t4 = this.nextIconPy;
             t1.get$scale;
@@ -3613,7 +3710,7 @@ MsgBox: {"": "Layer;_game,_TextWriter,_guiCanvas,_guiCtx,width*,height*,px,py,ga
           return;
         this._waitingCounter = 0;
       default:
-        var t5, isEndOfLine;
+        var t4, t5, isEndOfLine;
         if (state0 === 0 && this._liblib2$_state === "STATE_IDLE") {
           this.drawBorder$1(this._guiCtx);
           this._liblib2$_state = "STATE_WRITING";
@@ -3622,9 +3719,8 @@ MsgBox: {"": "Layer;_game,_TextWriter,_guiCanvas,_guiCtx,width*,height*,px,py,ga
             case 0:
               t1 = this._TextWriter;
               t1.isFinish$0;
-              t2 = t1._msgToWrite.length === 0;
             default:
-              if (state0 === 0 && t2 && t1._charToWrite.length === 0)
+              if (state0 === 0 && t1._msgToWrite.length === 0 && t1._charToWrite.length === 0)
                 if (this._selfDismiss)
                   this._liblib2$_state = "STATE_WAIT_TO_DISMISS";
                 else
@@ -3633,18 +3729,18 @@ MsgBox: {"": "Layer;_game,_TextWriter,_guiCanvas,_guiCtx,width*,height*,px,py,ga
                 switch (state0) {
                   case 0:
                     t1.isEndPage$0;
-                    t3 = t1._ny;
+                    t2 = t1._ny;
                   case 1:
                     state0 = 0;
-                    t3 = $.$add$ns(t3, t1._fontHeight);
-                    t4 = t1._drawingRect.get$bottom();
+                    t2 = $.$add$ns(t2, t1._fontHeight);
+                    t3 = $.get$bottom$x(t1._drawingRect);
                   case 2:
                     state0 = 0;
-                    isEndOfLine = $.$ge$n(t3, $.$sub$n(t4, t1._bottomPadding));
-                    if (t2 && t1._charToWrite.length === 0 || isEndOfLine)
+                    isEndOfLine = $.$ge$n(t2, $.$sub$n(t3, t1._bottomPadding));
+                    if (t1._msgToWrite.length === 0 && t1._charToWrite.length === 0 || isEndOfLine)
                       this._liblib2$_state = "STATE_WAIT_NEXT_PAGE";
                     else
-                      t1.WriteNextChar$1(this._guiCtx);
+                      this._TextWriter.WriteNextChar$1(this._guiCtx);
                 }
           }
     }
@@ -3772,14 +3868,401 @@ MsgBox: {"": "Layer;_game,_TextWriter,_guiCanvas,_guiCtx,width*,height*,px,py,ga
   },
   static: {
 MsgBox$: function(game, msg, onCompleteMsgHandler, selfDismissOnFinish) {
-  var t1 = new $.MsgBox(null, null, null, null, 512, 152, 64, 320, 2, 5, "STATE_IDLE", 0, 5, "#EEEEEE", null, null, false, false, 1000, null);
+  var t1 = new $.MsgBox(null, null, null, null, 512, 152, 64, 320, 2, 5, "STATE_IDLE", 0, 5, "#EEEEEE", null, null, false, false, 500, null);
   t1.MsgBox$4$onCompleteMsgHandler$selfDismissOnFinish(game, msg, onCompleteMsgHandler, selfDismissOnFinish);
   return t1;
 }}
 
 },
 
-HeroSprite: {"": "Object;_mapPx,_mapPy,_game,_mapData,_currSprite,_currState,_currDir",
+BuyItemListMenu: {"": "Layer;_gm,_decisionBox,_liblib2$_state,_tasks,launchItemList,isBuy",
+  whitespace$1: function(n) {
+    var str, i;
+    if (typeof n !== "number")
+      throw $.iae(n);
+    str = "";
+    i = 0;
+    for (; i < n; ++i)
+      str = C.JSString_methods.$add(str, " ");
+    return str;
+  },
+  activate$1$args: function(args) {
+  },
+  deactivate$1$args: function(args) {
+  },
+  deactivate$0: function() {
+    return this.deactivate$1$args(null);
+  },
+  setDirty$0: function() {
+    var t1 = this._decisionBox;
+    t1.setDirty$0;
+    t1._bgDirty = true;
+  },
+  cleanup$0: function() {
+    this._decisionBox.cleanup$0();
+  },
+  draw$1: function(ctx) {
+    var t1, t2;
+    t1 = this._tasks;
+    t2 = t1.length;
+    if (t2 !== 0) {
+      if (0 >= t2)
+        throw $.ioore(0);
+      t1 = t1[0];
+      t1.isComplete$0();
+      t1.draw$1(ctx);
+      return;
+    }
+    this._decisionBox.draw$1(ctx);
+  },
+  update$1: function(delta) {
+    var t1, t2;
+    t1 = this._tasks;
+    t2 = t1.length;
+    if (t2 !== 0) {
+      if (0 >= t2)
+        throw $.ioore(0);
+      t2 = t1[0];
+      t2.isComplete$0();
+      t2.update$1(delta);
+      return;
+    }
+    this._decisionBox.update$1(delta);
+    switch (this._liblib2$_state) {
+      case 2:
+        t1 = this._decisionBox;
+        t1.cleanup$0;
+        t2 = t1._guiCtx;
+        t1 = t1._drawingBox;
+        t2.clearRect(t1.left, t1.top, t1.width, t1.height);
+        t1 = this._gm;
+        t2 = new $.PopRequest(null, null);
+        t2._game = t1;
+        t2._activateParams = null;
+        t1.AddRequest$1(t2);
+        t2 = this._gm;
+        t1 = new $.RedrawRequest(null);
+        t1._game = t2;
+        t2.AddRequest$1(t1);
+        break;
+      default:
+    }
+  },
+  OnKeyboardDown$1: function(e) {
+    var t1, t2, toBuyItem, msg, t3, yesMsg;
+    switch ($.get$keyCode$x(e)) {
+      case 37:
+        break;
+      case 38:
+        this._decisionBox.MoveCursorUp$0();
+        break;
+      case 39:
+        break;
+      case 40:
+        this._decisionBox.MoveCursorDown$0();
+        break;
+      case 88:
+        t1 = this._decisionBox;
+        t1.getCurrentSelectedItem$0;
+        t2 = t1._items;
+        t1 = t1._cursorIndex;
+        if (t1 < 0 || t1 >= t2.length)
+          throw $.ioore(t1);
+        toBuyItem = $.$index$asx(t2[t1], 1);
+        t1 = this._gm;
+        t2 = t1.get$gameState();
+        t2.isInventoryFull$0;
+        if (t2._inventory.length >= t2._inventoryCapacity) {
+          msg = "The " + $.S($.get$name$x(toBuyItem)) + "...;But your bag doesn't have enough room to store this item.";
+          t1 = this._gm;
+          t2 = $.MsgBox$(t1, msg, null, true);
+          t3 = new $.PushRequest(null, null, null);
+          t3._game = t1;
+          t3._pushLayer = t2;
+          t3._params = null;
+          t1.AddRequest$1(t3);
+          this._liblib2$_state = 2;
+        } else {
+          t1 = t1.get$gameState();
+          t1.get$heroGold;
+          t1 = t1._stats.Gold;
+          t2 = toBuyItem.get$cost();
+          if (t1 == null)
+            throw t1.$le();
+          t3 = $.getInterceptor$x(toBuyItem);
+          if (t1 <= t2) {
+            msg = "The " + $.S(t3.get$name(toBuyItem)) + "...;Would you like to equip this right now?";
+            t1 = this._gm.get$gameState();
+            t1.get$heroName;
+            yesMsg = t1._stats._name + " equipped " + $.S(t3.get$name(toBuyItem));
+            t3 = this._gm;
+            t1 = t3.get$gameState();
+            t1.get$heroName;
+            t1 = $.YesNoMsgBox$(t3, msg, new $.BuyItemListMenu_OnKeyboardDown_closure(toBuyItem), "Here you go " + t1._stats._name, false, new $.BuyItemListMenu_OnKeyboardDown_closure0(toBuyItem), yesMsg);
+            t2 = new $.PushRequest(null, null, null);
+            t2._game = t3;
+            t2._pushLayer = t1;
+            t2._params = null;
+            t3.AddRequest$1(t2);
+            this._liblib2$_state = 2;
+          } else {
+            msg = "The " + $.S(t3.get$name(toBuyItem)) + "...;But you don't have enough money to purchase that.";
+            t1 = this._gm;
+            t2 = $.MsgBox$(t1, msg, null, true);
+            t3 = new $.PushRequest(null, null, null);
+            t3._game = t1;
+            t3._pushLayer = t2;
+            t3._params = null;
+            t1.AddRequest$1(t3);
+            this._liblib2$_state = 2;
+          }
+        }
+        break;
+      case 67:
+        this._liblib2$_state = 2;
+        break;
+      default:
+    }
+  },
+  OnKeyboardUp$1: function(e) {
+  },
+  BuyItemListMenu$2: function(gm, itemInfo) {
+    var itemList, t1, maxItemNameLen, horzSpace, t2, itm, cost, t3, t4, ws;
+    this._gm = gm;
+    itemList = [];
+    for (itemInfo.get$iterator, t1 = new $.ListIterator(itemInfo, itemInfo.length, 0, null), maxItemNameLen = 0; t1.moveNext$0();)
+      maxItemNameLen = $.max(maxItemNameLen, $.get$length$asx($.get$name$x(t1._liblib$_current)));
+    horzSpace = $.$add$ns(maxItemNameLen, 6);
+    for (itemInfo.get$iterator, t1 = new $.ListIterator(itemInfo, itemInfo.length, 0, null), t2 = $.getInterceptor$n(horzSpace); t1.moveNext$0();) {
+      itm = t1._liblib$_current;
+      cost = "" + itm.get$cost();
+      t3 = $.getInterceptor$x(itm);
+      t4 = $.get$length$asx(t3.get$name(itm));
+      if (typeof t4 !== "number")
+        throw $.iae(t4);
+      ws = this.whitespace$1($.$sub$n(t2.$sub(horzSpace, t4), cost.length));
+      itemList.push([$.S(t3.get$name(itm)) + ws + cost, itm]);
+    }
+    t1 = $.$mul$n(t2.$sub(horzSpace, 6), 32);
+    t2 = itemList.length;
+    this._decisionBox = $.DecisionBox$fromList(this._gm, new $.Rect(128, 160, t1, t2 * 32), itemList, false);
+  },
+  static: {
+"": "BuyItemListMenu_BUY_ACTION,BuyItemListMenu_SELL_ACTION,BuyItemListMenu_END_ACTION,BuyItemListMenu_BROWSING_STATE,BuyItemListMenu_HAS_BOUGHT_ITEM_STATE,BuyItemListMenu_DISMISSAL_STATE",
+BuyItemListMenu$: function(gm, itemInfo) {
+  var t1 = new $.BuyItemListMenu(null, null, 0, [], false, null);
+  t1.BuyItemListMenu$2(gm, itemInfo);
+  return t1;
+}}
+
+},
+
+BuyItemListMenu_OnKeyboardDown_closure0: {"": "Closure;toBuyItem_0",
+  call$1: function(gm) {
+    var t1, t2;
+    t1 = this.toBuyItem_0;
+    gm.get$gameState().AddItem$1(t1);
+    t2 = gm.get$gameState();
+    t2.get$Stats;
+    t2._stats.Equip$1(t1);
+  }
+},
+
+BuyItemListMenu_OnKeyboardDown_closure: {"": "Closure;toBuyItem_1",
+  call$1: function(gm) {
+    gm.get$gameState().AddItem$1(this.toBuyItem_1);
+  }
+},
+
+BuySellMenu: {"": "Layer;_gm,_decisionBox,_liblib2$_state,_tasks,itemInfo",
+  activate$1$args: function(args) {
+  },
+  deactivate$1$args: function(args) {
+  },
+  deactivate$0: function() {
+    return this.deactivate$1$args(null);
+  },
+  setDirty$0: function() {
+    var t1 = this._decisionBox;
+    if (t1 != null) {
+      t1.setDirty$0;
+      t1._bgDirty = true;
+    }
+  },
+  cleanup$0: function() {
+  },
+  draw$1: function(ctx) {
+    var t1, t2;
+    t1 = this._tasks;
+    t2 = t1.length;
+    if (t2 !== 0) {
+      if (0 >= t2)
+        throw $.ioore(0);
+      t2 = t1[0];
+      if (!t2.isComplete$0())
+        t2.draw$1(ctx);
+      else {
+        C.JSArray_methods.removeAt$1(t1, 0);
+        t2 = t1.length;
+        if (t2 !== 0) {
+          if (0 >= t2)
+            throw $.ioore(0);
+          t1 = t1[0];
+          t1.start$0(t1);
+        }
+      }
+      return;
+    }
+    t1 = this._decisionBox;
+    if (t1 != null)
+      t1.draw$1(ctx);
+  },
+  update$1: function(delta) {
+    var t1, t2, t3;
+    t1 = this._tasks;
+    t2 = t1.length;
+    if (t2 !== 0) {
+      if (0 >= t2)
+        throw $.ioore(0);
+      t1 = t1[0];
+      if (!t1.isComplete$0())
+        t1.update$1(delta);
+      else
+        t1.end$0();
+      return;
+    }
+    if (this._decisionBox == null)
+      this._decisionBox = $.DecisionBox$fromList(this._gm, new $.Rect(480, 128, 96, 72), [["Buy", 1], ["Sell", 2], ["End", 3]], false);
+    this._decisionBox.update$1(delta);
+    switch (this._liblib2$_state) {
+      case 0:
+        break;
+      case 1:
+        t1 = this._gm;
+        t2 = $.BuyItemListMenu$(t1, this.itemInfo);
+        t3 = new $.PushRequest(null, null, null);
+        t3._game = t1;
+        t3._pushLayer = t2;
+        t3._params = null;
+        t1.AddRequest$1(t3);
+        this._liblib2$_state = 3;
+        break;
+      case 2:
+        t1 = this._gm;
+        t2 = $.SellItemListMenu$(t1);
+        t3 = new $.PushRequest(null, null, null);
+        t3._game = t1;
+        t3._pushLayer = t2;
+        t3._params = null;
+        t1.AddRequest$1(t3);
+        this._liblib2$_state = 3;
+        break;
+      case 3:
+        t2 = new $.AnnotateTask(null, null);
+        t2._game = this._gm;
+        t2._msg = ["Would you like anything else?"];
+        t1.push(t2);
+        this._liblib2$_state = 0;
+        break;
+      default:
+    }
+  },
+  dismiss$0: function() {
+    var t1, t2;
+    this._decisionBox.cleanup$0();
+    t1 = this._gm;
+    t2 = new $.PopRequest(null, null);
+    t2._game = t1;
+    t2._activateParams = null;
+    t1.AddRequest$1(t2);
+    t2 = this._gm;
+    t1 = new $.RedrawRequest(null);
+    t1._game = t2;
+    t2.AddRequest$1(t1);
+  },
+  OnKeyboardDown$1: function(e) {
+    var t1, t2;
+    switch ($.get$keyCode$x(e)) {
+      case 37:
+        break;
+      case 38:
+        this._decisionBox.MoveCursorUp$0();
+        break;
+      case 39:
+        break;
+      case 40:
+        this._decisionBox.MoveCursorDown$0();
+        break;
+      case 88:
+        t1 = this._decisionBox;
+        t1.getCurrentSelectedItem$0;
+        t2 = t1._items;
+        t1 = t1._cursorIndex;
+        if (t1 < 0 || t1 >= t2.length)
+          throw $.ioore(t1);
+        switch ($.$index$asx(t2[t1], 1)) {
+          case 1:
+            t1 = new $.AnnotateTask(null, null);
+            t1._game = this._gm;
+            t1._msg = ["So you want to buy something...;What would you like to buy?"];
+            this._tasks.push(t1);
+            this._liblib2$_state = 1;
+            break;
+          case 2:
+            t1 = new $.AnnotateTask(null, null);
+            t1._game = this._gm;
+            t1._msg = ["What's for sale?"];
+            this._tasks.push(t1);
+            this._liblib2$_state = 2;
+            break;
+          case 3:
+            this.dismiss$0();
+            break;
+          default:
+            break;
+        }
+        break;
+      case 67:
+        this.dismiss$0();
+        break;
+      default:
+    }
+  },
+  OnKeyboardUp$1: function(e) {
+  },
+  BuySellMenu$2: function(gm, shopname) {
+    var t1, t2, t3, t4, t5, t6;
+    this._gm = gm;
+    t1 = this._gm;
+    t2 = "This is a " + shopname + " shop.;How may I help you?";
+    t3 = new $.AnnotateTask(null, null);
+    t3._game = t1;
+    t3._msg = [t2];
+    this._tasks.push(t3);
+    t3 = $.get$stats_WeaponData();
+    t3 = t3.$index(t3, "Bamboo Pole");
+    t2 = $.get$stats_WeaponData();
+    t2 = t2.$index(t2, "Club");
+    t1 = $.get$stats_WeaponData();
+    t1 = t1.$index(t1, "Copper Sword");
+    t4 = $.get$stats_ArmorData();
+    t4 = t4.$index(t4, "Clothes");
+    t5 = $.get$stats_ArmorData();
+    t5 = t5.$index(t5, "Leather Armor");
+    t6 = $.get$stats_ShieldData();
+    this.itemInfo = [t3, t2, t1, t4, t5, t6.$index(t6, "Small Shield")];
+  },
+  static: {
+"": "BuySellMenu_PRE_PENDING_STATE,BuySellMenu_BUY_PENDING_STATE,BuySellMenu_SELL_PENDING_STATE,BuySellMenu_POST_PENDING_STATE,BuySellMenu_BUY_ACTION,BuySellMenu_SELL_ACTION,BuySellMenu_END_ACTION",
+BuySellMenu$: function(gm, shopname) {
+  var t1 = new $.BuySellMenu(null, null, 0, [], null);
+  t1.BuySellMenu$2(gm, shopname);
+  return t1;
+}}
+
+},
+
+HeroSprite: {"": "Object;_mapPx,_mapPy,_game,_mapData,_layer,_currSprite,_currState,_currDir",
   get$mapPx: function() {
     return this._mapPx;
   },
@@ -3828,47 +4311,60 @@ HeroSprite: {"": "Object;_mapPx,_mapPy,_game,_mapData,_currSprite,_currState,_cu
     this._currDir = dir;
     this._currSprite.setAnimation$1(dir);
   },
+  getCurrentTileId$2$px$py: function(px, py) {
+    var startTileX, startTileY;
+    if (px < 0)
+      px = this._mapPx;
+    if (py < 0)
+      py = this._mapPy;
+    startTileX = C.JSNumber_methods.$tdiv(px - 320, 32);
+    startTileY = C.JSNumber_methods.$tdiv(py - 400, 32);
+    return this._mapData.getTileIdByPos$2(startTileX, startTileY);
+  },
   update$1: function(delta) {
-    var t1, t2, t3, dist;
+    var t1, t2, t3, dist, rollbackPx, rollbackPy;
     t1 = this._currSprite;
-    t2 = $.getInterceptor$n(delta);
+    t2 = $.getInterceptor$nx(delta);
     t3 = t2.toInt$0(delta);
     t1.update$1;
-    t1._currentAnim.update$1($.toInt$0$n(t3));
+    t1._currentAnim.update$1($.toInt$0$nx(t3));
     if (this._currState === 1) {
       dist = t2.$mul(delta, $.HeroSprite_velocity);
+      rollbackPx = this._mapPx;
+      rollbackPy = this._mapPy;
       switch (this._currDir) {
         case 1:
-          t1 = this._mapPy;
           if (typeof dist !== "number")
             throw $.iae(dist);
-          this._mapPy = t1 - dist;
+          this._mapPy = rollbackPy - dist;
           break;
         case 2:
-          t1 = this._mapPy;
           if (typeof dist !== "number")
             throw $.iae(dist);
-          this._mapPy = t1 + dist;
+          this._mapPy = rollbackPy + dist;
           break;
         case 4:
-          t1 = this._mapPx;
           if (typeof dist !== "number")
             throw $.iae(dist);
-          this._mapPx = t1 - dist;
+          this._mapPx = rollbackPx - dist;
           break;
         case 3:
-          t1 = this._mapPx;
           if (typeof dist !== "number")
             throw $.iae(dist);
-          this._mapPx = t1 + dist;
+          this._mapPx = rollbackPx + dist;
           break;
         default:
       }
+      if (!this._mapData.isPassable$1(this.getCurrentTileId$2$px$py(this._mapPx, this._mapPy))) {
+        this._mapPx = rollbackPx;
+        this._mapPy = rollbackPy;
+      }
     }
   },
-  HeroSprite$4$initPx$initPy: function(game, mapData, initPx, initPy) {
+  HeroSprite$5$initPx$initPy: function(game, mapData, layer, initPx, initPy) {
     this._game = game;
     this._mapData = mapData;
+    this._layer = layer;
     this._currSprite = $.CharacterSprite$("Hero");
     this._currSprite.setAnimation$1(1);
     this._currState = 0;
@@ -3878,9 +4374,9 @@ HeroSprite: {"": "Object;_mapPx,_mapPy,_game,_mapData,_currSprite,_currState,_cu
   },
   static: {
 "": "HeroSprite_STATE_IDLE,HeroSprite_STATE_MOVING,HeroSprite_velocity",
-HeroSprite$: function(game, mapData, initPx, initPy) {
-  var t1 = new $.HeroSprite(null, null, null, null, null, null, null);
-  t1.HeroSprite$4$initPx$initPy(game, mapData, initPx, initPy);
+HeroSprite$: function(game, mapData, layer, initPx, initPy) {
+  var t1 = new $.HeroSprite(null, null, null, null, null, null, null, null);
+  t1.HeroSprite$5$initPx$initPy(game, mapData, layer, initPx, initPy);
   return t1;
 }}
 
@@ -3909,12 +4405,6 @@ HeroStats: {"": "Object;emptyWeapon,emptyArmor,emptyShield,currentWeapon,current
     this.currentWeapon = this.emptyWeapon;
     this.currentArmor = this.emptyArmor;
     this.currentShield = this.emptyShield;
-    var t1 = $.get$stats_WeaponData();
-    this.Equip$1(t1.$index(t1, "Erdrick's Sword"));
-    t1 = $.get$stats_ArmorData();
-    this.Equip$1(t1.$index(t1, "Erdrick's Armor"));
-    t1 = $.get$stats_ShieldData();
-    this.Equip$1(t1.$index(t1, "Silver Shield"));
   },
   Equip$1: function(item) {
     var unequipItem;
@@ -3938,8 +4428,25 @@ HeroStats: {"": "Object;emptyWeapon,emptyArmor,emptyShield,currentWeapon,current
     this.currentWeapon.Equip$0();
     return unequipItem;
   },
+  UnEquip$1: function(type) {
+    switch (type) {
+      case "Weapon":
+        this.currentWeapon.UnEquip$0();
+        this.currentWeapon = this.emptyWeapon;
+        break;
+      case "Armor":
+        this.currentArmor.UnEquip$0();
+        this.currentArmor = this.emptyArmor;
+        break;
+      case "Shield":
+        this.currentShield.UnEquip$0();
+        this.currentShield = this.emptyShield;
+        break;
+      default:
+    }
+  },
   IncrementEXP$1: function(value) {
-    var t1, t2;
+    var t1, t2, t3;
     t1 = this._Level;
     if (t1 == null)
       throw t1.$ge();
@@ -3948,29 +4455,40 @@ HeroStats: {"": "Object;emptyWeapon,emptyArmor,emptyShield,currentWeapon,current
     t1 = this._EXP;
     if (t1 == null)
       throw t1.$add();
-    if (typeof value !== "number")
+    if (value == null)
       throw $.iae(value);
     this._EXP = t1 + value;
     this._NextLV = $.$sub$n(this._NextLV, value);
     t1 = this._EXP;
-    t2 = $.get$stats_ExpTable()[21];
+    t2 = $.get$stats_ExpTable();
+    t3 = this._Level;
+    if (t3 == null)
+      throw t3.$add();
+    ++t3;
+    if (t3 >>> 0 !== t3 || t3 >= 31)
+      throw $.ioore(t3);
+    t2 = t2[t3];
     if (t1 == null)
       throw t1.$ge();
     if (t1 >= t2) {
+      this._Level = t3;
       this.OnLevelUp$0();
-      t1 = this._Level;
-      if (t1 == null)
-        throw t1.$add();
-      this._Level = t1 + 1;
       t1 = this._Level;
       if (t1 == null)
         throw t1.$lt();
       if (t1 < 30) {
-        t1 = $.get$stats_ExpTable()[21];
-        t2 = this._EXP;
+        t1 = $.get$stats_ExpTable();
+        t2 = this._Level;
         if (t2 == null)
-          throw $.iae(t2);
-        this._NextLV = t1 - t2;
+          throw t2.$add();
+        ++t2;
+        if (t2 >>> 0 !== t2 || t2 >= 31)
+          throw $.ioore(t2);
+        t2 = t1[t2];
+        t1 = this._EXP;
+        if (t1 == null)
+          throw $.iae(t1);
+        this._NextLV = t2 - t1;
       } else
         this._NextLV = 0;
       return true;
@@ -3978,7 +4496,7 @@ HeroStats: {"": "Object;emptyWeapon,emptyArmor,emptyShield,currentWeapon,current
     return false;
   },
   OnLevelUp$0: function() {
-    var growth, values, t1, gval, t2, t3, t4, indices;
+    var growth, values, k, t1, prevLevel, gval, prevGval, t2, t3, t4, indices, t5;
     switch (this._growType) {
       case 0:
         growth = [0, 1, 0, 1];
@@ -3996,9 +4514,16 @@ HeroStats: {"": "Object;emptyWeapon,emptyArmor,emptyShield,currentWeapon,current
         growth = null;
     }
     values = [0, 0, 0, 0];
-    if ($.get$HeroStats_additionalGrowth().containsKey$1("20")) {
+    k = $.S(this._Level);
+    t1 = this._Level;
+    if (t1 == null)
+      throw t1.$sub();
+    prevLevel = $.S(t1 - 1);
+    if ($.get$HeroStats_additionalGrowth().containsKey$1(k)) {
       t1 = $.get$HeroStats_additionalGrowth();
-      gval = t1.$index(t1, "20");
+      gval = t1.$index(t1, k);
+      t1 = $.get$HeroStats_additionalGrowth();
+      prevGval = t1.$index(t1, prevLevel);
       t1 = growth.length;
       if (0 >= t1)
         throw $.ioore(0);
@@ -4022,16 +4547,29 @@ HeroStats: {"": "Object;emptyWeapon,emptyArmor,emptyShield,currentWeapon,current
       if (0 >= indices.length)
         throw $.ioore(0);
       t1 = $.getInterceptor$asx(gval);
-      t4 = $.$sub$n(t1.$index(gval, indices[0]), this._STR);
+      t4 = t1.$index(gval, indices[0]);
+      if (0 >= indices.length)
+        throw $.ioore(0);
+      t3 = $.getInterceptor$asx(prevGval);
+      t4 = $.$sub$n(t4, t3.$index(prevGval, indices[0]));
       if (1 >= indices.length)
         throw $.ioore(1);
-      t3 = $.$sub$n(t1.$index(gval, indices[1]), this._AGI);
+      t2 = t1.$index(gval, indices[1]);
+      if (1 >= indices.length)
+        throw $.ioore(1);
+      t2 = $.$sub$n(t2, t3.$index(prevGval, indices[1]));
       if (2 >= indices.length)
         throw $.ioore(2);
-      t2 = $.$sub$n(t1.$index(gval, indices[2]), this._MaxHP);
+      t5 = t1.$index(gval, indices[2]);
+      if (2 >= indices.length)
+        throw $.ioore(2);
+      t5 = $.$sub$n(t5, t3.$index(prevGval, indices[2]));
       if (3 >= indices.length)
         throw $.ioore(3);
-      values = [t4, t3, t2, $.$sub$n(t1.$index(gval, indices[3]), this._MaxMP)];
+      t1 = t1.$index(gval, indices[3]);
+      if (3 >= indices.length)
+        throw $.ioore(3);
+      values = [t4, t2, t5, $.$sub$n(t1, t3.$index(prevGval, indices[3]))];
       this._STR = $.$add$ns(this._STR, values[0]);
       this._AGI = $.$add$ns(this._AGI, values[1]);
       this._MaxHP = $.$add$ns(this._MaxHP, values[2]);
@@ -4048,7 +4586,7 @@ HeroStats: {"": "Object;emptyWeapon,emptyArmor,emptyShield,currentWeapon,current
 
 },
 
-NPC: {"": "Thing;_currSprite,_currDirection,_currState,_name,_talkHandler,_behavior,rng,waiting_counter,max_waiting_time,_mapPx,_mapPy,_game",
+NPC: {"": "Thing;_currSprite,_currDirection,_currState,_name,_talkHandler,_behavior,rng,waiting_counter,max_waiting_time,offsetX,offsetY,_mapPx,_mapPy,_game",
   get$characterSprite: function() {
     return this._currSprite;
   },
@@ -4070,12 +4608,12 @@ NPC: {"": "Thing;_currSprite,_currDirection,_currState,_name,_talkHandler,_behav
     return this.draw$3$px$py(ctx, null, null);
   },
   update$1: function(delta) {
-    var t1, t2, t3, max, dir, dist;
+    var t1, t2, t3, max, dir, truncated, dist;
     t1 = this._currSprite;
-    t2 = $.getInterceptor$n(delta);
+    t2 = $.getInterceptor$nx(delta);
     t3 = t2.toInt$0(delta);
     t1.update$1;
-    t1._currentAnim.update$1($.toInt$0$n(t3));
+    t1._currentAnim.update$1($.toInt$0$nx(t3));
     if (this._behavior === 1)
       if (this.waiting_counter >= this.max_waiting_time) {
         switch (this._currState) {
@@ -4085,11 +4623,31 @@ NPC: {"": "Thing;_currSprite,_currDirection,_currState,_name,_talkHandler,_behav
             this._currSprite.setAnimation$1(dir);
             this._currDirection = dir;
             this._currState = 1;
-            this.max_waiting_time = 500;
+            if (isNaN(750))
+              $.throwExpression(new $.UnsupportedError("NaN"));
+            if (750 == Infinity || 750 == -Infinity)
+              $.throwExpression(new $.UnsupportedError("Infinity"));
+            truncated = Math.floor(750);
+            max = truncated == -0.0 ? 0 : truncated;
+            if (max < 0)
+              $.throwExpression(new $.ArgumentError("negative max: " + $.S(max)));
+            if (max > 4294967295)
+              max = 4294967295;
+            this.max_waiting_time = (Math.random() * max >>> 0) + 250;
             break;
           case 1:
             this._currState = 0;
-            this.max_waiting_time = 2000;
+            if (isNaN(2000))
+              $.throwExpression(new $.UnsupportedError("NaN"));
+            if (2000 == Infinity || 2000 == -Infinity)
+              $.throwExpression(new $.UnsupportedError("Infinity"));
+            truncated = Math.floor(2000);
+            max = truncated == -0.0 ? 0 : truncated;
+            if (max < 0)
+              $.throwExpression(new $.ArgumentError("negative max: " + $.S(max)));
+            if (max > 4294967295)
+              max = 4294967295;
+            this.max_waiting_time = (Math.random() * max >>> 0) + 1000;
             break;
           default:
         }
@@ -4133,11 +4691,11 @@ NPC: {"": "Thing;_currSprite,_currDirection,_currState,_name,_talkHandler,_behav
   },
   ResetToIdle$0: function() {
     this._currState = 0;
-    this.max_waiting_time = 2000;
+    this.max_waiting_time = this.rng.nextInt$1(C.JSInt_methods.toInt$0(2000)) + 1000;
     this.waiting_counter = 0;
   },
   getRect$0: function() {
-    var t1, truncated, t2;
+    var t1, truncated, t2, t3;
     t1 = this._mapPx;
     if (isNaN(t1))
       $.throwExpression(new $.UnsupportedError("NaN"));
@@ -4145,20 +4703,21 @@ NPC: {"": "Thing;_currSprite,_currDirection,_currState,_name,_talkHandler,_behav
       $.throwExpression(new $.UnsupportedError("Infinity"));
     truncated = t1 < 0 ? Math.ceil(t1) : Math.floor(t1);
     t1 = truncated == -0.0 ? 0 : truncated;
-    t2 = this._mapPy;
-    if (isNaN(t2))
+    t2 = this.offsetX;
+    t3 = this._mapPy;
+    if (isNaN(t3))
       $.throwExpression(new $.UnsupportedError("NaN"));
-    if (t2 == Infinity || t2 == -Infinity)
+    if (t3 == Infinity || t3 == -Infinity)
       $.throwExpression(new $.UnsupportedError("Infinity"));
-    truncated = t2 < 0 ? Math.ceil(t2) : Math.floor(t2);
-    t2 = truncated == -0.0 ? 0 : truncated;
-    return new $.Rect(t1, t2, 32, 32);
+    truncated = t3 < 0 ? Math.ceil(t3) : Math.floor(t3);
+    t3 = truncated == -0.0 ? 0 : truncated;
+    return new $.Rect(t1 + t2, t3 + this.offsetY, 32, 32);
   },
   OnTalkBegin$2: function(gm, talker) {
     if (this._talkHandler != null)
       this._talkHandler$3(gm, talker, this);
   },
-  NPC$8$behavior_type$direction$name$px$py$talkHandler: function(game, type, behavior_type, direction, $name, px, py, talkHandler) {
+  NPC$10$behavior_type$direction$drawingOffsetX$drawingOffsetY$name$px$py$talkHandler: function(game, type, behavior_type, direction, drawingOffsetX, drawingOffsetY, $name, px, py, talkHandler) {
     this._talkHandler = talkHandler;
     this._name = $name;
     this._currSprite = $.CharacterSprite$(type);
@@ -4168,15 +4727,17 @@ NPC: {"": "Thing;_currSprite,_currDirection,_currState,_name,_talkHandler,_behav
     this._currState = 0;
     this.waiting_counter = 0;
     this.max_waiting_time = 1000;
+    this.offsetX = drawingOffsetX;
+    this.offsetY = drawingOffsetY;
   },
   static: {
-"": "NPC_BEHAVIOR_STANDING,NPC_BEHAVIOR_WALKING,NPC_STATE_IDLE,NPC_STATE_MOVING,NPC_velocity,NPC_MAX_WAITING_TIME_MOVING,NPC_MAX_WAITING_TIME_STANDING",
-NPC$: function(game, type, behavior_type, direction, $name, px, py, talkHandler) {
-  var t1 = new $.NPC(null, null, null, null, null, null, C.C__Random, null, null, null, null, null);
+"": "NPC_BEHAVIOR_STANDING,NPC_BEHAVIOR_WALKING,NPC_STATE_IDLE,NPC_STATE_MOVING,NPC_velocity,NPC_MIN_WAITING_TIME_MOVING,NPC_MAX_WAITING_TIME_MOVING,NPC_WAITING_TIME_MOVING_RANGE,NPC_MIN_WAITING_TIME_STANDING,NPC_WAITING_TIME_STANDING_RANGE",
+NPC$: function(game, type, behavior_type, direction, drawingOffsetX, drawingOffsetY, $name, px, py, talkHandler) {
+  var t1 = new $.NPC(null, null, null, null, null, null, C.C__Random, null, null, null, null, null, null, null);
   t1._game = game;
   t1._mapPx = px;
   t1._mapPy = py;
-  t1.NPC$8$behavior_type$direction$name$px$py$talkHandler(game, type, behavior_type, direction, $name, px, py, talkHandler);
+  t1.NPC$10$behavior_type$direction$drawingOffsetX$drawingOffsetY$name$px$py$talkHandler(game, type, behavior_type, direction, drawingOffsetX, drawingOffsetY, $name, px, py, talkHandler);
   return t1;
 }}
 
@@ -4280,6 +4841,137 @@ TreasureChest$: function(game, isClosed, px, py, size, talkHandler) {
 
 },
 
+SellItemListMenu: {"": "Layer;_game,_decisionBox,_liblib2$_state",
+  activate$1$args: function(args) {
+  },
+  deactivate$1$args: function(args) {
+  },
+  deactivate$0: function() {
+    return this.deactivate$1$args(null);
+  },
+  setDirty$0: function() {
+    var t1 = this._decisionBox;
+    t1.setDirty$0;
+    t1._bgDirty = true;
+  },
+  cleanup$0: function() {
+    this._decisionBox.cleanup$0();
+  },
+  draw$1: function(ctx) {
+    this._decisionBox.draw$1(ctx);
+  },
+  update$1: function(delta) {
+    var t1, t2;
+    this._decisionBox.update$1(delta);
+    switch (this._liblib2$_state) {
+      case 2:
+        t1 = this._decisionBox;
+        t1.cleanup$0;
+        t2 = t1._guiCtx;
+        t1 = t1._drawingBox;
+        t2.clearRect(t1.left, t1.top, t1.width, t1.height);
+        t1 = this._game;
+        t2 = new $.PopRequest(null, null);
+        t2._game = t1;
+        t2._activateParams = null;
+        t1.AddRequest$1(t2);
+        t2 = this._game;
+        t1 = new $.RedrawRequest(null);
+        t1._game = t2;
+        t2.AddRequest$1(t1);
+        break;
+      default:
+    }
+  },
+  OnKeyboardDown$1: function(e) {
+    var t1, t2, toSellItem, sellingCost, msg, t3;
+    switch ($.get$keyCode$x(e)) {
+      case 37:
+        break;
+      case 38:
+        this._decisionBox.MoveCursorUp$0();
+        break;
+      case 39:
+        break;
+      case 40:
+        this._decisionBox.MoveCursorDown$0();
+        break;
+      case 88:
+        t1 = this._decisionBox;
+        t1.getCurrentSelectedItem$0;
+        t2 = t1._items;
+        t1 = t1._cursorIndex;
+        if (t1 < 0 || t1 >= t2.length)
+          throw $.ioore(t1);
+        toSellItem = $.$index$asx(t2[t1], 1);
+        sellingCost = C.JSInt_methods.$tdiv(toSellItem.get$cost(), 2);
+        msg = "The " + $.S($.get$name$x(toSellItem)) + " huh?;I'll give you " + sellingCost + " gold for that, okay?";
+        t1 = this._game;
+        t2 = $.YesNoMsgBox$(t1, msg, null, "That's too bad...", false, new $.SellItemListMenu_OnKeyboardDown_closure(toSellItem, sellingCost), "Thanks a lot!");
+        t3 = new $.PushRequest(null, null, null);
+        t3._game = t1;
+        t3._pushLayer = t2;
+        t3._params = null;
+        t1.AddRequest$1(t3);
+        this._liblib2$_state = 2;
+        break;
+      case 67:
+        this._liblib2$_state = 2;
+        break;
+      default:
+    }
+  },
+  OnKeyboardUp$1: function(e) {
+  },
+  SellItemListMenu$1: function(gm) {
+    var t1, items, itemList, maxLen, itm, t2;
+    this._game = gm;
+    t1 = this._game.get$gameState();
+    t1.get$Inventory;
+    items = t1._inventory;
+    itemList = [];
+    for (t1 = new $.ListIterator(items, items.length, 0, null), maxLen = 0; t1.moveNext$0();) {
+      itm = t1._liblib$_current;
+      t2 = $.getInterceptor$x(itm);
+      maxLen = $.max($.get$length$asx(t2.get$name(itm)), maxLen);
+      itemList.push([t2.get$name(itm), itm]);
+    }
+    t1 = $.$mul$n($.$sub$n(maxLen, 5), 32);
+    t2 = items.length;
+    this._decisionBox = $.DecisionBox$fromList(this._game, new $.Rect(128, 160, t1, (t2 - 2) * 32), itemList, false);
+  },
+  static: {
+"": "SellItemListMenu_BROWSING_STATE,SellItemListMenu_DISMISSAL_STATE",
+SellItemListMenu$: function(gm) {
+  var t1 = new $.SellItemListMenu(null, null, 0);
+  t1.SellItemListMenu$1(gm);
+  return t1;
+}}
+
+},
+
+SellItemListMenu_OnKeyboardDown_closure: {"": "Closure;toSellItem_0,sellingCost_1",
+  call$1: function(gm) {
+    var t1, t2;
+    t1 = this.toSellItem_0;
+    if (t1.get$IsEquip()) {
+      t2 = gm.get$gameState();
+      t2.get$Stats;
+      t2._stats.UnEquip$1(t1.getType$0());
+    }
+    t2 = gm.get$gameState();
+    t2.RemoveItem$1;
+    C.JSArray_methods.remove$1(t2._inventory, t1);
+    t1 = gm.get$gameState();
+    t1.get$Stats;
+    t1 = t1._stats;
+    t2 = t1.Gold;
+    if (t2 == null)
+      throw t2.$add();
+    t1.Gold = t2 + this.sellingCost_1;
+  }
+},
+
 FieldHealSpellAction: {"": "QuestAction;_liblib2$_map,_healMore",
   execute$2: function(gm, menu) {
     var tasks, t1, t2;
@@ -4343,262 +5035,322 @@ ReturnSpellAction: {"": "QuestAction;_liblib2$_map",
 
 QuestAction: {"": "Object;"},
 
-attributeMenu: {"": "Layer;_game,_gameState,_TextWriter,width*,height*,px,py,gap,pad",
+attributeMenu: {"": "Layer;_game,_gameState,_TextWriter,_isDirty,width*,height*,px,py,gap,pad",
+  setDirty$0: function() {
+    this._isDirty = true;
+  },
   draw$1: function(ctx) {
     var t1, t2, t3, t4, t5, t6, numWhiteSpace, tmpStr;
-    t1 = $.getInterceptor$x(ctx);
-    t1.set$fillStyle(ctx, "#EEEEEE");
-    t2 = this.px;
-    t3 = this.py;
-    t1.fillRect$4(ctx, t2, t3, this.width, this.height);
-    t1.set$fillStyle(ctx, "#222222");
-    t4 = this.pad;
-    t2 += t4;
-    t3 += t4;
-    t5 = this.width;
-    if (typeof t5 !== "number")
-      return this.draw$1$bailout1(1, ctx, t4, t2, t1, t3, t5);
-    t5 = t5 - t4 - t4;
-    t6 = this.height;
-    if (typeof t6 !== "number")
-      return this.draw$1$bailout1(2, ctx, t4, t2, t1, t3, t5, t6);
-    t1.fillRect$4(ctx, t2, t3, t5, t6 - t4 - t4);
-    t4 = this._TextWriter;
-    t6 = this._gameState;
-    t6.get$heroName;
-    t4.WriteByRow$3(ctx, this.formatName$1(t6._stats._name), 1);
-    t6 = this._gameState;
-    t6.get$heroSTR;
-    t6 = $.get$length$asx($.toString$0(t6._stats._STR));
-    if (typeof t6 !== "number")
-      throw $.iae(t6);
-    numWhiteSpace = $.max(0, 5 - t6);
-    t6 = this._gameState;
-    t6.get$heroLevel;
-    t6._stats;
-    t6 = "Level :" + this.formatNumber$1(20);
-    t4 = this.whitespace$1(3) + "Strength :" + this.whitespace$1(numWhiteSpace);
-    t5 = this._gameState;
-    t5.get$heroSTR;
-    tmpStr = C.JSString_methods.$add(t6, t4 + $.S(t5._stats._STR));
-    this._TextWriter.WriteByRow$3(ctx, tmpStr, 3);
-    t5 = this._gameState;
-    t5.get$heroAGI;
-    t5 = $.get$length$asx($.toString$0(t5._stats._AGI));
-    if (typeof t5 !== "number")
-      throw $.iae(t5);
-    numWhiteSpace = $.max(0, 5 - t5);
-    t5 = this._gameState;
-    t5.get$heroHP;
-    t5 = "HP    :" + this.formatNumber$1(t5._stats._HP);
-    t4 = this.whitespace$1(3) + "Agility  :" + this.whitespace$1(numWhiteSpace);
-    t6 = this._gameState;
-    t6.get$heroAGI;
-    tmpStr = C.JSString_methods.$add(t5, t4 + $.S(t6._stats._AGI));
-    this._TextWriter.WriteByRow$3(ctx, tmpStr, 4);
-    t6 = this._gameState;
-    t6.get$heroATK;
-    t6 = t6._stats;
-    t4 = t6._STR;
-    if (typeof t4 !== "number")
-      return this.draw$1$bailout1(3, ctx, t4, 0, 0, 0, 0, t6);
-    numWhiteSpace = $.max(0, 5 - C.JSNumber_methods.toString$0(t4 + t6.currentWeapon.get$pow()).length);
-    t6 = this._gameState;
-    t6.get$heroMP;
-    t6._stats;
-    t1 = "MP    :" + this.formatNumber$1(100);
-    t2 = this.whitespace$1(3) + "Attack   :" + this.whitespace$1(numWhiteSpace);
-    t3 = this._gameState;
-    t3.get$heroATK;
-    t3 = t3._stats;
-    t4 = t3._STR;
-    if (typeof t4 !== "number")
-      return this.draw$1$bailout1(4, ctx, t4, t2, t1, t3);
-    tmpStr = C.JSString_methods.$add(t1, t2 + $.S(t4 + t3.currentWeapon.get$pow()));
-    this._TextWriter.WriteByRow$3(ctx, tmpStr, 5);
-    t3 = this._gameState;
-    t3.get$heroDEF;
-    t3 = t3._stats;
-    t4 = t3._AGI;
-    if (typeof t4 !== "number")
-      return this.draw$1$bailout1(5, ctx, t4, 0, 0, t3);
-    numWhiteSpace = $.max(0, 5 - C.JSNumber_methods.toString$0(t4 + t3.currentArmor.get$def() + t3.currentShield.get$def()).length);
-    t3 = this._gameState;
-    t3.get$heroMaxHP;
-    t3 = "Max HP:" + this.formatNumber$1(t3._stats._MaxHP);
-    t4 = this.whitespace$1(3) + "Defense  :" + this.whitespace$1(numWhiteSpace);
-    t2 = this._gameState;
-    t2.get$heroDEF;
-    t2 = t2._stats;
-    t1 = t2._AGI;
-    if (typeof t1 !== "number")
-      return this.draw$1$bailout1(6, ctx, t4, t2, t1, t3);
-    tmpStr = C.JSString_methods.$add(t3, t4 + $.S(t1 + t2.currentArmor.get$def() + t2.currentShield.get$def()));
-    this._TextWriter.WriteByRow$3(ctx, tmpStr, 6);
-    t2 = this._gameState;
-    t2.get$heroEXP;
-    numWhiteSpace = $.max(0, 5 - $.toString$0(t2._stats._EXP).length);
-    t2 = this._gameState;
-    t2.get$heroMaxMP;
-    t1 = t2._stats;
-    t1 = t1._MaxMP;
-    if (typeof t1 !== "number")
-      return this.draw$1$bailout1(7, ctx, 0, 0, t1, 0, 0, 0, numWhiteSpace);
-    t1 = "Max MP:" + this.formatNumber$1(t1);
-    t2 = this.whitespace$1(3) + "EXP      :" + this.whitespace$1(numWhiteSpace);
-    t3 = this._gameState;
-    t3.get$heroEXP;
-    tmpStr = C.JSString_methods.$add(t1, t2 + $.S(t3._stats._EXP));
-    this._TextWriter.WriteByRow$3(ctx, tmpStr, 7);
-    t3 = this._gameState;
-    t3.get$heroNextLV;
-    numWhiteSpace = $.max(0, 5 - $.toString$0(t3._stats._NextLV).length);
-    t3 = this._TextWriter;
-    t2 = this.whitespace$1(13) + "Next LV  :" + this.whitespace$1(numWhiteSpace);
-    t1 = this._gameState;
-    t1.get$heroNextLV;
-    t3.WriteByRow$3(ctx, t2 + $.S(t1._stats._NextLV), 8);
-    t1 = this._TextWriter;
-    t2 = this._gameState;
-    t2.get$heroWeapon;
-    t1.WriteByRow$3(ctx, "=" + $.S($.get$name$x(t2._stats.currentWeapon)), 9);
-    t2 = this._TextWriter;
-    t1 = this._gameState;
-    t1.get$heroArmor;
-    t2.WriteByRow$3(ctx, "=" + $.S($.get$name$x(t1._stats.currentArmor)), 10);
-    t1 = this._TextWriter;
-    t2 = this._gameState;
-    t2.get$heroShield;
-    t1.WriteByRow$3(ctx, "=" + $.S($.get$name$x(t2._stats.currentShield)), 11);
+    if (this._isDirty) {
+      this._game.get$guiCanvasCtx().fillStyle = "#EEEEEE";
+      t1 = this.px;
+      t2 = this.py;
+      this._game.get$guiCanvasCtx().fillRect(t1, t2, this.width, this.height);
+      this._game.get$guiCanvasCtx().fillStyle = "#222222";
+      t3 = this._game.get$guiCanvasCtx();
+      t4 = this.pad;
+      t1 += t4;
+      t2 += t4;
+      t5 = this.width;
+      if (typeof t5 !== "number")
+        return this.draw$1$bailout1(1, t5, t4, t1, t3, t2);
+      t5 = t5 - t4 - t4;
+      t6 = this.height;
+      if (typeof t6 !== "number")
+        return this.draw$1$bailout1(2, t5, t4, t1, t3, t2, t6);
+      t3.fillRect(t1, t2, t5, t6 - t4 - t4);
+      t4 = this._TextWriter;
+      t6 = this._game.get$guiCanvasCtx();
+      t5 = this._gameState;
+      t5.get$heroName;
+      t4.WriteByRow$3(t6, this.formatName$1(t5._stats._name), 1);
+      t5 = this._gameState;
+      t5.get$heroSTR;
+      t5 = $.get$length$asx($.toString$0(t5._stats._STR));
+      if (typeof t5 !== "number")
+        throw $.iae(t5);
+      numWhiteSpace = $.max(0, 5 - t5);
+      t5 = this._gameState;
+      t5.get$heroLevel;
+      t5 = "Level :" + this.formatNumber$1(t5._stats._Level);
+      t6 = this.whitespace$1(3) + "Strength :" + this.whitespace$1(numWhiteSpace);
+      t4 = this._gameState;
+      t4.get$heroSTR;
+      tmpStr = C.JSString_methods.$add(t5, t6 + $.S(t4._stats._STR));
+      this._TextWriter.WriteByRow$3(this._game.get$guiCanvasCtx(), tmpStr, 3);
+      t4 = this._gameState;
+      t4.get$heroAGI;
+      t4 = $.get$length$asx($.toString$0(t4._stats._AGI));
+      if (typeof t4 !== "number")
+        throw $.iae(t4);
+      numWhiteSpace = $.max(0, 5 - t4);
+      t4 = this._gameState;
+      t4.get$heroHP;
+      t4 = "HP    :" + this.formatNumber$1(t4._stats._HP);
+      t6 = this.whitespace$1(3) + "Agility  :" + this.whitespace$1(numWhiteSpace);
+      t5 = this._gameState;
+      t5.get$heroAGI;
+      tmpStr = C.JSString_methods.$add(t4, t6 + $.S(t5._stats._AGI));
+      this._TextWriter.WriteByRow$3(this._game.get$guiCanvasCtx(), tmpStr, 4);
+      t5 = this._gameState;
+      t5.get$heroATK;
+      t5 = t5._stats;
+      t6 = t5._STR;
+      if (typeof t6 !== "number")
+        return this.draw$1$bailout1(3, t5, 0, 0, 0, 0, t6);
+      numWhiteSpace = $.max(0, 5 - C.JSNumber_methods.toString$0(t6 + t5.currentWeapon.get$pow()).length);
+      t5 = this._gameState;
+      t5.get$heroMP;
+      t1 = t5._stats;
+      t2 = t1._Level;
+      if (t2 == null)
+        throw t2.$lt();
+      if (t2 < 3)
+        t1 = 0;
+      else {
+        t1 = t1._MP;
+        if (typeof t1 !== "number")
+          return this.draw$1$bailout1(4, 0, 0, t1, 0, 0, 0, numWhiteSpace);
+      }
+      t1 = "MP    :" + this.formatNumber$1(t1);
+      t2 = this.whitespace$1(3) + "Attack   :" + this.whitespace$1(numWhiteSpace);
+      t3 = this._gameState;
+      t3.get$heroATK;
+      t3 = t3._stats;
+      t4 = t3._STR;
+      if (typeof t4 !== "number")
+        return this.draw$1$bailout1(5, 0, t4, t1, t3, t2);
+      tmpStr = C.JSString_methods.$add(t1, t2 + $.S(t4 + t3.currentWeapon.get$pow()));
+      this._TextWriter.WriteByRow$3(this._game.get$guiCanvasCtx(), tmpStr, 5);
+      t3 = this._gameState;
+      t3.get$heroDEF;
+      t3 = t3._stats;
+      t4 = t3._AGI;
+      if (typeof t4 !== "number")
+        return this.draw$1$bailout1(6, 0, t4, 0, t3);
+      numWhiteSpace = $.max(0, 5 - C.JSNumber_methods.toString$0(t4 + t3.currentArmor.get$def() + t3.currentShield.get$def()).length);
+      t3 = this._gameState;
+      t3.get$heroMaxHP;
+      t3 = "Max HP:" + this.formatNumber$1(t3._stats._MaxHP);
+      t4 = this.whitespace$1(3) + "Defense  :" + this.whitespace$1(numWhiteSpace);
+      t2 = this._gameState;
+      t2.get$heroDEF;
+      t2 = t2._stats;
+      t1 = t2._AGI;
+      if (typeof t1 !== "number")
+        return this.draw$1$bailout1(7, 0, t4, t1, t3, t2);
+      tmpStr = C.JSString_methods.$add(t3, t4 + $.S(t1 + t2.currentArmor.get$def() + t2.currentShield.get$def()));
+      this._TextWriter.WriteByRow$3(this._game.get$guiCanvasCtx(), tmpStr, 6);
+      t2 = this._gameState;
+      t2.get$heroEXP;
+      numWhiteSpace = $.max(0, 5 - $.toString$0(t2._stats._EXP).length);
+      t2 = this._gameState;
+      t2.get$heroMaxMP;
+      t1 = t2._stats;
+      t2 = t1._Level;
+      if (t2 == null)
+        throw t2.$lt();
+      if (t2 < 3)
+        t1 = 0;
+      else {
+        t1 = t1._MaxMP;
+        if (typeof t1 !== "number")
+          return this.draw$1$bailout1(8, 0, 0, t1, 0, 0, 0, numWhiteSpace);
+      }
+      t1 = "Max MP:" + this.formatNumber$1(t1);
+      t2 = this.whitespace$1(3) + "EXP      :" + this.whitespace$1(numWhiteSpace);
+      t3 = this._gameState;
+      t3.get$heroEXP;
+      tmpStr = C.JSString_methods.$add(t1, t2 + $.S(t3._stats._EXP));
+      this._TextWriter.WriteByRow$3(this._game.get$guiCanvasCtx(), tmpStr, 7);
+      t3 = this._gameState;
+      t3.get$heroNextLV;
+      numWhiteSpace = $.max(0, 5 - $.toString$0(t3._stats._NextLV).length);
+      t3 = this._TextWriter;
+      t2 = this._game.get$guiCanvasCtx();
+      t1 = this.whitespace$1(13) + "Next LV  :" + this.whitespace$1(numWhiteSpace);
+      t4 = this._gameState;
+      t4.get$heroNextLV;
+      t3.WriteByRow$3(t2, t1 + $.S(t4._stats._NextLV), 8);
+      t4 = this._TextWriter;
+      t1 = this._game.get$guiCanvasCtx();
+      t2 = this._gameState;
+      t2.get$heroWeapon;
+      t4.WriteByRow$3(t1, "=" + $.S($.get$name$x(t2._stats.currentWeapon)), 9);
+      t2 = this._TextWriter;
+      t1 = this._game.get$guiCanvasCtx();
+      t4 = this._gameState;
+      t4.get$heroArmor;
+      t2.WriteByRow$3(t1, "=" + $.S($.get$name$x(t4._stats.currentArmor)), 10);
+      t4 = this._TextWriter;
+      t1 = this._game.get$guiCanvasCtx();
+      t2 = this._gameState;
+      t2.get$heroShield;
+      t4.WriteByRow$3(t1, "=" + $.S($.get$name$x(t2._stats.currentShield)), 11);
+      this._isDirty = false;
+    }
   },
-  draw$1$bailout1: function(state0, ctx, t4, t2, t1, t3, t5, t6, numWhiteSpace) {
+  draw$1$bailout1: function(state0, t5, t4, t1, t3, t2, t6, numWhiteSpace) {
     switch (state0) {
       case 0:
-        t1 = $.getInterceptor$x(ctx);
-        t1.set$fillStyle(ctx, "#EEEEEE");
-        t2 = this.px;
-        t3 = this.py;
-        t1.fillRect$4(ctx, t2, t3, this.width, this.height);
-        t1.set$fillStyle(ctx, "#222222");
-        t4 = this.pad;
-        t2 += t4;
-        t3 += t4;
-        t5 = this.width;
-      case 1:
-        state0 = 0;
-        t5 = $.$sub$n($.$sub$n(t5, t4), t4);
-        t6 = this.height;
-      case 2:
-        state0 = 0;
-        t1.fillRect$4(ctx, t2, t3, t5, $.$sub$n($.$sub$n(t6, t4), t4));
-        t4 = this._TextWriter;
-        t6 = this._gameState;
-        t6.get$heroName;
-        t4.WriteByRow$3(ctx, this.formatName$1(t6._stats._name), 1);
-        t6 = this._gameState;
-        t6.get$heroSTR;
-        t6 = $.get$length$asx($.toString$0(t6._stats._STR));
-        if (typeof t6 !== "number")
-          throw $.iae(t6);
-        numWhiteSpace = $.max(0, 5 - t6);
-        t6 = this._gameState;
-        t6.get$heroLevel;
-        t6._stats;
-        t6 = "Level :" + this.formatNumber$1(20);
-        t4 = this.whitespace$1(3) + "Strength :" + this.whitespace$1(numWhiteSpace);
-        t5 = this._gameState;
-        t5.get$heroSTR;
-        tmpStr = C.JSString_methods.$add(t6, t4 + $.S(t5._stats._STR));
-        this._TextWriter.WriteByRow$3(ctx, tmpStr, 3);
-        t5 = this._gameState;
-        t5.get$heroAGI;
-        t5 = $.get$length$asx($.toString$0(t5._stats._AGI));
-        if (typeof t5 !== "number")
-          throw $.iae(t5);
-        numWhiteSpace = $.max(0, 5 - t5);
-        t5 = this._gameState;
-        t5.get$heroHP;
-        t5 = "HP    :" + this.formatNumber$1(t5._stats._HP);
-        t4 = this.whitespace$1(3) + "Agility  :" + this.whitespace$1(numWhiteSpace);
-        t6 = this._gameState;
-        t6.get$heroAGI;
-        tmpStr = C.JSString_methods.$add(t5, t4 + $.S(t6._stats._AGI));
-        this._TextWriter.WriteByRow$3(ctx, tmpStr, 4);
-        t6 = this._gameState;
-        t6.get$heroATK;
-        t6 = t6._stats;
-        t4 = t6._STR;
-      case 3:
-        state0 = 0;
-        numWhiteSpace = $.max(0, 5 - $.toString$0($.$add$ns(t4, t6.currentWeapon.get$pow())).length);
-        t6 = this._gameState;
-        t6.get$heroMP;
-        t6._stats;
-        t1 = "MP    :" + this.formatNumber$1(100);
-        t2 = this.whitespace$1(3) + "Attack   :" + this.whitespace$1(numWhiteSpace);
-        t3 = this._gameState;
-        t3.get$heroATK;
-        t3 = t3._stats;
-        t4 = t3._STR;
-      case 4:
-        state0 = 0;
-        tmpStr = C.JSString_methods.$add(t1, t2 + $.S($.$add$ns(t4, t3.currentWeapon.get$pow())));
-        this._TextWriter.WriteByRow$3(ctx, tmpStr, 5);
-        t3 = this._gameState;
-        t3.get$heroDEF;
-        t3 = t3._stats;
-        t4 = t3._AGI;
-      case 5:
-        state0 = 0;
-        numWhiteSpace = $.max(0, 5 - $.toString$0($.$add$ns($.$add$ns(t4, t3.currentArmor.get$def()), t3.currentShield.get$def())).length);
-        t3 = this._gameState;
-        t3.get$heroMaxHP;
-        t3 = "Max HP:" + this.formatNumber$1(t3._stats._MaxHP);
-        t4 = this.whitespace$1(3) + "Defense  :" + this.whitespace$1(numWhiteSpace);
-        t2 = this._gameState;
-        t2.get$heroDEF;
-        t2 = t2._stats;
-        t1 = t2._AGI;
-      case 6:
-        state0 = 0;
-        tmpStr = C.JSString_methods.$add(t3, t4 + $.S($.$add$ns($.$add$ns(t1, t2.currentArmor.get$def()), t2.currentShield.get$def())));
-        this._TextWriter.WriteByRow$3(ctx, tmpStr, 6);
-        t2 = this._gameState;
-        t2.get$heroEXP;
-        numWhiteSpace = $.max(0, 5 - $.toString$0(t2._stats._EXP).length);
-        t2 = this._gameState;
-        t2.get$heroMaxMP;
-        t1 = t2._stats;
-        t1 = t1._MaxMP;
-      case 7:
+      default:
         var tmpStr;
-        state0 = 0;
-        t1 = "Max MP:" + this.formatNumber$1(t1);
-        t2 = this.whitespace$1(3) + "EXP      :" + this.whitespace$1(numWhiteSpace);
-        t3 = this._gameState;
-        t3.get$heroEXP;
-        tmpStr = C.JSString_methods.$add(t1, t2 + $.S(t3._stats._EXP));
-        this._TextWriter.WriteByRow$3(ctx, tmpStr, 7);
-        t3 = this._gameState;
-        t3.get$heroNextLV;
-        numWhiteSpace = $.max(0, 5 - $.toString$0(t3._stats._NextLV).length);
-        t3 = this._TextWriter;
-        t2 = this.whitespace$1(13) + "Next LV  :" + this.whitespace$1(numWhiteSpace);
-        t1 = this._gameState;
-        t1.get$heroNextLV;
-        t3.WriteByRow$3(ctx, t2 + $.S(t1._stats._NextLV), 8);
-        t1 = this._TextWriter;
-        t2 = this._gameState;
-        t2.get$heroWeapon;
-        t1.WriteByRow$3(ctx, "=" + $.S($.get$name$x(t2._stats.currentWeapon)), 9);
-        t2 = this._TextWriter;
-        t1 = this._gameState;
-        t1.get$heroArmor;
-        t2.WriteByRow$3(ctx, "=" + $.S($.get$name$x(t1._stats.currentArmor)), 10);
-        t1 = this._TextWriter;
-        t2 = this._gameState;
-        t2.get$heroShield;
-        t1.WriteByRow$3(ctx, "=" + $.S($.get$name$x(t2._stats.currentShield)), 11);
+        if (state0 === 8 || state0 === 7 || state0 === 6 || state0 === 5 || state0 === 4 || state0 === 3 || state0 === 2 || state0 === 1 || state0 === 0 && this._isDirty)
+          switch (state0) {
+            case 0:
+              this._game.get$guiCanvasCtx().fillStyle = "#EEEEEE";
+              t1 = this.px;
+              t2 = this.py;
+              this._game.get$guiCanvasCtx().fillRect(t1, t2, this.width, this.height);
+              this._game.get$guiCanvasCtx().fillStyle = "#222222";
+              t3 = this._game.get$guiCanvasCtx();
+              t4 = this.pad;
+              t1 += t4;
+              t2 += t4;
+              t5 = this.width;
+            case 1:
+              state0 = 0;
+              t5 = $.$sub$n($.$sub$n(t5, t4), t4);
+              t6 = this.height;
+            case 2:
+              state0 = 0;
+              t3.fillRect(t1, t2, t5, $.$sub$n($.$sub$n(t6, t4), t4));
+              t4 = this._TextWriter;
+              t6 = this._game.get$guiCanvasCtx();
+              t5 = this._gameState;
+              t5.get$heroName;
+              t4.WriteByRow$3(t6, this.formatName$1(t5._stats._name), 1);
+              t5 = this._gameState;
+              t5.get$heroSTR;
+              t5 = $.get$length$asx($.toString$0(t5._stats._STR));
+              if (typeof t5 !== "number")
+                throw $.iae(t5);
+              numWhiteSpace = $.max(0, 5 - t5);
+              t5 = this._gameState;
+              t5.get$heroLevel;
+              t5 = "Level :" + this.formatNumber$1(t5._stats._Level);
+              t6 = this.whitespace$1(3) + "Strength :" + this.whitespace$1(numWhiteSpace);
+              t4 = this._gameState;
+              t4.get$heroSTR;
+              tmpStr = C.JSString_methods.$add(t5, t6 + $.S(t4._stats._STR));
+              this._TextWriter.WriteByRow$3(this._game.get$guiCanvasCtx(), tmpStr, 3);
+              t4 = this._gameState;
+              t4.get$heroAGI;
+              t4 = $.get$length$asx($.toString$0(t4._stats._AGI));
+              if (typeof t4 !== "number")
+                throw $.iae(t4);
+              numWhiteSpace = $.max(0, 5 - t4);
+              t4 = this._gameState;
+              t4.get$heroHP;
+              t4 = "HP    :" + this.formatNumber$1(t4._stats._HP);
+              t6 = this.whitespace$1(3) + "Agility  :" + this.whitespace$1(numWhiteSpace);
+              t5 = this._gameState;
+              t5.get$heroAGI;
+              tmpStr = C.JSString_methods.$add(t4, t6 + $.S(t5._stats._AGI));
+              this._TextWriter.WriteByRow$3(this._game.get$guiCanvasCtx(), tmpStr, 4);
+              t5 = this._gameState;
+              t5.get$heroATK;
+              t5 = t5._stats;
+              t6 = t5._STR;
+            case 3:
+              state0 = 0;
+              numWhiteSpace = $.max(0, 5 - $.toString$0($.$add$ns(t6, t5.currentWeapon.get$pow())).length);
+              t5 = this._gameState;
+              t5.get$heroMP;
+              t1 = t5._stats;
+              t2 = t1._Level;
+              if (t2 == null)
+                throw t2.$lt();
+            case 4:
+              if (state0 === 0 && t2 < 3)
+                t1 = 0;
+              else
+                switch (state0) {
+                  case 0:
+                    t1 = t1._MP;
+                  case 4:
+                    state0 = 0;
+                }
+              t1 = "MP    :" + this.formatNumber$1(t1);
+              t2 = this.whitespace$1(3) + "Attack   :" + this.whitespace$1(numWhiteSpace);
+              t3 = this._gameState;
+              t3.get$heroATK;
+              t3 = t3._stats;
+              t4 = t3._STR;
+            case 5:
+              state0 = 0;
+              tmpStr = C.JSString_methods.$add(t1, t2 + $.S($.$add$ns(t4, t3.currentWeapon.get$pow())));
+              this._TextWriter.WriteByRow$3(this._game.get$guiCanvasCtx(), tmpStr, 5);
+              t3 = this._gameState;
+              t3.get$heroDEF;
+              t3 = t3._stats;
+              t4 = t3._AGI;
+            case 6:
+              state0 = 0;
+              numWhiteSpace = $.max(0, 5 - $.toString$0($.$add$ns($.$add$ns(t4, t3.currentArmor.get$def()), t3.currentShield.get$def())).length);
+              t3 = this._gameState;
+              t3.get$heroMaxHP;
+              t3 = "Max HP:" + this.formatNumber$1(t3._stats._MaxHP);
+              t4 = this.whitespace$1(3) + "Defense  :" + this.whitespace$1(numWhiteSpace);
+              t2 = this._gameState;
+              t2.get$heroDEF;
+              t2 = t2._stats;
+              t1 = t2._AGI;
+            case 7:
+              state0 = 0;
+              tmpStr = C.JSString_methods.$add(t3, t4 + $.S($.$add$ns($.$add$ns(t1, t2.currentArmor.get$def()), t2.currentShield.get$def())));
+              this._TextWriter.WriteByRow$3(this._game.get$guiCanvasCtx(), tmpStr, 6);
+              t2 = this._gameState;
+              t2.get$heroEXP;
+              numWhiteSpace = $.max(0, 5 - $.toString$0(t2._stats._EXP).length);
+              t2 = this._gameState;
+              t2.get$heroMaxMP;
+              t1 = t2._stats;
+              t2 = t1._Level;
+              if (t2 == null)
+                throw t2.$lt();
+            case 8:
+              if (state0 === 0 && t2 < 3)
+                t1 = 0;
+              else
+                switch (state0) {
+                  case 0:
+                    t1 = t1._MaxMP;
+                  case 8:
+                    state0 = 0;
+                }
+              t1 = "Max MP:" + this.formatNumber$1(t1);
+              t2 = this.whitespace$1(3) + "EXP      :" + this.whitespace$1(numWhiteSpace);
+              t3 = this._gameState;
+              t3.get$heroEXP;
+              tmpStr = C.JSString_methods.$add(t1, t2 + $.S(t3._stats._EXP));
+              this._TextWriter.WriteByRow$3(this._game.get$guiCanvasCtx(), tmpStr, 7);
+              t3 = this._gameState;
+              t3.get$heroNextLV;
+              numWhiteSpace = $.max(0, 5 - $.toString$0(t3._stats._NextLV).length);
+              t3 = this._TextWriter;
+              t2 = this._game.get$guiCanvasCtx();
+              t1 = this.whitespace$1(13) + "Next LV  :" + this.whitespace$1(numWhiteSpace);
+              t4 = this._gameState;
+              t4.get$heroNextLV;
+              t3.WriteByRow$3(t2, t1 + $.S(t4._stats._NextLV), 8);
+              t4 = this._TextWriter;
+              t1 = this._game.get$guiCanvasCtx();
+              t2 = this._gameState;
+              t2.get$heroWeapon;
+              t4.WriteByRow$3(t1, "=" + $.S($.get$name$x(t2._stats.currentWeapon)), 9);
+              t2 = this._TextWriter;
+              t1 = this._game.get$guiCanvasCtx();
+              t4 = this._gameState;
+              t4.get$heroArmor;
+              t2.WriteByRow$3(t1, "=" + $.S($.get$name$x(t4._stats.currentArmor)), 10);
+              t4 = this._TextWriter;
+              t1 = this._game.get$guiCanvasCtx();
+              t2 = this._gameState;
+              t2.get$heroShield;
+              t4.WriteByRow$3(t1, "=" + $.S($.get$name$x(t2._stats.currentShield)), 11);
+              this._isDirty = false;
+          }
     }
   },
   whitespace$1: function(n) {
@@ -4626,7 +5378,7 @@ attributeMenu: {"": "Layer;_game,_gameState,_TextWriter,width*,height*,px,py,gap
       return $.S(val);
   },
   OnKeyboardDown$1: function(e) {
-    var t1, t2;
+    var t1, t2, t3;
     switch ($.get$keyCode$x(e)) {
       case 37:
         break;
@@ -4640,14 +5392,19 @@ attributeMenu: {"": "Layer;_game,_gameState,_TextWriter,width*,height*,px,py,gap
         break;
       case 67:
         t1 = this._game;
-        t2 = new $.PopRequest(null, null);
-        t2._game = t1;
-        t2._activateParams = null;
-        t1.AddRequest$1(t2);
-        t2 = this._game;
+        t2 = t1.get$guiCanvasCtx();
+        t1 = t1.get$guiCanvas();
+        t3 = $.getInterceptor$x(t1);
+        t2.clearRect(0, 0, t3.get$width(t1), t3.get$height(t1));
+        t1 = this._game;
+        t3 = new $.PopRequest(null, null);
+        t3._game = t1;
+        t3._activateParams = null;
+        t1.AddRequest$1(t3);
+        t3 = this._game;
         t1 = new $.RedrawRequest(null);
-        t1._game = t2;
-        t2.AddRequest$1(t1);
+        t1._game = t3;
+        t3.AddRequest$1(t1);
         break;
       default:
     }
@@ -4672,32 +5429,37 @@ attributeMenu: {"": "Layer;_game,_gameState,_TextWriter,width*,height*,px,py,gap
   },
   static: {
 attributeMenu$: function(game, gamestate) {
-  var t1 = new $.attributeMenu(null, null, null, 512, 256, 32, 64, 1, 5);
+  var t1 = new $.attributeMenu(null, null, null, true, 512, 256, 32, 64, 1, 5);
   t1.attributeMenu$2(game, gamestate);
   return t1;
 }}
 
 },
 
-EquipMenu: {"": "Layer;_game,_gameState,_TextWriter,gap,pad,padgap,timeElapse,blinkDuration,ItemNameBox,ItemListBox,EquipmentBox,_cursorPos",
+EquipMenu: {"": "Layer;_game,_gameState,_TextWriter,gap,pad,padgap,timeElapse,blinkDuration,ItemNameBox,ItemListBox,EquipmentBox,_isDirty,pageNumber,maxPageNumber,minPageNumber,_cursorPos,_subItemList",
+  calcItemListBox$1: function(numItems) {
+    var t1 = this.padgap;
+    return new $.Rect(320 + t1 + 5, 32 + t1, 256 - t1, (numItems + 2) * 32 - t1);
+  },
   drawBox$2: function(ctx, rect) {
     var t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11;
-    t1 = $.getInterceptor$x(ctx);
-    t1.set$fillStyle(ctx, "#EEEEEE");
-    t2 = rect.left;
-    t3 = this.padgap;
-    t4 = $.getInterceptor$n(t2);
-    t5 = rect.top;
-    t6 = $.getInterceptor$n(t5);
+    ctx.fillStyle = "#EEEEEE";
+    t1 = rect.left;
+    t2 = $.getInterceptor$n(t1);
+    t3 = t2.$sub(t1, this.padgap);
+    t4 = rect.top;
+    t5 = $.getInterceptor$n(t4);
+    t6 = t5.$sub(t4, this.padgap);
     t7 = rect.width;
     t8 = $.getInterceptor$ns(t7);
-    t9 = rect.height;
-    t10 = $.getInterceptor$ns(t9);
-    t1.fillRect$4(ctx, t4.$sub(t2, t3), t6.$sub(t5, t3), t8.$add(t7, t3), t10.$add(t9, t3));
-    t1.set$fillStyle(ctx, "#222222");
-    t3 = this.gap;
-    t11 = this.pad;
-    t1.fillRect$4(ctx, t4.$sub(t2, t3), t6.$sub(t5, t3), $.$sub$n(t8.$add(t7, t3), t11), $.$sub$n(t10.$add(t9, t3), t11));
+    t9 = t8.$add(t7, this.padgap);
+    t10 = rect.height;
+    t11 = $.getInterceptor$ns(t10);
+    ctx.fillRect(t3, t6, t9, t11.$add(t10, this.padgap));
+    ctx.fillStyle = "#222222";
+    t9 = this.gap;
+    t6 = this.pad;
+    ctx.fillRect(t2.$sub(t1, t9), t5.$sub(t4, t9), $.$sub$n(t8.$add(t7, t9), t6), $.$sub$n(t11.$add(t10, t9), t6));
   },
   whitespace$1: function(n) {
     var str, i;
@@ -4705,36 +5467,148 @@ EquipMenu: {"": "Layer;_game,_gameState,_TextWriter,gap,pad,padgap,timeElapse,bl
       str = C.JSString_methods.$add(str, " ");
     return str;
   },
-  draw$1: function(ctx) {
-    var drawCursor, t1, t2, itemName, items, row, $name, cursorStr;
+  setDirty$0: function() {
+    this._isDirty = true;
+  },
+  drawItemNameBox$1: function(ctx) {
+    var t1, t2, itemName, t3, attrVal, attrName;
     this.drawBox$2(ctx, this.ItemNameBox);
-    this.drawBox$2(ctx, this.ItemListBox);
-    this.drawBox$2(ctx, this.EquipmentBox);
-    drawCursor = this.timeElapse < this.blinkDuration / 2 && true;
     t1 = this._TextWriter;
     t2 = this.ItemNameBox;
     t1.set$drawingRect;
     t1._drawingRect = t2;
-    t2 = this._gameState;
-    t2.get$heroWeapon;
-    itemName = $.get$name$x(t2._stats.currentWeapon);
+    switch (this.pageNumber) {
+      case 0:
+        t1 = this._gameState;
+        t1.get$heroWeapon;
+        itemName = $.get$name$x(t1._stats.currentWeapon);
+        t1 = this._gameState;
+        t1.get$heroATK;
+        t1 = t1._stats;
+        t1 = $.$add$ns(t1._STR, t1.currentWeapon.get$pow());
+        t2 = this._gameState;
+        t2.get$Stats;
+        t2 = $.$sub$n(t1, t2._stats.currentWeapon.get$pow());
+        t1 = this._subItemList;
+        t3 = this._cursorPos;
+        if (t3 >>> 0 !== t3 || t3 >= t1.length)
+          throw $.ioore(t3);
+        attrVal = $.$add$ns(t2, t1[t3].power$0());
+        attrName = "Attack";
+        break;
+      case 1:
+        t1 = this._gameState;
+        t1.get$heroArmor;
+        itemName = $.get$name$x(t1._stats.currentArmor);
+        t1 = this._gameState;
+        t1.get$heroDEF;
+        t1 = t1._stats;
+        t1 = $.$add$ns($.$add$ns(t1._AGI, t1.currentArmor.get$def()), t1.currentShield.get$def());
+        t2 = this._gameState;
+        t2.get$Stats;
+        t2 = $.$sub$n(t1, t2._stats.currentArmor.get$def());
+        t1 = this._subItemList;
+        t3 = this._cursorPos;
+        if (t3 >>> 0 !== t3 || t3 >= t1.length)
+          throw $.ioore(t3);
+        attrVal = $.$add$ns(t2, t1[t3].defence$0());
+        attrName = "Defence";
+        break;
+      case 2:
+        t1 = this._gameState;
+        t1.get$heroShield;
+        itemName = $.get$name$x(t1._stats.currentShield);
+        t1 = this._gameState;
+        t1.get$heroDEF;
+        t1 = t1._stats;
+        t1 = $.$add$ns($.$add$ns(t1._AGI, t1.currentArmor.get$def()), t1.currentShield.get$def());
+        t2 = this._gameState;
+        t2.get$Stats;
+        t2 = $.$sub$n(t1, t2._stats.currentShield.get$def());
+        t1 = this._subItemList;
+        t3 = this._cursorPos;
+        if (t3 >>> 0 !== t3 || t3 >= t1.length)
+          throw $.ioore(t3);
+        attrVal = $.$add$ns(t2, t1[t3].defence$0());
+        attrName = "Defence";
+        break;
+      default:
+        itemName = null;
+        attrName = null;
+        attrVal = null;
+    }
     this._TextWriter.WriteByRow$3(ctx, this.whitespace$1(1) + $.S(itemName), 1);
     this._TextWriter.HorzLine$2(ctx, 3);
-    this._TextWriter.WriteByRow$3(ctx, this.whitespace$1(1) + "Attack", 4);
-    this._TextWriter.WriteByRow$3(ctx, this.whitespace$1(3) + "=" + this.whitespace$1(2) + "12", 5);
+    this._TextWriter.WriteByRow$3(ctx, this.whitespace$1(1) + attrName, 4);
+    this._TextWriter.WriteByRow$3(ctx, this.whitespace$1(3) + "=" + this.whitespace$1(2) + $.S(attrVal), 5);
+  },
+  drawItemListBox$2: function(ctx, drawCursor) {
+    var t1, heroItems, currentHeroItem, t2, categoryName, hasFoundEquipItem, row, item, cursorStr, equip;
+    t1 = this._gameState;
+    t1.get$Inventory;
+    heroItems = t1._inventory;
+    switch (this.pageNumber) {
+      case 0:
+        t1.get$Stats;
+        currentHeroItem = t1._stats.currentWeapon;
+        this._subItemList = [];
+        this._subItemList = $.List_List$from(new $.WhereIterable(heroItems, new $.EquipMenu_drawItemListBox_closure()), true);
+        t1 = this._subItemList;
+        t2 = $.get$stats_WeaponData();
+        C.JSArray_methods.add$1(t1, t2.$index(t2, "Nothing"));
+        categoryName = "Weapon";
+        break;
+      case 1:
+        t1.get$Stats;
+        currentHeroItem = t1._stats.currentArmor;
+        this._subItemList = [];
+        this._subItemList = $.List_List$from(new $.WhereIterable(heroItems, new $.EquipMenu_drawItemListBox_closure0()), true);
+        t1 = this._subItemList;
+        t2 = $.get$stats_ArmorData();
+        C.JSArray_methods.add$1(t1, t2.$index(t2, "Nothing"));
+        categoryName = "Armor";
+        break;
+      case 2:
+        t1.get$Stats;
+        currentHeroItem = t1._stats.currentShield;
+        this._subItemList = [];
+        this._subItemList = $.List_List$from(new $.WhereIterable(heroItems, new $.EquipMenu_drawItemListBox_closure1()), true);
+        t1 = this._subItemList;
+        t2 = $.get$stats_ShieldData();
+        C.JSArray_methods.add$1(t1, t2.$index(t2, "Nothing"));
+        categoryName = "Shield";
+        break;
+      default:
+        currentHeroItem = null;
+        categoryName = null;
+    }
+    t1 = $.$sub$n(this.ItemListBox.left, 7);
+    t2 = this.ItemListBox;
+    ctx.clearRect(t1, t2.top, $.$add$ns(t2.width, 7), this.ItemListBox.height);
+    this.ItemListBox = this.calcItemListBox$1(this._subItemList.length);
+    this.drawBox$2(ctx, this.ItemListBox);
     t2 = this._TextWriter;
     t1 = this.ItemListBox;
     t2.set$drawingRect;
     t2._drawingRect = t1;
-    this._TextWriter.WriteByRow$3(ctx, this.whitespace$1(1) + "Weapon", 1);
+    this._TextWriter.WriteByRow$3(ctx, this.whitespace$1(1) + categoryName, 1);
     this._TextWriter.HorzLine$2(ctx, 2);
-    items = [itemName, "Empty"];
-    for (t1 = new $.ListIterator(items, items.length, 0, null), row = 1; t1.moveNext$0();) {
-      $name = t1._liblib$_current;
-      cursorStr = drawCursor && row === this._cursorPos * 2 + 1 ? ">" : this.whitespace$1(1);
+    for (t1 = this._subItemList, t1 = new $.ListIterator(t1, t1.length, 0, null), hasFoundEquipItem = false, row = 1; t1.moveNext$0();) {
+      item = t1._liblib$_current;
+      cursorStr = drawCursor && row === $.$add$ns($.$mul$n(this._cursorPos, 2), 1) ? ">" : this.whitespace$1(1);
+      equip = this.whitespace$1(1);
+      if (!hasFoundEquipItem)
+        if (currentHeroItem.compare$1(item)) {
+          hasFoundEquipItem = true;
+          equip = "=";
+        }
       row += 2;
-      this._TextWriter.WriteByRow$3(ctx, "=" + cursorStr + $.S($name), row);
+      this._TextWriter.WriteByRow$3(ctx, equip + cursorStr + $.S($.get$name$x(item)), row);
     }
+  },
+  drawEquipmentBox$1: function(ctx) {
+    var t1, t2;
+    this.drawBox$2(ctx, this.EquipmentBox);
     t1 = this._TextWriter;
     t2 = this.EquipmentBox;
     t1.set$drawingRect;
@@ -4751,6 +5625,13 @@ EquipMenu: {"": "Layer;_game,_gameState,_TextWriter,gap,pad,padgap,timeElapse,bl
     t1 = this._gameState;
     t1.get$heroShield;
     t2.WriteByRow$3(ctx, "=" + $.S($.get$name$x(t1._stats.currentShield)), 5);
+  },
+  draw$1: function(ctx) {
+    var drawCursor = this.timeElapse < this.blinkDuration / 2 && true;
+    this.drawItemListBox$2(this._game.get$guiCanvasCtx(), drawCursor);
+    this.drawItemNameBox$1(this._game.get$guiCanvasCtx());
+    this.drawEquipmentBox$1(this._game.get$guiCanvasCtx());
+    this._isDirty = false;
   },
   activate$1$args: function(args) {
   },
@@ -4772,29 +5653,56 @@ EquipMenu: {"": "Layer;_game,_gameState,_TextWriter,gap,pad,padgap,timeElapse,bl
     if (t1 > t2)
       this.timeElapse = t1 - t2;
   },
+  dismiss$0: function() {
+    var t1, t2, t3;
+    t1 = this._game;
+    t2 = t1.get$guiCanvasCtx();
+    t1 = t1.get$guiCanvas();
+    t3 = $.getInterceptor$x(t1);
+    t2.clearRect(0, 0, t3.get$width(t1), t3.get$height(t1));
+    t1 = this._game;
+    t3 = new $.PopRequest(null, null);
+    t3._game = t1;
+    t3._activateParams = null;
+    t1.AddRequest$1(t3);
+    t3 = this._game;
+    t1 = new $.RedrawRequest(null);
+    t1._game = t3;
+    t3.AddRequest$1(t1);
+  },
   OnKeyboardDown$1: function(e) {
-    var t1, t2;
+    var t1, t2, currentItem;
     switch ($.get$keyCode$x(e)) {
       case 37:
         break;
       case 38:
+        this._cursorPos = $.max($.$sub$n(this._cursorPos, 1), 0);
+        this._isDirty = true;
         break;
       case 39:
         break;
       case 40:
+        this._cursorPos = $.min($.$add$ns(this._cursorPos, 1), this._subItemList.length - 1);
+        this._isDirty = true;
         break;
       case 88:
+        t1 = this._subItemList;
+        t2 = this._cursorPos;
+        if (t2 >>> 0 !== t2 || t2 >= t1.length)
+          throw $.ioore(t2);
+        currentItem = t1[t2];
+        t2 = this._gameState;
+        t2.get$Stats;
+        t2._stats.Equip$1(currentItem);
+        this._cursorPos = 0;
+        if ($.$eq(this.pageNumber, this.maxPageNumber))
+          this.dismiss$0();
+        else
+          this.pageNumber = $.$add$ns(this.pageNumber, 1);
+        this._isDirty = true;
         break;
       case 67:
-        t1 = this._game;
-        t2 = new $.PopRequest(null, null);
-        t2._game = t1;
-        t2._activateParams = null;
-        t1.AddRequest$1(t2);
-        t2 = this._game;
-        t1 = new $.RedrawRequest(null);
-        t1._game = t2;
-        t2.AddRequest$1(t1);
+        this.dismiss$0();
         break;
       default:
     }
@@ -4823,8 +5731,7 @@ EquipMenu: {"": "Layer;_game,_gameState,_TextWriter,gap,pad,padgap,timeElapse,bl
     this.padgap = this.gap + this.pad;
     t1 = this.padgap;
     this.ItemNameBox = new $.Rect(64 + t1, 32 + t1, 256 - t1, 128 - t1);
-    t1 = this.padgap;
-    this.ItemListBox = new $.Rect(320 + t1 + 5, 32 + t1, 256 - t1, 128 - t1);
+    this.ItemListBox = this.calcItemListBox$1(3);
     t1 = this.padgap;
     this.EquipmentBox = new $.Rect(64 + t1, 160 + t1 + 5, 256 - t1, 192 - t1);
     t1 = new $.TextWriter($.makeLiteralMap([]), ";", true, null, 1, 1, 1, 2, 1, "Left", null, 0, 16, 16);
@@ -4833,103 +5740,136 @@ EquipMenu: {"": "Layer;_game,_gameState,_TextWriter,gap,pad,padgap,timeElapse,bl
   },
   static: {
 EquipMenu$: function(game, gamestate) {
-  var t1 = new $.EquipMenu(null, null, null, 1, 5, 6, 0, 500, null, null, null, 1);
+  var t1 = new $.EquipMenu(null, null, null, 1, 5, 6, 0, 500, null, null, null, true, 0, 2, 0, 0, []);
   t1.EquipMenu$2(game, gamestate);
   return t1;
 }}
 
 },
 
-itemMenu: {"": "Layer;_game,_gameState,_TextWriter,width*,height*,px,py,gap,pad,timeElapse,blinkDuration,_cursorPos,_currentAction",
+EquipMenu_drawItemListBox_closure: {"": "Closure;",
+  call$1: function(n) {
+    return n.getType$0() === "Weapon";
+  }
+},
+
+EquipMenu_drawItemListBox_closure0: {"": "Closure;",
+  call$1: function(n) {
+    return n.getType$0() === "Armor";
+  }
+},
+
+EquipMenu_drawItemListBox_closure1: {"": "Closure;",
+  call$1: function(n) {
+    return n.getType$0() === "Shield";
+  }
+},
+
+itemMenu: {"": "Layer;_game,_gameState,_TextWriter,width*,height*,px,py,gap,pad,timeElapse,blinkDuration,_cursorPos,_isDirty,_currentAction",
+  setDirty$0: function() {
+    this._isDirty = true;
+  },
   draw$1: function(ctx) {
     var t1, t2, t3, t4, t5, t6, drawCursor, row, item, cursorStr;
-    t1 = $.getInterceptor$x(ctx);
-    t1.set$fillStyle(ctx, "#EEEEEE");
-    t2 = this.px;
-    t3 = this.py;
-    t1.fillRect$4(ctx, t2, t3, this.width, this.height);
-    t1.set$fillStyle(ctx, "#222222");
-    t4 = this.pad;
-    t2 += t4;
-    t3 += t4;
-    t5 = this.width;
-    if (typeof t5 !== "number")
-      return this.draw$1$bailout1(1, ctx, t4, t2, t1, t3, t5);
-    t5 = t5 - t4 - t4;
-    t6 = this.height;
-    if (typeof t6 !== "number")
-      return this.draw$1$bailout1(2, ctx, t4, t2, t1, t3, t5, t6);
-    t1.fillRect$4(ctx, t2, t3, t5, t6 - t4 - t4);
-    drawCursor = this.timeElapse < this.blinkDuration / 2 && true;
-    for (t1 = this._gameState, t1.get$Inventory, t1 = t1._inventory, t1 = new $.ListIterator(t1, t1.length, 0, null), row = 0; t1.moveNext$0();) {
-      item = t1._liblib$_current;
-      if (drawCursor) {
-        t2 = this._cursorPos;
-        if (typeof t2 !== "number")
-          return this.draw$1$bailout1(3, ctx, 0, t2, t1, 0, 0, 0, drawCursor, item, row);
-        t2 = row === t2 * 2;
-      } else
-        t2 = false;
-      cursorStr = t2 ? ">" : " ";
-      this._TextWriter.WriteByRow$3(ctx, cursorStr + $.S($.get$name$x(item)), row + 1);
-      row += 2;
+    if (this._isDirty) {
+      this._game.get$guiCanvasCtx().fillStyle = "#EEEEEE";
+      t1 = this.px;
+      t2 = this.py;
+      this._game.get$guiCanvasCtx().fillRect(t1, t2, this.width, this.height);
+      this._game.get$guiCanvasCtx().fillStyle = "#222222";
+      t3 = this._game.get$guiCanvasCtx();
+      t4 = this.pad;
+      t1 += t4;
+      t2 += t4;
+      t5 = this.width;
+      if (typeof t5 !== "number")
+        return this.draw$1$bailout1(1, t4, t1, t2, t5, t3);
+      t5 = t5 - t4 - t4;
+      t6 = this.height;
+      if (typeof t6 !== "number")
+        return this.draw$1$bailout1(2, t4, t1, t2, t5, t3, t6);
+      t3.fillRect(t1, t2, t5, t6 - t4 - t4);
+      drawCursor = this.timeElapse < this.blinkDuration / 2 && true;
+      for (t1 = this._gameState, t1.get$Inventory, t1 = t1._inventory, t1 = new $.ListIterator(t1, t1.length, 0, null), row = 0; t1.moveNext$0();) {
+        item = t1._liblib$_current;
+        if (drawCursor) {
+          t2 = this._cursorPos;
+          if (typeof t2 !== "number")
+            return this.draw$1$bailout1(3, 0, t1, t2, 0, 0, 0, row, item, drawCursor);
+          t2 = row === t2 * 2;
+        } else
+          t2 = false;
+        cursorStr = t2 ? ">" : " ";
+        this._TextWriter.WriteByRow$3(this._game.get$guiCanvasCtx(), cursorStr + $.S($.get$name$x(item)), row + 1);
+        row += 2;
+      }
+      this._isDirty = false;
     }
   },
-  draw$1$bailout1: function(state0, ctx, t4, t2, t1, t3, t5, t6, drawCursor, item, row) {
+  draw$1$bailout1: function(state0, t4, t1, t2, t5, t3, t6, row, item, drawCursor) {
     switch (state0) {
       case 0:
-        t1 = $.getInterceptor$x(ctx);
-        t1.set$fillStyle(ctx, "#EEEEEE");
-        t2 = this.px;
-        t3 = this.py;
-        t1.fillRect$4(ctx, t2, t3, this.width, this.height);
-        t1.set$fillStyle(ctx, "#222222");
-        t4 = this.pad;
-        t2 += t4;
-        t3 += t4;
-        t5 = this.width;
-      case 1:
-        state0 = 0;
-        t5 = $.$sub$n($.$sub$n(t5, t4), t4);
-        t6 = this.height;
-      case 2:
-        state0 = 0;
-        t1.fillRect$4(ctx, t2, t3, t5, $.$sub$n($.$sub$n(t6, t4), t4));
-        drawCursor = this.timeElapse < this.blinkDuration / 2 && true;
-        t1 = this._gameState;
-        t1.get$Inventory;
-        t1 = t1._inventory;
-        t1 = new $.ListIterator(t1, t1.length, 0, null);
-        row = 0;
-      case 3:
+      default:
         var cursorStr;
-        L0:
-          while (true)
-            switch (state0) {
-              case 0:
-                if (!t1.moveNext$0())
-                  break L0;
-                item = t1._liblib$_current;
-              case 3:
-                if (state0 === 3 || state0 === 0 && drawCursor)
+        if (state0 === 3 || state0 === 2 || state0 === 1 || state0 === 0 && this._isDirty)
+          switch (state0) {
+            case 0:
+              this._game.get$guiCanvasCtx().fillStyle = "#EEEEEE";
+              t1 = this.px;
+              t2 = this.py;
+              this._game.get$guiCanvasCtx().fillRect(t1, t2, this.width, this.height);
+              this._game.get$guiCanvasCtx().fillStyle = "#222222";
+              t3 = this._game.get$guiCanvasCtx();
+              t4 = this.pad;
+              t1 += t4;
+              t2 += t4;
+              t5 = this.width;
+            case 1:
+              state0 = 0;
+              t5 = $.$sub$n($.$sub$n(t5, t4), t4);
+              t6 = this.height;
+            case 2:
+              state0 = 0;
+              t3.fillRect(t1, t2, t5, $.$sub$n($.$sub$n(t6, t4), t4));
+              drawCursor = this.timeElapse < this.blinkDuration / 2 && true;
+              t1 = this._gameState;
+              t1.get$Inventory;
+              t1 = t1._inventory;
+              t1 = new $.ListIterator(t1, t1.length, 0, null);
+              row = 0;
+            case 3:
+              L0:
+                while (true)
                   switch (state0) {
                     case 0:
-                      t2 = this._cursorPos;
+                      if (!t1.moveNext$0())
+                        break L0;
+                      item = t1._liblib$_current;
                     case 3:
-                      state0 = 0;
-                      t2 = row === $.$mul$n(t2, 2);
+                      if (state0 === 3 || state0 === 0 && drawCursor)
+                        switch (state0) {
+                          case 0:
+                            t2 = this._cursorPos;
+                          case 3:
+                            state0 = 0;
+                            t2 = row === $.$mul$n(t2, 2);
+                        }
+                      else
+                        t2 = false;
+                      cursorStr = t2 ? ">" : " ";
+                      this._TextWriter.WriteByRow$3(this._game.get$guiCanvasCtx(), cursorStr + $.S($.get$name$x(item)), row + 1);
+                      row += 2;
                   }
-                else
-                  t2 = false;
-                cursorStr = t2 ? ">" : " ";
-                this._TextWriter.WriteByRow$3(ctx, cursorStr + $.S($.get$name$x(item)), row + 1);
-                row += 2;
-            }
+              this._isDirty = false;
+          }
     }
   },
   activate$1$args: function(args) {
-    if (args != null && args.containsKey$1("UserSelection"))
-      this._currentAction = $.$index$asx(args.$index(args, "UserSelection"), 1);
+    if (args != null && args.containsKey$1("UserSelection")) {
+      this._currentAction = 3;
+      if (args.$index(args, "UserSelection") != null)
+        this._currentAction = $.$index$asx(args.$index(args, "UserSelection"), 1);
+    }
   },
   deactivate$1$args: function(args) {
   },
@@ -4954,14 +5894,19 @@ itemMenu: {"": "Layer;_game,_gameState,_TextWriter,width*,height*,px,py,gap,pad,
     t2 = t1.length;
     if (t2 === 0) {
       t1 = this._game;
-      t2 = new $.PopRequest(null, null);
-      t2._game = t1;
-      t2._activateParams = null;
-      t1.AddRequest$1(t2);
-      t2 = this._game;
+      t2 = t1.get$guiCanvasCtx();
+      t1 = t1.get$guiCanvas();
+      t3 = $.getInterceptor$x(t1);
+      t2.clearRect(0, 0, t3.get$width(t1), t3.get$height(t1));
+      t1 = this._game;
+      t3 = new $.PopRequest(null, null);
+      t3._game = t1;
+      t3._activateParams = null;
+      t1.AddRequest$1(t3);
+      t3 = this._game;
       t1 = new $.RedrawRequest(null);
-      t1._game = t2;
-      t2.AddRequest$1(t1);
+      t1._game = t3;
+      t3.AddRequest$1(t1);
       return;
     }
     switch (this._currentAction) {
@@ -4970,18 +5915,24 @@ itemMenu: {"": "Layer;_game,_gameState,_TextWriter,width*,height*,px,py,gap,pad,
         if (t3 >>> 0 !== t3 || t3 >= t2)
           throw $.ioore(t3);
         item = t1[t3];
-        $.Primitives_printString("using " + item.get$name(item));
+        $.Primitives_printString("using " + $.S($.get$name$x(item)));
+        t3 = this._gameState;
+        t3.RemoveItem$1;
+        C.JSArray_methods.remove$1(t3._inventory, item);
+        this._cursorPos = 0;
+        this._isDirty = true;
         break;
       case 2:
         t3 = this._cursorPos;
         if (t3 >>> 0 !== t3 || t3 >= t2)
           throw $.ioore(t3);
         item = t1[t3];
-        $.Primitives_printString("droping " + item.get$name(item));
+        $.Primitives_printString("droping " + $.S($.get$name$x(item)));
         t3 = this._gameState;
         t3.RemoveItem$1;
         C.JSArray_methods.remove$1(t3._inventory, item);
         this._cursorPos = 0;
+        this._isDirty = true;
         break;
       default:
     }
@@ -4994,6 +5945,7 @@ itemMenu: {"": "Layer;_game,_gameState,_TextWriter,width*,height*,px,py,gap,pad,
         break;
       case 38:
         this._cursorPos = $.max(0, $.$sub$n(this._cursorPos, 1));
+        this._isDirty = true;
         break;
       case 39:
         break;
@@ -5001,13 +5953,14 @@ itemMenu: {"": "Layer;_game,_gameState,_TextWriter,width*,height*,px,py,gap,pad,
         t1 = this._gameState;
         t1.get$Inventory;
         this._cursorPos = $.min(t1._inventory.length - 1, $.$add$ns(this._cursorPos, 1));
+        this._isDirty = true;
         break;
       case 88:
         t1 = this._game;
         t2 = this.width;
         if (typeof t2 !== "number")
           throw $.iae(t2);
-        t2 = $.DecisionBox$fromList(t1, new $.Rect(this.px + t2 + 10, this.py, 100, 80), [["Use", 1], ["Drop", 2], ["Done", 3]]);
+        t2 = $.DecisionBox$fromList(t1, new $.Rect(this.px + t2 + 10, this.py, 100, 80), [["Use", 1], ["Drop", 2], ["Done", 3]], true);
         t3 = new $.PushRequest(null, null, null);
         t3._game = t1;
         t3._pushLayer = t2;
@@ -5016,14 +5969,19 @@ itemMenu: {"": "Layer;_game,_gameState,_TextWriter,width*,height*,px,py,gap,pad,
         break;
       case 67:
         t1 = this._game;
-        t2 = new $.PopRequest(null, null);
-        t2._game = t1;
-        t2._activateParams = null;
-        t1.AddRequest$1(t2);
-        t2 = this._game;
+        t2 = t1.get$guiCanvasCtx();
+        t1 = t1.get$guiCanvas();
+        t3 = $.getInterceptor$x(t1);
+        t2.clearRect(0, 0, t3.get$width(t1), t3.get$height(t1));
+        t1 = this._game;
+        t3 = new $.PopRequest(null, null);
+        t3._game = t1;
+        t3._activateParams = null;
+        t1.AddRequest$1(t3);
+        t3 = this._game;
         t1 = new $.RedrawRequest(null);
-        t1._game = t2;
-        t2.AddRequest$1(t1);
+        t1._game = t3;
+        t3.AddRequest$1(t1);
         break;
       default:
     }
@@ -5063,14 +6021,14 @@ itemMenu: {"": "Layer;_game,_gameState,_TextWriter,width*,height*,px,py,gap,pad,
   static: {
 "": "itemMenu_USE_ACTION,itemMenu_DROP_ACTION,itemMenu_DONE_ACTION",
 itemMenu$: function(game, gamestate) {
-  var t1 = new $.itemMenu(null, null, null, 256, 312, 192, 128, 1, 5, 0, 500, 0, 3);
+  var t1 = new $.itemMenu(null, null, null, 256, 312, 192, 128, 1, 5, 0, 500, 0, true, 3);
   t1.itemMenu$2(game, gamestate);
   return t1;
 }}
 
 },
 
-MapLayer: {"": "Layer;_game,_gameState,_bgCanvas,_mainCanvas,_bgContext,_bgCanvasWidth,_bgCanvasHeight,_tileWidth,_tileHeight,_dispCanvasWidth,_dispCanvasHeight,_dispRect,_mapData,_heroSprite,_npcs,_lastTilePosX,_lastTilePosY,_lastTileSubPosX,_lastTileSubPosY,_triggerMap,_tasks,_pendingHandleTalk,_pendingSearch",
+MapLayer: {"": "Layer;_game,_gameState,_bgCanvas,_mainCanvas,_bgContext,_bgCanvasWidth,_bgCanvasHeight,_tileWidth,_tileHeight,_dispCanvasWidth,_dispCanvasHeight,_dispRect,_mapData,_heroSprite,_npcs,_lastTilePosX,_lastTilePosY,_lastTileSubPosX,_lastTileSubPosY,_triggerMap,_tasks,_pendingHandleTalk,_pendingSearch,_rng",
   activate$1$args: function(args) {
     var t1;
     this.drawBackground$1(this._bgContext);
@@ -5080,7 +6038,7 @@ MapLayer: {"": "Layer;_game,_gameState,_bgCanvas,_mainCanvas,_bgContext,_bgCanva
     else if (t1 && args.containsKey$1("UserTalkAction"))
       this._pendingHandleTalk = true;
     else if (t1 && args.containsKey$1("UserSearchAction"))
-      $.Primitives_printString("Search action");
+      this._pendingSearch = true;
   },
   deactivate$1$args: function(args) {
   },
@@ -5130,7 +6088,7 @@ MapLayer: {"": "Layer;_game,_gameState,_bgCanvas,_mainCanvas,_bgContext,_bgCanva
     }
   },
   draw$1: function(ctx) {
-    var t1, t2;
+    var t1, t2, t3;
     t1 = this._tasks;
     t2 = t1.length;
     if (t2 !== 0) {
@@ -5144,12 +6102,18 @@ MapLayer: {"": "Layer;_game,_gameState,_bgCanvas,_mainCanvas,_bgContext,_bgCanva
       return;
     }
     this.blitBackground$1(ctx);
-    t1 = this._heroSprite;
-    t1.draw$1;
-    t1 = t1._currSprite;
-    t1.draw$4$px$py$size;
-    t1._currentAnim.GetCurrentSprite$0().draw$4$context$dx$dy$size(ctx, 320, 240, 32);
-    this.drawNPCS$1(ctx);
+    t1 = this._game;
+    t2 = t1.get$spriteCanvasCtx();
+    t1 = t1.get$spriteCanvas();
+    t3 = $.getInterceptor$x(t1);
+    t2.clearRect(0, 0, t3.get$width(t1), t3.get$height(t1));
+    t1 = this._game.get$spriteCanvasCtx();
+    t3 = this._heroSprite;
+    t3.draw$1;
+    t3 = t3._currSprite;
+    t3.draw$4$px$py$size;
+    t3._currentAnim.GetCurrentSprite$0().draw$4$context$dx$dy$size(t1, 320, 240, 32);
+    this.drawNPCS$1(this._game.get$spriteCanvasCtx());
   },
   OnEnterNewSubTile$2: function(px, py) {
     var t1, t2, posKey;
@@ -5174,23 +6138,23 @@ MapLayer: {"": "Layer;_game,_gameState,_bgCanvas,_mainCanvas,_bgContext,_bgCanva
     }
   },
   update$1: function(delta) {
-    var t1, t2, t3, t4, hero, facingBox, thing;
+    var t1, t2, t3, t4, hero, facingBox, didTalk, thing;
     t1 = this._tasks;
     t2 = t1.length;
     if (t2 !== 0) {
       if (0 >= t2)
         throw $.ioore(0);
       t2 = t1[0].isComplete$0();
-      t3 = t1[0];
-      t4 = t1.length;
+      t3 = t1.length;
+      t4 = t1[0];
       if (!t2) {
-        if (0 >= t4)
+        if (0 >= t3)
           throw $.ioore(0);
-        t3.update$1(delta);
+        t4.update$1(delta);
       } else {
-        if (0 >= t4)
+        if (0 >= t3)
           throw $.ioore(0);
-        t3.end$0();
+        t4.end$0();
         C.JSArray_methods.removeAt$1(t1, 0);
         t2 = t1.length;
         if (t2 !== 0) {
@@ -5206,12 +6170,19 @@ MapLayer: {"": "Layer;_game,_gameState,_bgCanvas,_mainCanvas,_bgContext,_bgCanva
       hero.ResetToIdle$0;
       hero._currState = 0;
       facingBox = hero.getFacingBox$0();
-      for (t1 = this._npcs, t1.get$iterator, t1 = new $.ListIterator(t1, t1.length, 0, null); t1.moveNext$0();) {
-        thing = t1._liblib$_current;
-        if (facingBox.intersects$1(thing.getRect$0())) {
+      for (t2 = this._npcs, t2.get$iterator, t2 = new $.ListIterator(t2, t2.length, 0, null); didTalk = false, t2.moveNext$0();) {
+        thing = t2._liblib$_current;
+        if (facingBox.intersects$1(facingBox, thing.getRect$0())) {
           thing.OnTalkBegin$2(this._game, hero);
+          didTalk = true;
           break;
         }
+      }
+      if (!didTalk) {
+        t2 = new $.AnnotateTask(null, null);
+        t2._game = this._game;
+        t2._msg = ["There is no one to talk."];
+        t1.push(t2);
       }
       this._pendingHandleTalk = false;
     } else if (this._pendingSearch)
@@ -5277,7 +6248,7 @@ MapLayer: {"": "Layer;_game,_gameState,_bgCanvas,_mainCanvas,_bgContext,_bgCanva
         break;
       case 67:
         t1 = this._game;
-        t2 = $.battleMenu$(t1, "Forest", "M_Magician");
+        t2 = $.BuySellMenu$(t1, "Weapon");
         t3 = new $.PushRequest(null, null, null);
         t3._game = t1;
         t3._pushLayer = t2;
@@ -5379,7 +6350,7 @@ MapLayer: {"": "Layer;_game,_gameState,_bgCanvas,_mainCanvas,_bgContext,_bgCanva
     this._dispCanvasHeight = $.get$height$x(this._mainCanvas);
     this._dispRect = new $.Rect(0, 0, this._dispCanvasWidth, this._dispCanvasHeight);
     this._mapData = mapData;
-    this._heroSprite = $.HeroSprite$(game, mapData, -1, -1);
+    this._heroSprite = $.HeroSprite$(game, mapData, this, -1, -1);
     t1 = this._heroSprite;
     t1.get$TilePosX;
     this._lastTilePosX = C.JSNumber_methods.$tdiv(t1._mapPx, 32);
@@ -5397,14 +6368,14 @@ MapLayer: {"": "Layer;_game,_gameState,_bgCanvas,_mainCanvas,_bgContext,_bgCanva
   },
   static: {
 MapLayer$: function(game, mapData) {
-  var t1 = new $.MapLayer(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, -1, -1, -1, -1, null, [], false, false);
+  var t1 = new $.MapLayer(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, -1, -1, -1, -1, null, [], false, false, C.C__Random);
   t1.MapLayer$2(game, mapData);
   return t1;
 }}
 
 },
 
-questMenu: {"": "Layer;_game,_gameState,_mapLayer,_TextWriter,width*,height*,px,py,gap,pad,timeElapse,blinkDuration,_cursorPos,_visible,_statusBarMenu,_choosenAction",
+questMenu: {"": "Layer;_game,_gameState,_mapLayer,_TextWriter,width*,height*,px,py,gap,pad,timeElapse,blinkDuration,_cursorPos,_visible,_bgDirty,_statusBarMenu,_choosenAction",
   get$cursorIndex: function() {
     var t1, t2;
     t1 = this._cursorPos;
@@ -5418,23 +6389,23 @@ questMenu: {"": "Layer;_game,_gameState,_mapLayer,_TextWriter,width*,height*,px,
   },
   draw$1: function(ctx) {
     var t1, t2, t3, t4, t5, t6, cursorStr;
-    t1 = $.getInterceptor$x(ctx);
-    t1.set$fillStyle(ctx, "#EEEEEE");
-    t2 = this.px;
-    t3 = this.py;
-    t1.fillRect$4(ctx, t2, t3, this.width, this.height);
-    t1.set$fillStyle(ctx, "#222222");
+    this._game.get$guiCanvasCtx().fillStyle = "#EEEEEE";
+    t1 = this.px;
+    t2 = this.py;
+    this._game.get$guiCanvasCtx().fillRect(t1, t2, this.width, this.height);
+    this._game.get$guiCanvasCtx().fillStyle = "#222222";
+    t3 = this._game.get$guiCanvasCtx();
     t4 = this.pad;
+    t1 += t4;
     t2 += t4;
-    t3 += t4;
     t5 = this.width;
     if (typeof t5 !== "number")
-      return this.draw$1$bailout1(1, ctx, t5, t4, t1, t2, t3);
+      return this.draw$1$bailout1(1, t3, t4, t1, t2, t5);
     t5 = t5 - t4 - t4;
     t6 = this.height;
     if (typeof t6 !== "number")
-      return this.draw$1$bailout1(2, ctx, t5, t4, t1, t2, t3, t6);
-    t1.fillRect$4(ctx, t2, t3, t5, t6 - t4 - t4);
+      return this.draw$1$bailout1(2, t3, t4, t1, t2, t5, t6);
+    t3.fillRect(t1, t2, t5, t6 - t4 - t4);
     cursorStr = [" ", " ", " ", " ", " ", " "];
     if (this.timeElapse < this.blinkDuration / 2) {
       t1 = this._cursorPos;
@@ -5442,35 +6413,35 @@ questMenu: {"": "Layer;_game,_gameState,_mapLayer,_TextWriter,width*,height*,px,
         throw $.ioore(1);
       t2 = t1[1];
       if (t2 !== (t2 | 0))
-        return this.draw$1$bailout1(3, ctx, 0, 0, t2, 0, 0, 0, cursorStr);
+        return this.draw$1$bailout1(3, 0, 0, t2, 0, 0, 0, cursorStr);
       t1 = t1[0];
       if (typeof t1 !== "number")
         throw $.iae(t1);
       t1 = t2 * 2 + t1;
       if (t1 !== (t1 | 0))
-        return this.draw$1$bailout1(4, ctx, 0, 0, 0, t1, 0, 0, cursorStr);
+        return this.draw$1$bailout1(4, 0, 0, 0, t1, 0, 0, cursorStr);
       if (t1 < 0 || t1 >= 6)
         throw $.ioore(t1);
       cursorStr[t1] = ">";
     }
-    this._TextWriter.WriteByRow$3(ctx, "Command", 1);
-    this._TextWriter.WriteByRow$3(ctx, cursorStr[0] + "Talk  " + cursorStr[1] + "Spell", 2);
-    this._TextWriter.WriteByRow$3(ctx, cursorStr[2] + "Status" + cursorStr[3] + "Item", 3);
-    this._TextWriter.WriteByRow$3(ctx, cursorStr[4] + "Equip " + cursorStr[5] + "Search", 4);
-    this._statusBarMenu.draw$1(ctx);
+    this._TextWriter.WriteByRow$3(this._game.get$guiCanvasCtx(), "Command", 1);
+    this._TextWriter.WriteByRow$3(this._game.get$guiCanvasCtx(), cursorStr[0] + "Talk  " + cursorStr[1] + "Spell", 2);
+    this._TextWriter.WriteByRow$3(this._game.get$guiCanvasCtx(), cursorStr[2] + "Status" + cursorStr[3] + "Item", 3);
+    this._TextWriter.WriteByRow$3(this._game.get$guiCanvasCtx(), cursorStr[4] + "Equip " + cursorStr[5] + "Search", 4);
+    this._statusBarMenu.draw$1(this._game.get$guiCanvasCtx());
   },
-  draw$1$bailout1: function(state0, ctx, t5, t4, t1, t2, t3, t6, cursorStr) {
+  draw$1$bailout1: function(state0, t3, t4, t1, t2, t5, t6, cursorStr) {
     switch (state0) {
       case 0:
-        t1 = $.getInterceptor$x(ctx);
-        t1.set$fillStyle(ctx, "#EEEEEE");
-        t2 = this.px;
-        t3 = this.py;
-        t1.fillRect$4(ctx, t2, t3, this.width, this.height);
-        t1.set$fillStyle(ctx, "#222222");
+        this._game.get$guiCanvasCtx().fillStyle = "#EEEEEE";
+        t1 = this.px;
+        t2 = this.py;
+        this._game.get$guiCanvasCtx().fillRect(t1, t2, this.width, this.height);
+        this._game.get$guiCanvasCtx().fillStyle = "#222222";
+        t3 = this._game.get$guiCanvasCtx();
         t4 = this.pad;
+        t1 += t4;
         t2 += t4;
-        t3 += t4;
         t5 = this.width;
       case 1:
         state0 = 0;
@@ -5478,7 +6449,7 @@ questMenu: {"": "Layer;_game,_gameState,_mapLayer,_TextWriter,width*,height*,px,
         t6 = this.height;
       case 2:
         state0 = 0;
-        t1.fillRect$4(ctx, t2, t3, t5, $.$sub$n($.$sub$n(t6, t4), t4));
+        t3.fillRect(t1, t2, t5, $.$sub$n($.$sub$n(t6, t4), t4));
         cursorStr = [" ", " ", " ", " ", " ", " "];
       default:
         if (state0 === 4 || state0 === 3 || state0 === 0 && this.timeElapse < this.blinkDuration / 2)
@@ -5504,11 +6475,11 @@ questMenu: {"": "Layer;_game,_gameState,_mapLayer,_TextWriter,width*,height*,px,
                 throw $.ioore(t2);
               cursorStr[t2] = ">";
           }
-        this._TextWriter.WriteByRow$3(ctx, "Command", 1);
-        this._TextWriter.WriteByRow$3(ctx, cursorStr[0] + "Talk  " + cursorStr[1] + "Spell", 2);
-        this._TextWriter.WriteByRow$3(ctx, cursorStr[2] + "Status" + cursorStr[3] + "Item", 3);
-        this._TextWriter.WriteByRow$3(ctx, cursorStr[4] + "Equip " + cursorStr[5] + "Search", 4);
-        this._statusBarMenu.draw$1(ctx);
+        this._TextWriter.WriteByRow$3(this._game.get$guiCanvasCtx(), "Command", 1);
+        this._TextWriter.WriteByRow$3(this._game.get$guiCanvasCtx(), cursorStr[0] + "Talk  " + cursorStr[1] + "Spell", 2);
+        this._TextWriter.WriteByRow$3(this._game.get$guiCanvasCtx(), cursorStr[2] + "Status" + cursorStr[3] + "Item", 3);
+        this._TextWriter.WriteByRow$3(this._game.get$guiCanvasCtx(), cursorStr[4] + "Equip " + cursorStr[5] + "Search", 4);
+        this._statusBarMenu.draw$1(this._game.get$guiCanvasCtx());
     }
   },
   activate$1$args: function(args) {
@@ -5521,6 +6492,9 @@ questMenu: {"": "Layer;_game,_gameState,_mapLayer,_TextWriter,width*,height*,px,
     return this.deactivate$1$args(null);
   },
   cleanup$0: function() {
+  },
+  setDirty$0: function() {
+    this._bgDirty = true;
   },
   update$1: function(delta) {
     var t1, t2, t3;
@@ -5541,6 +6515,23 @@ questMenu: {"": "Layer;_game,_gameState,_mapLayer,_TextWriter,width*,height*,px,
       t3._activateParams = t1;
       t2.AddRequest$1(t3);
     }
+  },
+  dismiss$0: function() {
+    var t1, t2, t3;
+    t1 = this._game;
+    t2 = t1.get$guiCanvasCtx();
+    t1 = t1.get$guiCanvas();
+    t3 = $.getInterceptor$x(t1);
+    t2.clearRect(0, 0, t3.get$width(t1), t3.get$height(t1));
+    t1 = this._game;
+    t3 = new $.PopRequest(null, null);
+    t3._game = t1;
+    t3._activateParams = null;
+    t1.AddRequest$1(t3);
+    t3 = this._game;
+    t1 = new $.RedrawRequest(null);
+    t1._game = t3;
+    t3.AddRequest$1(t1);
   },
   OnKeyboardDown$1: function(e) {
     var t1, t2, t3, spells;
@@ -5585,11 +6576,20 @@ questMenu: {"": "Layer;_game,_gameState,_mapLayer,_TextWriter,width*,height*,px,
         switch (this.get$cursorIndex()) {
           case 0:
             t1 = this._game;
-            t2 = $.makeLiteralMap(["UserTalkAction", "Talk"]);
-            t3 = new $.PopRequest(null, null);
-            t3._game = t1;
-            t3._activateParams = t2;
-            t1.AddRequest$1(t3);
+            t2 = t1.get$guiCanvasCtx();
+            t1 = t1.get$guiCanvas();
+            t3 = $.getInterceptor$x(t1);
+            t2.clearRect(0, 0, t3.get$width(t1), t3.get$height(t1));
+            t1 = this._game;
+            t3 = $.makeLiteralMap(["UserTalkAction", "Talk"]);
+            t2 = new $.PopRequest(null, null);
+            t2._game = t1;
+            t2._activateParams = t3;
+            t1.AddRequest$1(t2);
+            t2 = this._game;
+            t1 = new $.RedrawRequest(null);
+            t1._game = t2;
+            t2.AddRequest$1(t1);
             break;
           case 1:
             spells = this._game.get$gameState().getFieldSpell$0();
@@ -5660,21 +6660,26 @@ questMenu: {"": "Layer;_game,_gameState,_mapLayer,_TextWriter,width*,height*,px,
             break;
           case 5:
             t1 = this._game;
-            t2 = $.makeLiteralMap(["UserSearchAction", "Search"]);
-            t3 = new $.PopRequest(null, null);
-            t3._game = t1;
-            t3._activateParams = t2;
-            t1.AddRequest$1(t3);
+            t2 = t1.get$guiCanvasCtx();
+            t1 = t1.get$guiCanvas();
+            t3 = $.getInterceptor$x(t1);
+            t2.clearRect(0, 0, t3.get$width(t1), t3.get$height(t1));
+            t1 = this._game;
+            t3 = $.makeLiteralMap(["UserSearchAction", "Search"]);
+            t2 = new $.PopRequest(null, null);
+            t2._game = t1;
+            t2._activateParams = t3;
+            t1.AddRequest$1(t2);
+            t2 = this._game;
+            t1 = new $.RedrawRequest(null);
+            t1._game = t2;
+            t2.AddRequest$1(t1);
             break;
           default:
         }
         break;
       case 67:
-        t1 = this._game;
-        t2 = new $.PopRequest(null, null);
-        t2._game = t1;
-        t2._activateParams = null;
-        t1.AddRequest$1(t2);
+        this.dismiss$0();
         break;
       default:
     }
@@ -5716,7 +6721,7 @@ questMenu: {"": "Layer;_game,_gameState,_mapLayer,_TextWriter,width*,height*,px,
   static: {
 "": "questMenu_TALK_COMMAND,questMenu_SEARCH_COMMAND",
 questMenu$: function(game, menu) {
-  var t1 = new $.questMenu(null, null, null, null, 256, 88, 192, 32, 1, 5, 0, 500, [0, 0], false, null, null);
+  var t1 = new $.questMenu(null, null, null, null, 256, 88, 192, 32, 1, 5, 0, 500, [0, 0], false, true, null, null);
   t1.questMenu$2(game, menu);
   return t1;
 }}
@@ -5729,19 +6734,18 @@ SpellMenu: {"": "Layer;_game,_gameState,_TextWriter,_maplayer,gap,pad,padgap,tim
     t1 = $.getInterceptor$x(ctx);
     t1.set$fillStyle(ctx, "#EEEEEE");
     t2 = rect.left;
-    t3 = this.padgap;
-    t4 = $.getInterceptor$n(t2);
-    t5 = rect.top;
-    t6 = $.getInterceptor$n(t5);
-    t7 = rect.width;
-    t8 = $.getInterceptor$ns(t7);
-    t9 = rect.height;
-    t10 = $.getInterceptor$ns(t9);
-    t1.fillRect$4(ctx, t4.$sub(t2, t3), t6.$sub(t5, t3), t8.$add(t7, t3), t10.$add(t9, t3));
+    t3 = $.getInterceptor$n(t2);
+    t4 = rect.top;
+    t5 = $.getInterceptor$n(t4);
+    t6 = rect.width;
+    t7 = $.getInterceptor$ns(t6);
+    t8 = rect.height;
+    t9 = $.getInterceptor$ns(t8);
+    t1.fillRect$4(ctx, t3.$sub(t2, this.padgap), t5.$sub(t4, this.padgap), t7.$add(t6, this.padgap), t9.$add(t8, this.padgap));
     t1.set$fillStyle(ctx, "#222222");
-    t3 = this.gap;
+    t10 = this.gap;
     t11 = this.pad;
-    t1.fillRect$4(ctx, t4.$sub(t2, t3), t6.$sub(t5, t3), $.$sub$n(t8.$add(t7, t3), t11), $.$sub$n(t10.$add(t9, t3), t11));
+    t1.fillRect$4(ctx, t3.$sub(t2, t10), t5.$sub(t4, t10), $.$sub$n(t7.$add(t6, t10), t11), $.$sub$n(t9.$add(t8, t10), t11));
   },
   whitespace$1: function(n) {
     var str, i;
@@ -5950,23 +6954,23 @@ SpellMenu$: function(game, menu, spell) {
 statusBar: {"": "Object;_game,_gameState,_TextWriter,width*,height*,px,py,gap,pad,_visible",
   draw$1: function(ctx) {
     var t1, t2, t3, t4, t5, t6;
-    t1 = $.getInterceptor$x(ctx);
-    t1.set$fillStyle(ctx, "#EEEEEE");
-    t2 = this.px;
-    t3 = this.py;
-    t1.fillRect$4(ctx, t2, t3, this.width, this.height);
-    t1.set$fillStyle(ctx, "#222222");
+    this._game.get$guiCanvasCtx().fillStyle = "#EEEEEE";
+    t1 = this.px;
+    t2 = this.py;
+    this._game.get$guiCanvasCtx().fillRect(t1, t2, this.width, this.height);
+    this._game.get$guiCanvasCtx().fillStyle = "#222222";
+    t3 = this._game.get$guiCanvasCtx();
     t4 = this.pad;
+    t1 += t4;
     t2 += t4;
-    t3 += t4;
     t5 = this.width;
     if (typeof t5 !== "number")
-      return this.draw$1$bailout(1, ctx, t3, t5, t1, t4, t2);
+      return this.draw$1$bailout(1, ctx, t3, t4, t1, t5, t2);
     t5 = t5 - t4 - t4;
     t6 = this.height;
     if (typeof t6 !== "number")
-      return this.draw$1$bailout(2, ctx, t3, t5, t1, t4, t2, t6);
-    t1.fillRect$4(ctx, t2, t3, t5, t6 - t4 - t4);
+      return this.draw$1$bailout(2, ctx, t3, t4, t1, t5, t2, t6);
+    t3.fillRect(t1, t2, t5, t6 - t4 - t4);
     t4 = this._TextWriter;
     t6 = this._gameState;
     t6.get$heroName;
@@ -5978,30 +6982,39 @@ statusBar: {"": "Object;_game,_gameState,_TextWriter,width*,height*,px,py,gap,pa
     t4 = this._TextWriter;
     t6 = this._gameState;
     t6.get$heroMP;
-    t6._stats;
-    t4.WriteByRow$3(ctx, "MP:" + this.formatNumber$1(100), 3);
+    t1 = t6._stats;
+    t2 = t1._Level;
+    if (t2 == null)
+      throw t2.$lt();
+    if (t2 < 3)
+      t1 = 0;
+    else {
+      t1 = t1._MP;
+      if (typeof t1 !== "number")
+        return this.draw$1$bailout(3, ctx, 0, t4, t1);
+    }
+    t4.WriteByRow$3(ctx, "MP:" + this.formatNumber$1(t1), 3);
     t1 = this._TextWriter;
-    t2 = this._gameState;
-    t2.get$heroLevel;
-    t2._stats;
-    t1.WriteByRow$3(ctx, "Lv:" + this.formatNumber$1(20), 4);
-    t1 = this._TextWriter;
-    t2 = this._gameState;
-    t2.get$heroGold;
-    t1.WriteByRow$3(ctx, "G" + this.formatGoldValue$1(t2._stats.Gold), 5);
+    t4 = this._gameState;
+    t4.get$heroLevel;
+    t1.WriteByRow$3(ctx, "Lv:" + this.formatNumber$1(t4._stats._Level), 4);
+    t4 = this._TextWriter;
+    t1 = this._gameState;
+    t1.get$heroGold;
+    t4.WriteByRow$3(ctx, "G" + this.formatGoldValue$1(t1._stats.Gold), 5);
   },
-  draw$1$bailout: function(state0, ctx, t3, t5, t1, t4, t2, t6) {
+  draw$1$bailout: function(state0, ctx, t3, t4, t1, t5, t2, t6) {
     switch (state0) {
       case 0:
-        t1 = $.getInterceptor$x(ctx);
-        t1.set$fillStyle(ctx, "#EEEEEE");
-        t2 = this.px;
-        t3 = this.py;
-        t1.fillRect$4(ctx, t2, t3, this.width, this.height);
-        t1.set$fillStyle(ctx, "#222222");
+        this._game.get$guiCanvasCtx().fillStyle = "#EEEEEE";
+        t1 = this.px;
+        t2 = this.py;
+        this._game.get$guiCanvasCtx().fillRect(t1, t2, this.width, this.height);
+        this._game.get$guiCanvasCtx().fillStyle = "#222222";
+        t3 = this._game.get$guiCanvasCtx();
         t4 = this.pad;
+        t1 += t4;
         t2 += t4;
-        t3 += t4;
         t5 = this.width;
       case 1:
         state0 = 0;
@@ -6009,7 +7022,7 @@ statusBar: {"": "Object;_game,_gameState,_TextWriter,width*,height*,px,py,gap,pa
         t6 = this.height;
       case 2:
         state0 = 0;
-        t1.fillRect$4(ctx, t2, t3, t5, $.$sub$n($.$sub$n(t6, t4), t4));
+        t3.fillRect(t1, t2, t5, $.$sub$n($.$sub$n(t6, t4), t4));
         t4 = this._TextWriter;
         t6 = this._gameState;
         t6.get$heroName;
@@ -6021,17 +7034,29 @@ statusBar: {"": "Object;_game,_gameState,_TextWriter,width*,height*,px,py,gap,pa
         t4 = this._TextWriter;
         t6 = this._gameState;
         t6.get$heroMP;
-        t6._stats;
-        t4.WriteByRow$3(ctx, "MP:" + this.formatNumber$1(100), 3);
+        t1 = t6._stats;
+        t2 = t1._Level;
+        if (t2 == null)
+          throw t2.$lt();
+      case 3:
+        if (state0 === 0 && t2 < 3)
+          t1 = 0;
+        else
+          switch (state0) {
+            case 0:
+              t1 = t1._MP;
+            case 3:
+              state0 = 0;
+          }
+        t4.WriteByRow$3(ctx, "MP:" + this.formatNumber$1(t1), 3);
         t1 = this._TextWriter;
-        t2 = this._gameState;
-        t2.get$heroLevel;
-        t2._stats;
-        t1.WriteByRow$3(ctx, "Lv:" + this.formatNumber$1(20), 4);
-        t1 = this._TextWriter;
-        t2 = this._gameState;
-        t2.get$heroGold;
-        t1.WriteByRow$3(ctx, "G" + this.formatGoldValue$1(t2._stats.Gold), 5);
+        t4 = this._gameState;
+        t4.get$heroLevel;
+        t1.WriteByRow$3(ctx, "Lv:" + this.formatNumber$1(t4._stats._Level), 4);
+        t4 = this._TextWriter;
+        t1 = this._gameState;
+        t1.get$heroGold;
+        t4.WriteByRow$3(ctx, "G" + this.formatGoldValue$1(t1._stats.Gold), 5);
     }
   },
   formatName$1: function($name) {
@@ -6083,20 +7108,20 @@ statusBar$: function(game, gameState) {
 },
 
 MapData: {"": "Object;",
-  getTriggeMap$0: function() {
-    return;
-  },
   getNPC$1: function(gm) {
     return [];
+  },
+  isPassable$1: function(tileId) {
+    return true;
   }
 },
 
 overworldMap: {"": "MapData;world,_maxPX,_maxPY,_srcTileSize",
   getInitPosX$0: function() {
-    return 60;
+    return 1855;
   },
   getInitPosY$0: function() {
-    return 58;
+    return 1938;
   },
   getTriggeMap$0: function() {
     var triggers, RadotomeTownEnterTrigger, RadotomeCastleEnterTrigger;
@@ -6104,14 +7129,16 @@ overworldMap: {"": "MapData;world,_maxPX,_maxPY,_srcTileSize",
     RadotomeTownEnterTrigger = new $.EnterTownTrigger(null, null);
     RadotomeTownEnterTrigger._liblib2$_key = "172:149";
     RadotomeTownEnterTrigger._townName = "RadotomeTown";
+    triggers.$indexSet(triggers, "123:116", RadotomeTownEnterTrigger);
+    triggers.$indexSet(triggers, "124:116", RadotomeTownEnterTrigger);
     triggers.$indexSet(triggers, "125:116", RadotomeTownEnterTrigger);
     triggers.$indexSet(triggers, "126:116", RadotomeTownEnterTrigger);
     RadotomeCastleEnterTrigger = new $.EnterTownTrigger(null, null);
     RadotomeCastleEnterTrigger._liblib2$_key = "164:154";
     RadotomeCastleEnterTrigger._townName = "RadotomeCastle1";
-    triggers.$indexSet(triggers, "75:80", RadotomeCastleEnterTrigger);
-    triggers.$indexSet(triggers, "76:80", RadotomeCastleEnterTrigger);
-    triggers.$indexSet(triggers, "77:80", RadotomeCastleEnterTrigger);
+    triggers.$indexSet(triggers, "114:120", RadotomeCastleEnterTrigger);
+    triggers.$indexSet(triggers, "115:120", RadotomeCastleEnterTrigger);
+    triggers.$indexSet(triggers, "116:120", RadotomeCastleEnterTrigger);
     return triggers;
   },
   getSrcTileSize$0: function() {
@@ -6174,6 +7201,9 @@ overworldMap: {"": "MapData;world,_maxPX,_maxPY,_srcTileSize",
     t1 = truncated == -0.0 ? 0 : truncated;
     return t1 * this._srcTileSize;
   },
+  isPassable$1: function(tileId) {
+    return $.stats_isPassableTerran(tileId);
+  },
   overworldMap$0: function() {
     this._maxPX = this.world[0].length;
     this._maxPY = 128;
@@ -6199,6 +7229,15 @@ RadotomeCastle1: {"": "MapData;world,_maxPX,_maxPY,_srcTileSize,_defaultTileId,_
   },
   getSrcImageName$0: function() {
     return "TownImage";
+  },
+  getTriggeMap$0: function() {
+    var triggers, Castle2ndFloorEnterTrigger;
+    triggers = new $.HashMap(0, null, null, null, null);
+    Castle2ndFloorEnterTrigger = new $.EnterTownTrigger(null, null);
+    Castle2ndFloorEnterTrigger._liblib2$_key = "172:149";
+    Castle2ndFloorEnterTrigger._townName = "RadotomeCastle2";
+    triggers.$indexSet(triggers, "49:39", Castle2ndFloorEnterTrigger);
+    return triggers;
   },
   getTileIdByPos$2: function(px, py) {
     var t1;
@@ -6291,10 +7330,10 @@ RadotomeCastle2: {"": "MapData;world,_maxPX,_maxPY,_srcTileSize,_defaultTileId,_
     t2 = gm.get$gameState();
     t2.get$heroName;
     heroName = t2._stats._name;
-    npcs.push($.NPC$(gm, "King", 0, 2, "King Lorik", 496, 538, new $.RadotomeCastle2_getNPC_closure(C.JSString_methods.$add(C.JSString_methods.$add(C.JSString_methods.$add(C.JSString_methods.$add(C.JSString_methods.$add(C.JSString_methods.$add(C.JSString_methods.$add("King Lorik: Descendant of Erdrick, listen now to my words.", "It is told that in ages past Erdrick fought demons with a Ball of Light."), "Then came the Dragonlord who stole the precious globe and hid it in the darkness."), "Now, Hero, thou must help us recover the Ball of Light and restore peace to our land."), "The Dragonlord must be defeated."), "Take now whatever thou may find in these Treasure Chests to aid thee in thy quest."), "Then speak with the guards, for they have much knowledge that may aid thee."), "May the light shine upon thee, Hero."))));
-    npcs.push($.NPC$(gm, "Adviser", 1, 2, "Adviser", 437, 576, new $.RadotomeCastle2_getNPC_closure0(heroName)));
-    npcs.push($.NPC$(gm, "Soldier", 0, 2, "Soldier1", 528, 800, t1));
-    npcs.push($.NPC$(gm, "Soldier", 0, 2, "Soldier2", 594, 800, t1));
+    npcs.push($.NPC$(gm, "King", 0, 2, 0, 0, "King Lorik", 496, 538, new $.RadotomeCastle2_getNPC_closure(C.JSString_methods.$add(C.JSString_methods.$add(C.JSString_methods.$add(C.JSString_methods.$add(C.JSString_methods.$add(C.JSString_methods.$add(C.JSString_methods.$add("King Lorik: Descendant of Erdrick, listen now to my words.", "It is told that in ages past Erdrick fought demons with a Ball of Light."), "Then came the Dragonlord who stole the precious globe and hid it in the darkness."), "Now, Hero, thou must help us recover the Ball of Light and restore peace to our land."), "The Dragonlord must be defeated."), "Take now whatever thou may find in these Treasure Chests to aid thee in thy quest."), "Then speak with the guards, for they have much knowledge that may aid thee."), "May the light shine upon thee, Hero."))));
+    npcs.push($.NPC$(gm, "Adviser", 1, 2, 0, 0, "Adviser", 437, 576, new $.RadotomeCastle2_getNPC_closure0(heroName)));
+    npcs.push($.NPC$(gm, "Soldier", 0, 2, 0, 0, "Soldier1", 528, 800, t1));
+    npcs.push($.NPC$(gm, "Soldier", 0, 2, 0, 0, "Soldier2", 594, 800, t1));
     npcs.push($.TreasureChest$(gm, true, 533, 640, 32, null));
     npcs.push($.TreasureChest$(gm, true, 565, 640, 32, null));
     npcs.push($.TreasureChest$(gm, true, 597, 640, 32, null));
@@ -6409,7 +7448,7 @@ RadotomeCastle2_getNPC_closure: {"": "Closure;msg_0",
 
 RadotomeCastle2_getNPC_closure0: {"": "Closure;heroName_1",
   call$3: function(gm, talker, talkee) {
-    var t1, msg, msgYes, msgNo, t2;
+    var t1, msg, msgYes, t2;
     talkee.ResetToIdle$0();
     talkee.get$characterSprite().setAnimation$1($.DEF_OppositeDirection(talker.get$direction()));
     t1 = new $.RedrawRequest(null);
@@ -6418,12 +7457,7 @@ RadotomeCastle2_getNPC_closure0: {"": "Closure;heroName_1",
     t1 = this.heroName_1;
     msg = "*: " + t1 + " do you know about Pricess Gwaelin?";
     msgYes = "*:" + t1 + " please go forth and rescue Princess Gwaelin!";
-    msgNo = C.JSString_methods.$add(C.JSString_methods.$add(C.JSString_methods.$add(C.JSString_methods.$add(C.JSString_methods.$add("Princess Gwaelin is the only beloved daughter of the King.", "So when the Queen passed away, Princess Gwaelin helped support the King's broken heart..."), "Then, half a year ago, the Princess was kidnapped by demons!"), "The King doesn't ever speak about that."), "But, I know he is suffering from the depths of his heart."), msgYes);
-    t1 = new $.YesNoMsgBox(null, null, null, null, null, null, null, 512, 152, 64, 320, 2, 5, "STATE_IDLE", 0, 5, "#EEEEEE", null, null, false, false, 1000, null);
-    t1.MsgBox$4$onCompleteMsgHandler$selfDismissOnFinish(gm, msg, null, false);
-    t1._yesMsg = msgYes;
-    t1._noMsg = msgNo;
-    t1.isFirstMsg = true;
+    t1 = $.YesNoMsgBox$(gm, msg, null, C.JSString_methods.$add(C.JSString_methods.$add(C.JSString_methods.$add(C.JSString_methods.$add(C.JSString_methods.$add("Princess Gwaelin is the only beloved daughter of the King.", "So when the Queen passed away, Princess Gwaelin helped support the King's broken heart..."), "Then, half a year ago, the Princess was kidnapped by demons!"), "The King doesn't ever speak about that."), "But, I know he is suffering from the depths of his heart."), msgYes), false, null, msgYes);
     t2 = new $.PushRequest(null, null, null);
     t2._game = gm;
     t2._pushLayer = t1;
@@ -6434,10 +7468,10 @@ RadotomeCastle2_getNPC_closure0: {"": "Closure;heroName_1",
 
 RadotomeTown: {"": "MapData;world,_maxPX,_maxPY,_srcTileSize,_defaultTileId,_tilePerRow",
   getInitPosX$0: function() {
-    return 30;
+    return 336;
   },
   getInitPosY$0: function() {
-    return 27;
+    return 875;
   },
   getTriggeMap$0: function() {
     var triggers, exitTownTrigger;
@@ -6461,6 +7495,32 @@ RadotomeTown: {"": "MapData;world,_maxPX,_maxPY,_srcTileSize,_defaultTileId,_til
     triggers.$indexSet(triggers, "-8:-6", exitTownTrigger);
     triggers.$indexSet(triggers, "-7:-6", exitTownTrigger);
     return triggers;
+  },
+  getNPC$1: function(gm) {
+    var t1, npcs, t2;
+    t1 = new $.RadotomeTown_getNPC_handleTalk();
+    npcs = $.List_List(null);
+    t2 = gm.get$gameState();
+    t2.get$heroName;
+    t2._stats;
+    npcs.push($.NPC$(gm, "Merchant", 1, 2, 0, 0, "Merchant1", 1090, 1107, t1));
+    npcs.push($.NPC$(gm, "Merchant", 0, 2, 0, 0, "Merchant2", 491, 544, t1));
+    npcs.push($.NPC$(gm, "Merchant", 0, 4, 0, 0, "Merchant3", 1167, 1212, t1));
+    npcs.push($.NPC$(gm, "Knight", 0, 2, 0, 0, "Knight1", 468, 1234, t1));
+    npcs.push($.NPC$(gm, "Knight", 0, 2, 0, 0, "Knight2", 686, 786, t1));
+    npcs.push($.NPC$(gm, "Knight", 0, 2, 0, 0, "Knight3", 979, 992, t1));
+    npcs.push($.NPC$(gm, "Oldman", 0, 2, 0, 0, "Oldman1", 688, 1281, t1));
+    npcs.push($.NPC$(gm, "Oldman", 0, 3, 0, 0, "Oldman2", 1072, 734, t1));
+    npcs.push($.NPC$(gm, "Man", 1, 2, 0, 0, "Man1", 591, 899, t1));
+    npcs.push($.NPC$(gm, "Man", 1, 2, 0, 0, "Man2", 1086, 1309, t1));
+    npcs.push($.NPC$(gm, "Man", 0, 2, 0, 0, "Man3", 979, 739, t1));
+    npcs.push($.NPC$(gm, "Girl", 1, 2, 0, 0, "Girl1", 816, 1142, t1));
+    npcs.push($.NPC$(gm, "Woman", 0, 4, 0, 0, "Woman1", 691, 1087, t1));
+    npcs.push($.NPC$(gm, "Woman", 0, 1, 0, 0, "Woman2", 590, 1278, t1));
+    npcs.push($.NPC$(gm, "Nan", 0, 4, 0, 0, "Nan1", 1134, 544, t1));
+    npcs.push($.NPC$(gm, "Soldier", 1, 2, 0, 0, "Soldier1", 1069, 867, t1));
+    npcs.push($.NPC$(gm, "Soldier", 0, 2, 0, 0, "Soldier2", 1258, 449, t1));
+    return npcs;
   },
   getSrcTileSize$0: function() {
     return this._srcTileSize;
@@ -6533,6 +7593,23 @@ RadotomeTown$: function() {
   return t1;
 }}
 
+},
+
+RadotomeTown_getNPC_handleTalk: {"": "Closure;",
+  call$3: function(gm, talker, talkee) {
+    var t1, t2;
+    talkee.ResetToIdle$0();
+    talkee.get$characterSprite().setAnimation$1($.DEF_OppositeDirection(talker.get$direction()));
+    t1 = new $.RedrawRequest(null);
+    t1._game = gm;
+    gm.AddRequest$1(t1);
+    t1 = $.MsgBox$(gm, $.get$name$x(talkee), null, false);
+    t2 = new $.PushRequest(null, null, null);
+    t2._game = gm;
+    t2._pushLayer = t1;
+    t2._params = null;
+    gm.AddRequest$1(t2);
+  }
 },
 
 Trigger: {"": "Object;"},
@@ -9135,6 +10212,27 @@ MappedListIterable: {"": "ListIterable;_source,_f",
   }
 },
 
+WhereIterable: {"": "IterableBase;_iterable,_f",
+  get$iterator: function(_) {
+    return new $.WhereIterator($.get$iterator$ax(this._iterable), this._f);
+  }
+},
+
+WhereIterator: {"": "Iterator;_iterator,_f",
+  _f$1: function(arg0) {
+    return this._f.call$1(arg0);
+  },
+  moveNext$0: function() {
+    for (var t1 = this._iterator; t1.moveNext$0() === true;)
+      if (this._f$1(t1.get$current()) === true)
+        return true;
+    return false;
+  },
+  get$current: function() {
+    return this._iterator.get$current();
+  }
+},
+
 SkipIterable: {"": "IterableBase;_iterable,_skipCount",
   get$iterator: function(_) {
     var t1 = this._iterable;
@@ -9530,14 +10628,13 @@ _FutureImpl__FutureImpl$wait: function(futures) {
     t1.remaining_2 = $.$add$ns(pos, 1);
     future.catchError$1(t2).then$1(new $._FutureImpl__FutureImpl$wait_closure(t1, pos));
   }
-  t2 = t1.remaining_2;
-  if ($.$eq(t2, 0)) {
+  if ($.$eq(t1.remaining_2, 0)) {
     t1 = new $._FutureImpl(0, $.get$_Zone__current(), null);
     t1._state = 8;
     t1._resultOrListeners = C.List_empty;
     return t1;
   }
-  t1.values_1 = $.List_List(t2);
+  t1.values_1 = $.List_List(t1.remaining_2);
   completer = new $._AsyncCompleter(new $._FutureImpl(0, $.get$_Zone__current(), null), false);
   completer._Completer$0();
   t1.completer_0 = completer;
@@ -10286,6 +11383,28 @@ _ForwardingStreamSubscription$: function(_stream, onData, onError, onDone, cance
   return t2;
 }}
 
+},
+
+_WhereStream: {"": "_ForwardingStream;_test,_liblib0$_source",
+  _test$1: function(arg0) {
+    return this._test.call$1(arg0);
+  },
+  _handleData$2: function(inputEvent, sink) {
+    var satisfies, e, s, exception, t1;
+    satisfies = null;
+    try {
+      satisfies = this._test$1(inputEvent);
+    } catch (exception) {
+      t1 = $.unwrapException(exception);
+      e = t1;
+      s = new $._StackTrace(exception, null);
+      sink._addError$1($._asyncError(e, s));
+      return;
+    }
+
+    if (satisfies === true)
+      sink._liblib0$_add$1(inputEvent);
+  }
 },
 
 _MapStream: {"": "_ForwardingStream;_transform,_liblib0$_source",
@@ -11087,17 +12206,17 @@ ListQueue: {"": "IterableBase;_table,_head,_tail,_modificationCount",
     return result;
   },
   _add$1: function(element) {
-    var t1, t2, t3;
+    var t1, t2;
     t1 = this._table;
     t2 = this._tail;
-    t3 = t1.length;
-    if (t2 >>> 0 !== t2 || t2 >= t3)
+    if (t2 >>> 0 !== t2 || t2 >= t1.length)
       throw $.ioore(t2);
     t1[t2] = element;
     ++t2;
+    t1 = this._table;
     if (t2 !== (t2 | 0))
       throw t2.$and();
-    this._tail = (t2 & t3 - 1) >>> 0;
+    this._tail = (t2 & t1.length - 1) >>> 0;
     if (this._head === this._tail)
       this._grow$0();
     this._modificationCount = this._modificationCount + 1;
@@ -11234,6 +12353,8 @@ Duration: {"": "Object;_duration<",
   },
   $mul: function(_, factor) {
     var t1, truncated;
+    if (typeof factor !== "number")
+      throw $.iae(factor);
     t1 = C.JSNumber_methods.roundToDouble$0(this._duration * factor);
     if (isNaN(t1))
       $.throwExpression(new $.UnsupportedError("NaN"));
@@ -11711,10 +12832,137 @@ _EventStreamSubscription: {"": "StreamSubscription;_pauseCount,_target,_eventTyp
 
 EventStreamProvider: {"": "Object;_eventType"},
 
-RectBase: {"": "Object;",
-  get$right: function() {
+Point: {"": "Object;x>,y>",
+  toString$0: function(_) {
+    return "(" + $.S(this.x) + ", " + $.S(this.y) + ")";
+  },
+  $eq: function(_, other) {
+    if (other == null)
+      return false;
+    if (typeof other !== "object" || other === null || !$.getInterceptor(other).$isPoint)
+      return false;
+    return $.$eq(this.x, other.x) && $.$eq(this.y, other.y);
+  },
+  get$hashCode: function(_) {
     var t1, t2;
-    t1 = this.get$left();
+    t1 = $.get$hashCode$(this.x);
+    t2 = $.get$hashCode$(this.y);
+    return $.JenkinsSmiHash_finish($.JenkinsSmiHash_combine($.JenkinsSmiHash_combine(0, t1), t2));
+  },
+  $add: function(_, other) {
+    var t1, t2, t3;
+    t1 = this.x;
+    if (typeof t1 !== "number")
+      return this.$$add$bailout(1, other, t1);
+    t2 = $.getInterceptor$x(other);
+    t3 = t2.get$x(other);
+    if (typeof t3 !== "number")
+      return this.$$add$bailout(2, other, t1, t2, t3);
+    t3 = t1 + t3;
+    t1 = this.y;
+    if (typeof t1 !== "number")
+      return this.$$add$bailout(3, other, t1, t2, t3);
+    t2 = t2.get$y(other);
+    if (typeof t2 !== "number")
+      return this.$$add$bailout(4, 0, t1, t2, t3);
+    return new $.Point(t3, t1 + t2);
+  },
+  $$add$bailout: function(state0, other, t1, t2, t3) {
+    switch (state0) {
+      case 0:
+        t1 = this.x;
+      case 1:
+        state0 = 0;
+        t2 = $.getInterceptor$x(other);
+        t3 = t2.get$x(other);
+      case 2:
+        state0 = 0;
+        t3 = $.$add$ns(t1, t3);
+        t1 = this.y;
+      case 3:
+        state0 = 0;
+        t2 = t2.get$y(other);
+      case 4:
+        state0 = 0;
+        return new $.Point(t3, $.$add$ns(t1, t2));
+    }
+  },
+  $sub: function(_, other) {
+    var t1, t2, t3;
+    t1 = this.x;
+    if (typeof t1 !== "number")
+      return this.$$sub$bailout(1, other, t1);
+    t2 = $.getInterceptor$x(other);
+    t3 = t2.get$x(other);
+    if (typeof t3 !== "number")
+      return this.$$sub$bailout(2, other, t1, t2, t3);
+    t3 = t1 - t3;
+    t1 = this.y;
+    if (typeof t1 !== "number")
+      return this.$$sub$bailout(3, other, t1, t2, t3);
+    t2 = t2.get$y(other);
+    if (typeof t2 !== "number")
+      return this.$$sub$bailout(4, 0, t1, t2, t3);
+    return new $.Point(t3, t1 - t2);
+  },
+  $$sub$bailout: function(state0, other, t1, t2, t3) {
+    switch (state0) {
+      case 0:
+        t1 = this.x;
+      case 1:
+        state0 = 0;
+        t2 = $.getInterceptor$x(other);
+        t3 = t2.get$x(other);
+      case 2:
+        state0 = 0;
+        t3 = $.$sub$n(t1, t3);
+        t1 = this.y;
+      case 3:
+        state0 = 0;
+        t2 = t2.get$y(other);
+      case 4:
+        state0 = 0;
+        return new $.Point(t3, $.$sub$n(t1, t2));
+    }
+  },
+  $mul: function(_, factor) {
+    var t1, t2;
+    if (typeof factor !== "number")
+      return this.$$mul$bailout(1, factor);
+    t1 = this.x;
+    if (typeof t1 !== "number")
+      return this.$$mul$bailout(2, factor, t1);
+    t1 *= factor;
+    t2 = this.y;
+    if (typeof t2 !== "number")
+      return this.$$mul$bailout(3, factor, t1, t2);
+    return new $.Point(t1, t2 * factor);
+  },
+  $$mul$bailout: function(state0, factor, t1, t2) {
+    switch (state0) {
+      case 0:
+      case 1:
+        state0 = 0;
+        t1 = this.x;
+      case 2:
+        state0 = 0;
+        t1 = $.$mul$n(t1, factor);
+        t2 = this.y;
+      case 3:
+        state0 = 0;
+        return new $.Point(t1, $.$mul$n(t2, factor));
+    }
+  },
+  toInt$0: function(_) {
+    return new $.Point($.toInt$0$nx(this.x), $.toInt$0$nx(this.y));
+  },
+  $isPoint: true
+},
+
+RectBase: {"": "Object;",
+  get$right: function(_) {
+    var t1, t2;
+    t1 = this.get$left(this);
     if (typeof t1 !== "number")
       return this.get$right$bailout(1, t1);
     t2 = this.get$width(this);
@@ -11725,7 +12973,7 @@ RectBase: {"": "Object;",
   get$right$bailout: function(state0, t1, t2) {
     switch (state0) {
       case 0:
-        t1 = this.get$left();
+        t1 = this.get$left(this);
       case 1:
         state0 = 0;
         t2 = this.get$width(this);
@@ -11734,30 +12982,32 @@ RectBase: {"": "Object;",
         return $.$add$ns(t1, t2);
     }
   },
-  get$bottom: function() {
+  get$bottom: function(_) {
     return $.$add$ns(this.get$top(this), this.get$height(this));
   },
   toString$0: function(_) {
-    return "(" + $.S(this.get$left()) + ", " + $.S(this.get$top(this)) + ", " + $.S(this.get$width(this)) + ", " + $.S(this.get$height(this)) + ")";
+    return "(" + $.S(this.get$left(this)) + ", " + $.S(this.get$top(this)) + ", " + $.S(this.get$width(this)) + ", " + $.S(this.get$height(this)) + ")";
   },
   $eq: function(_, other) {
+    var t1;
     if (other == null)
       return false;
     if (typeof other !== "object" || other === null || !$.getInterceptor(other).$isRect)
       return false;
-    return $.$eq(this.get$left(), other.left) && $.$eq(this.get$top(this), other.top) && $.$eq(this.get$width(this), other.width) && $.$eq(this.get$height(this), other.height);
+    t1 = $.getInterceptor$x(other);
+    return $.$eq(this.get$left(this), t1.get$left(other)) && $.$eq(this.get$top(this), t1.get$top(other)) && $.$eq(this.get$width(this), t1.get$width(other)) && $.$eq(this.get$height(this), t1.get$height(other));
   },
   get$hashCode: function(_) {
     var t1, t2, t3, t4;
-    t1 = $.get$hashCode$(this.get$left());
+    t1 = $.get$hashCode$(this.get$left(this));
     t2 = $.get$hashCode$(this.get$top(this));
     t3 = $.get$hashCode$(this.get$width(this));
     t4 = $.get$hashCode$(this.get$height(this));
     return $.JenkinsSmiHash_finish($.JenkinsSmiHash_combine($.JenkinsSmiHash_combine($.JenkinsSmiHash_combine($.JenkinsSmiHash_combine(0, t1), t2), t3), t4));
   },
-  intersects$1: function(other) {
+  intersects$1: function(_, other) {
     var t1, t2, t3;
-    t1 = this.get$left();
+    t1 = this.get$left(this);
     if (typeof t1 !== "number")
       return this.intersects$1$bailout(1, other, t1);
     t2 = other.left;
@@ -11769,21 +13019,21 @@ RectBase: {"": "Object;",
     if (t1 <= t2 + t3) {
       t3 = this.get$width(this);
       if (typeof t3 !== "number")
-        return this.intersects$1$bailout(4, other, t1, t2, t3, C.JSNumber_methods, C.JSNumber_methods);
+        return this.intersects$1$bailout(5, other, t1, t2, t3, C.JSNumber_methods);
       if (t2 <= t1 + t3) {
         t1 = this.get$top(this);
         if (typeof t1 !== "number")
-          return this.intersects$1$bailout(5, other, t1);
+          return this.intersects$1$bailout(6, other, t1);
         t2 = other.top;
         if (typeof t2 !== "number")
-          return this.intersects$1$bailout(6, other, t1, t2);
+          return this.intersects$1$bailout(7, other, t1, t2);
         t3 = other.height;
         if (typeof t3 !== "number")
-          return this.intersects$1$bailout(7, 0, t1, t2, t3);
+          return this.intersects$1$bailout(8, 0, t1, t2, t3);
         if (t1 <= t2 + t3) {
           t3 = this.get$height(this);
           if (typeof t3 !== "number")
-            return this.intersects$1$bailout(8, 0, t1, t2, t3, C.JSNumber_methods, C.JSNumber_methods);
+            return this.intersects$1$bailout(10, 0, t1, t2, t3, C.JSNumber_methods);
           t3 = t2 <= t1 + t3;
           t1 = t3;
         } else
@@ -11794,10 +13044,10 @@ RectBase: {"": "Object;",
       t1 = false;
     return t1;
   },
-  intersects$1$bailout: function(state0, other, t1, t2, t3, t4, t5) {
+  intersects$1$bailout: function(state0, other, t1, t2, t3, t4) {
     switch (state0) {
       case 0:
-        t1 = this.get$left();
+        t1 = this.get$left(this);
       case 1:
         state0 = 0;
         t2 = other.left;
@@ -11807,37 +13057,41 @@ RectBase: {"": "Object;",
       case 3:
         state0 = 0;
         t4 = $.getInterceptor$ns(t2);
-        t5 = $.getInterceptor$n(t1);
       default:
-        if (state0 === 8 || state0 === 7 || state0 === 6 || state0 === 5 || state0 === 4 || state0 === 0 && t5.$le(t1, t4.$add(t2, t3)))
+        if (state0 === 10 || state0 === 9 || state0 === 8 || state0 === 7 || state0 === 6 || state0 === 5 || state0 === 4 || state0 === 0 && $.$le$n(t1, t4.$add(t2, t3)))
           switch (state0) {
             case 0:
-              t3 = this.get$width(this);
+              t1 = this.get$left(this);
             case 4:
               state0 = 0;
+              t3 = this.get$width(this);
+            case 5:
+              state0 = 0;
             default:
-              if (state0 === 8 || state0 === 7 || state0 === 6 || state0 === 5 || state0 === 0 && t4.$le(t2, t5.$add(t1, t3)))
+              if (state0 === 10 || state0 === 9 || state0 === 8 || state0 === 7 || state0 === 6 || state0 === 0 && t4.$le(t2, $.$add$ns(t1, t3)))
                 switch (state0) {
                   case 0:
                     t1 = this.get$top(this);
-                  case 5:
-                    state0 = 0;
-                    t2 = other.top;
                   case 6:
                     state0 = 0;
-                    t3 = other.height;
+                    t2 = other.top;
                   case 7:
                     state0 = 0;
-                    t4 = $.getInterceptor$ns(t2);
-                    t5 = $.getInterceptor$n(t1);
+                    t3 = other.height;
                   case 8:
-                    if (state0 === 8 || state0 === 0 && t5.$le(t1, t4.$add(t2, t3)))
+                    state0 = 0;
+                    t4 = $.getInterceptor$ns(t2);
+                  default:
+                    if (state0 === 10 || state0 === 9 || state0 === 0 && $.$le$n(t1, t4.$add(t2, t3)))
                       switch (state0) {
                         case 0:
-                          t3 = this.get$height(this);
-                        case 8:
+                          t1 = this.get$top(this);
+                        case 9:
                           state0 = 0;
-                          t3 = t4.$le(t2, t5.$add(t1, t3));
+                          t3 = this.get$height(this);
+                        case 10:
+                          state0 = 0;
+                          t3 = t4.$le(t2, $.$add$ns(t1, t3));
                           t1 = t3;
                       }
                     else
@@ -11852,11 +13106,11 @@ RectBase: {"": "Object;",
     }
   },
   toInt$0: function(_) {
-    return new $.Rect($.toInt$0$n(this.get$left()), $.toInt$0$n(this.get$top(this)), $.toInt$0$n(this.get$width(this)), $.toInt$0$n(this.get$height(this)));
+    return new $.Rect($.toInt$0$nx(this.get$left(this)), $.toInt$0$nx(this.get$top(this)), $.toInt$0$nx(this.get$width(this)), $.toInt$0$nx(this.get$height(this)));
   }
 },
 
-Rect: {"": "RectBase;left<,top>,width>,height>", $isRect: true},
+Rect: {"": "RectBase;left>,top>,width>,height>", $isRect: true, $asRect: null},
 
 _DOMWindowCrossFrame: {"": "Object;_window",
   get$top: function(_) {
@@ -11909,6 +13163,8 @@ CanvasRenderingContext2D: {"": "CanvasRenderingContext;fillStyle}",
     return receiver.drawImage(source, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
   }
 },
+
+CharacterData: {"": "Node;length="},
 
 DomError: {"": "Interceptor;name="},
 
@@ -11963,7 +13219,7 @@ FormElement: {"": "HtmlElement;length=,name="},
 
 IFrameElement: {"": "HtmlElement;height%,name=,src},width%"},
 
-ImageElement: {"": "HtmlElement;height%,src},width%"},
+ImageElement: {"": "HtmlElement;height%,src},width%,x=,y="},
 
 InputElement: {"": "HtmlElement;height%,name=,src},width%"},
 
@@ -12048,61 +13304,118 @@ Window: {"": "EventTarget;name=",
   toString$0: function(receiver) {
     return receiver.toString();
   }
+},
+
+_Attr: {"": "Node;name="},
+
+_ClientRect: {"": "Interceptor;bottom=,height=,left=,right=,top=,width=",
+  toString$0: function(receiver) {
+    return "(" + $.S(receiver.left) + ", " + $.S(receiver.top) + ", " + $.S(receiver.width) + ", " + $.S(receiver.height) + ")";
+  },
+  $eq: function(receiver, other) {
+    var t1, t2, t3;
+    if (other == null)
+      return false;
+    if (typeof other !== "object" || other === null || !$.getInterceptor(other).$isRect)
+      return false;
+    t1 = receiver.left;
+    t2 = $.getInterceptor$x(other);
+    t3 = t2.get$left(other);
+    if (t1 == null ? t3 == null : t1 === t3) {
+      t1 = receiver.top;
+      t3 = t2.get$top(other);
+      if (t1 == null ? t3 == null : t1 === t3) {
+        t1 = receiver.width;
+        t3 = t2.get$width(other);
+        if (t1 == null ? t3 == null : t1 === t3) {
+          t1 = receiver.height;
+          t2 = t2.get$height(other);
+          t2 = t1 == null ? t2 == null : t1 === t2;
+          t1 = t2;
+        } else
+          t1 = false;
+      } else
+        t1 = false;
+    } else
+      t1 = false;
+    return t1;
+  },
+  get$hashCode: function(receiver) {
+    var t1, t2, t3, t4;
+    t1 = $.get$hashCode$(receiver.left);
+    t2 = $.get$hashCode$(receiver.top);
+    t3 = $.get$hashCode$(receiver.width);
+    t4 = $.get$hashCode$(receiver.height);
+    return $.JenkinsSmiHash_finish($.JenkinsSmiHash_combine($.JenkinsSmiHash_combine($.JenkinsSmiHash_combine($.JenkinsSmiHash_combine(0, t1), t2), t3), t4));
+  },
+  toInt$0: function(receiver) {
+    return new $.Rect($.toInt$0$nx(receiver.left), $.toInt$0$nx(receiver.top), $.toInt$0$nx(receiver.width), $.toInt$0$nx(receiver.height));
+  },
+  $isRect: true,
+  $asRect: null
 }}],
 ["dart.dom.svg", "dart:svg", , {
-FEBlendElement: {"": "StyledElement;height=,width="},
+FEBlendElement: {"": "StyledElement;height=,width=,x=,y="},
 
-FEColorMatrixElement: {"": "StyledElement;height=,width="},
+FEColorMatrixElement: {"": "StyledElement;height=,width=,x=,y="},
 
-FEComponentTransferElement: {"": "StyledElement;height=,width="},
+FEComponentTransferElement: {"": "StyledElement;height=,width=,x=,y="},
 
-FECompositeElement: {"": "StyledElement;height=,width="},
+FECompositeElement: {"": "StyledElement;height=,width=,x=,y="},
 
-FEConvolveMatrixElement: {"": "StyledElement;height=,width="},
+FEConvolveMatrixElement: {"": "StyledElement;height=,width=,x=,y="},
 
-FEDiffuseLightingElement: {"": "StyledElement;height=,width="},
+FEDiffuseLightingElement: {"": "StyledElement;height=,width=,x=,y="},
 
-FEDisplacementMapElement: {"": "StyledElement;height=,width="},
+FEDisplacementMapElement: {"": "StyledElement;height=,width=,x=,y="},
 
-FEFloodElement: {"": "StyledElement;height=,width="},
+FEFloodElement: {"": "StyledElement;height=,width=,x=,y="},
 
-FEGaussianBlurElement: {"": "StyledElement;height=,width="},
+FEGaussianBlurElement: {"": "StyledElement;height=,width=,x=,y="},
 
-FEImageElement: {"": "StyledElement;height=,width="},
+FEImageElement: {"": "StyledElement;height=,width=,x=,y="},
 
-FEMergeElement: {"": "StyledElement;height=,width="},
+FEMergeElement: {"": "StyledElement;height=,width=,x=,y="},
 
-FEMorphologyElement: {"": "StyledElement;height=,width="},
+FEMorphologyElement: {"": "StyledElement;height=,width=,x=,y="},
 
-FEOffsetElement: {"": "StyledElement;height=,width="},
+FEOffsetElement: {"": "StyledElement;height=,width=,x=,y="},
 
-FESpecularLightingElement: {"": "StyledElement;height=,width="},
+FEPointLightElement: {"": "SvgElement;x=,y="},
 
-FETileElement: {"": "StyledElement;height=,width="},
+FESpecularLightingElement: {"": "StyledElement;height=,width=,x=,y="},
 
-FETurbulenceElement: {"": "StyledElement;height=,width="},
+FESpotLightElement: {"": "SvgElement;x=,y="},
 
-FilterElement: {"": "StyledElement;height=,width="},
+FETileElement: {"": "StyledElement;height=,width=,x=,y="},
 
-ForeignObjectElement: {"": "GraphicsElement;height=,width="},
+FETurbulenceElement: {"": "StyledElement;height=,width=,x=,y="},
+
+FilterElement: {"": "StyledElement;height=,width=,x=,y="},
+
+ForeignObjectElement: {"": "GraphicsElement;height=,width=,x=,y="},
 
 GraphicsElement: {"": "StyledElement;"},
 
-ImageElement0: {"": "GraphicsElement;height=,width="},
+ImageElement0: {"": "GraphicsElement;height=,width=,x=,y="},
 
-MaskElement: {"": "StyledElement;height=,width="},
+MaskElement: {"": "StyledElement;height=,width=,x=,y="},
 
-PatternElement: {"": "StyledElement;height=,width="},
+PatternElement: {"": "StyledElement;height=,width=,x=,y="},
 
-RectElement: {"": "GraphicsElement;height=,width="},
+RectElement: {"": "GraphicsElement;height=,width=,x=,y="},
 
 StyledElement: {"": "SvgElement;"},
 
 SvgElement: {"": "Element;"},
 
-SvgSvgElement: {"": "GraphicsElement;height=,width="},
+SvgSvgElement: {"": "GraphicsElement;height=,width=,x=,y="},
 
-UseElement: {"": "GraphicsElement;height=,width="}}],
+TextContentElement: {"": "GraphicsElement;"},
+
+TextPositioningElement: {"": "TextContentElement;x=,y="},
+
+UseElement: {"": "GraphicsElement;height=,width=,x=,y="}}],
 ["dart.isolate", "dart:isolate", , {
 _Isolate_port: function() {
   if ($.lazyPort == null)
@@ -12182,6 +13495,28 @@ min: function(a, b) {
 },
 
 max: function(a, b) {
+  if (typeof a !== "number")
+    return $.max$bailout(1, a, b);
+  if (typeof b !== "number")
+    return $.max$bailout(1, a, b);
+  if (a > b)
+    return a;
+  if (a < b)
+    return b;
+  if (typeof b === "number") {
+    if (typeof a === "number")
+      if (a === 0)
+        return a + b;
+    if (C.JSDouble_methods.get$isNaN(b))
+      return b;
+    return a;
+  }
+  if (b === 0 && C.JSNumber_methods.get$isNegative(a))
+    return b;
+  return a;
+},
+
+max$bailout: function(state0, a, b) {
   var t1 = $.getInterceptor$n(a);
   if (t1.$gt(a, b))
     return a;
@@ -12313,7 +13648,7 @@ JenkinsSmiHash_finish: function(hash) {
   hash = (hash ^ C.JSInt_methods.$shr(hash, 11)) >>> 0;
   return 536870911 & hash + ((16383 & hash) << 15 >>> 0);
 }}],
-["metadata", "../../../../../dart/dart-sdk/lib/html/html_common/metadata.dart", , {
+["metadata", "../../../../../../../dart/dart-sdk/lib/html/html_common/metadata.dart", , {
 SupportedBrowser: {"": "Object;browserName,minimumVersion", static: {
 "": "SupportedBrowser_CHROME,SupportedBrowser_FIREFOX,SupportedBrowser_IE,SupportedBrowser_OPERA,SupportedBrowser_SAFARI",
 }
@@ -12409,6 +13744,17 @@ $.getInterceptor$ns = function(receiver) {
     return $.UnknownJavaScriptObject.prototype;
   return receiver;
 };
+$.getInterceptor$nx = function(receiver) {
+  if (typeof receiver == "number")
+    return $.JSNumber.prototype;
+  if (receiver == null)
+    return receiver;
+  if (typeof receiver != "object")
+    return receiver;
+  if (receiver instanceof $.Object)
+    return receiver;
+  return $.getNativeInterceptor(receiver);
+};
 $.getInterceptor$s = function(receiver) {
   if (typeof receiver == "string")
     return $.JSString.prototype;
@@ -12462,129 +13808,129 @@ C.List_693 = Isolate.makeConstantList([797, 562, 550, 550, 550, 792, 550, 822, 8
 C.List_69P = Isolate.makeConstantList([650, 558, 113, 97, 97, 667, 660, 661, 560, 558, 559, 560, 560, 560, 558, 559, 560, 593, 574, 560, 593, 559, 558, 113, 97, 97, 97, 97, 97, 98, 651]);
 C.List_69t = Isolate.makeConstantList([558, 559, 560, 560, 560, 558, 559, 558, 559, 560, 560, 579, 580, 560, 581, 560, 558, 559, 560, 582, 560, 560, 560, 560, 560, 560, 560, 560, 558, 561, 550]);
 C.List_7eO = Isolate.makeConstantList([787, 788, 789, 789, 789, 789, 789, 789, 789, 789, 789, 789, 790, 791, 792, 792, 793, 794, 789, 789, 789, 789, 789, 789, 789, 789, 789, 789, 789, 789, 795, 555]);
-C.List_8co = Isolate.makeConstantList([0, 0, 0, 4, 17, 17, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 82, 49, 7, 15, 15, 15, 15, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 81, 10, 0, 0, 0, 0, 0, 53, 3, 17, 17, 17, 17, 17, 17, 17, 17, 66, 75, 123, 63, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 67, 76, 74, 17, 17, 18, 17, 17, 2, 52, 0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 16, 16, 16, 15, 15, 15, 15, 15, 14, 14, 14, 14, 81, 10, 0, 0, 0]);
-C.List_8co0 = Isolate.makeConstantList([0, 0, 0, 4, 80, 33, 34, 35, 15, 15, 15, 15, 15, 14, 81, 2, 1, 1, 1, 3, 80, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 14, 14, 81, 2, 52, 0, 0, 0, 0, 0, 0, 4, 80, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 88, 2, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 3, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 82, 9, 54, 0, 0, 0, 0, 0, 53, 3, 17, 17, 17, 17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 14, 14, 14, 14, 14, 14, 81, 2, 1, 1, 52, 0, 0, 0, 0, 0, 0, 0, 0]);
-C.List_8co1 = Isolate.makeConstantList([0, 0, 0, 4, 85, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 75, 18, 18, 18, 18, 18, 74, 93, 15, 15, 15, 15, 15, 17, 17, 2, 52, 53, 3, 17, 17, 17, 17, 17, 14, 14, 14, 14, 14, 82, 124, 1, 1, 1, 1, 52, 0, 0, 0, 0, 0, 55, 5, 6, 15, 15, 15, 15, 15, 15, 15, 132, 133, 134, 135, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 16, 16, 88, 2, 52, 0, 0, 55, 6, 15, 15, 15, 26, 28, 15, 15, 15, 49, 61, 5, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-C.List_8co10 = Isolate.makeConstantList([0, 0, 0, 53, 3, 80, 14, 14, 14, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 16, 16, 88, 11, 125, 0, 0, 0, 0, 55, 6, 17, 117, 119, 119, 120, 79, 18, 18, 18, 17, 17, 17, 17, 16, 16, 17, 17, 10, 0, 0, 0, 0, 0, 55, 5, 6, 17, 17, 67, 76, 18, 18, 18, 18, 18, 18, 123, 15, 15, 15, 15, 15, 9, 5, 54, 0, 0, 59, 7, 17, 17, 17, 17, 17, 17, 17, 16, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
-C.List_8co100 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 53, 3, 17, 17, 17, 15, 15, 15, 15, 15, 15, 2, 1, 1, 52, 0, 0, 55, 56, 7, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 81, 2, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 1, 1, 1, 1, 1, 1, 1, 52, 0, 0, 0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 2, 62, 5, 5, 5, 127, 3, 15, 15, 14, 14, 17, 17, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0]);
-C.List_8co101 = Isolate.makeConstantList([0, 0, 0, 4, 86, 87, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 15, 15, 15, 15, 92, 75, 18, 18, 18, 18, 74, 93, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 89, 9, 54, 0, 0, 0, 0, 0, 0, 4, 15, 15, 15, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 10, 0, 55, 6, 86, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 36, 15, 15, 15, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 11, 125, 0, 0, 0, 0]);
-C.List_8co102 = Isolate.makeConstantList([0, 0, 0, 4, 80, 14, 14, 15, 15, 15, 15, 15, 15, 15, 26, 21, 21, 28, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 17, 17, 17, 17, 16, 16, 16, 16, 87, 89, 9, 54, 0, 0, 0, 0, 0, 0, 4, 17, 17, 24, 21, 17, 17, 17, 17, 17, 14, 14, 14, 17, 17, 17, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 59, 7, 17, 17, 16, 16, 16, 16, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 75, 18, 18, 18, 18, 18, 18, 73, 15, 15, 2, 52, 0, 0, 0, 0, 0, 0]);
-C.List_8co103 = Isolate.makeConstantList([0, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 81, 11, 125, 0, 0, 0, 53, 116, 17, 111, 26, 21, 21, 28, 101, 103, 103, 99, 17, 17, 2, 52, 53, 1, 1, 1, 58, 1, 1, 1, 52, 53, 3, 71, 18, 18, 74, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 81, 2, 1, 1, 1, 1, 52, 0, 0, 0, 0, 53, 3, 85, 16, 16, 16, 16, 16, 88, 10, 0, 0, 0]);
-C.List_8co104 = Isolate.makeConstantList([0, 0, 0, 4, 83, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 11, 61, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 17, 17, 21, 27, 17, 17, 17, 14, 14, 14, 17, 17, 17, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 17, 17, 17, 16, 16, 16, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 76, 18, 18, 18, 18, 123, 15, 15, 15, 15, 15, 2, 52, 0, 0, 0, 0, 0]);
-C.List_8co105 = Isolate.makeConstantList([0, 0, 0, 0, 0, 55, 5, 6, 83, 84, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 82, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 17, 17, 17, 26, 28, 17, 17, 17, 9, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 5, 6, 86, 87, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 14, 14, 14, 14, 14, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
-C.List_8co106 = Isolate.makeConstantList([0, 0, 0, 4, 80, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 14, 81, 2, 52, 0, 0, 0, 0, 53, 3, 80, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 88, 2, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 9, 54, 0, 0, 0, 0, 53, 1, 3, 17, 17, 17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 14, 14, 14, 14, 14, 14, 14, 14, 81, 2, 52, 0, 0, 0, 0, 0, 0, 0]);
-C.List_8co107 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 9, 54, 0, 0, 4, 80, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 16, 16, 87, 89, 9, 54, 0, 0, 55, 5, 56, 7, 21, 21, 21, 21, 21, 21, 21, 21, 15, 15, 15, 15, 15, 15, 15, 84, 84, 84, 82, 9, 5, 5, 54, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0]);
-C.List_8co108 = Isolate.makeConstantList([0, 0, 0, 0, 53, 3, 80, 14, 14, 14, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 82, 9, 54, 0, 0, 0, 4, 17, 117, 111, 14, 14, 101, 122, 118, 119, 120, 99, 17, 17, 67, 76, 63, 17, 11, 125, 0, 0, 0, 0, 55, 6, 17, 17, 17, 67, 76, 18, 18, 18, 18, 18, 18, 18, 74, 15, 15, 15, 15, 15, 15, 15, 9, 5, 5, 6, 17, 17, 17, 17, 17, 17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
-C.List_8co109 = Isolate.makeConstantList([0, 0, 0, 0, 0, 53, 3, 85, 16, 16, 16, 16, 88, 20, 15, 15, 9, 56, 47, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 16, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 17, 11, 125, 0, 0, 0, 0, 0, 59, 7, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 81, 10, 0, 0, 0, 55, 6, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 16, 16, 16, 16, 16, 88, 11, 50, 52, 0, 0, 0, 0, 0, 0, 0]);
-C.List_8co11 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 55, 56, 7, 85, 16, 17, 17, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 9, 54, 4, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 16, 16, 16, 16, 16, 16, 16, 87, 89, 10, 0, 0, 0, 53, 3, 85, 16, 16, 17, 17, 17, 15, 15, 15, 15, 17, 17, 16, 16, 16, 82, 9, 5, 54, 0, 0, 0, 0, 0]);
-C.List_8co110 = Isolate.makeConstantList([0, 0, 0, 0, 0, 53, 3, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 81, 49, 60, 83, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 17, 17, 17, 15, 15, 15, 15, 15, 17, 17, 17, 124, 3, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 11, 50, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-C.List_8co111 = Isolate.makeConstantList([0, 0, 0, 0, 53, 3, 85, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 95, 76, 18, 18, 18, 18, 96, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 20, 15, 15, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 14, 81, 10, 0, 0, 0, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 49, 60, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-C.List_8co112 = Isolate.makeConstantList([0, 0, 0, 4, 80, 14, 14, 14, 15, 15, 15, 15, 24, 21, 21, 21, 21, 21, 21, 28, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 17, 17, 17, 16, 16, 16, 16, 16, 16, 16, 89, 10, 0, 0, 0, 0, 0, 55, 6, 17, 17, 76, 123, 63, 17, 17, 16, 16, 16, 16, 16, 16, 17, 17, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 17, 17, 17, 16, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 66, 75, 18, 74, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0, 0, 0]);
-C.List_8co113 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 83, 84, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 81, 11, 61, 5, 54, 53, 3, 15, 15, 15, 15, 15, 15, 15, 9, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 3, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 9, 5, 5, 5, 6, 15, 15, 14, 14, 14, 14, 17, 17, 17, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
-C.List_8co114 = Isolate.makeConstantList([0, 0, 0, 55, 5, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0, 0, 0, 0, 53, 3, 17, 17, 17, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 16, 16, 14, 14, 14, 14, 81, 49, 8, 8, 61, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 59, 7, 80, 14, 14, 14, 14, 14, 14, 76, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 69, 9, 54, 0, 0, 0]);
-C.List_8co115 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 53, 3, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 2, 52, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 81, 2, 1, 1, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 3, 17, 17, 17, 17, 17, 17, 17, 17, 2, 1, 52, 0, 0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 2, 1, 1, 1, 3, 15, 15, 15, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0]);
-C.List_8co116 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 15, 14, 14, 14, 14, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 84, 82, 9, 54, 0, 0, 0, 0, 0, 0, 59, 8, 7, 16, 16, 77, 18, 18, 18, 18, 65, 17, 17, 17, 17, 17, 17, 17, 17, 67, 18, 63, 17, 17, 17, 67, 76, 18, 18, 73, 17, 17, 17, 2, 52, 0, 0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 16, 16, 16, 15, 15, 15, 15, 15, 14, 82, 9, 54, 0, 0, 0]);
-C.List_8co117 = Isolate.makeConstantList([0, 0, 0, 55, 5, 6, 83, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 15, 15, 15, 75, 18, 18, 18, 18, 18, 18, 74, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 16, 16, 88, 11, 50, 52, 0, 0, 0, 0, 0, 53, 3, 15, 15, 15, 15, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 10, 0, 0, 55, 6, 85, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 2, 52, 0, 0, 0]);
-C.List_8co118 = Isolate.makeConstantList([0, 0, 0, 0, 0, 4, 86, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 17, 17, 17, 17, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 17, 17, 17, 17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 2, 1, 3, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 81, 10, 53, 3, 80, 14, 14, 14, 14, 14, 14, 14, 14, 14, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 2, 52, 0, 0, 0, 0]);
-C.List_8co119 = Isolate.makeConstantList([0, 0, 0, 53, 3, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 16, 16, 16, 89, 10, 0, 0, 59, 7, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 16, 89, 9, 5, 5, 6, 72, 70, 70, 18, 18, 21, 21, 21, 21, 21, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 84, 84, 82, 9, 5, 5, 46, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0, 0]);
-C.List_8co12 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 14, 14, 81, 10, 4, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 2, 52, 55, 6, 86, 87, 16, 16, 16, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 9, 5, 5, 54, 0, 0, 0]);
-C.List_8co120 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 55, 6, 83, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 15, 95, 76, 18, 18, 18, 18, 18, 123, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 88, 2, 52, 0, 53, 3, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 2, 52, 0, 4, 86, 16, 16, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
-C.List_8co121 = Isolate.makeConstantList([0, 0, 0, 0, 0, 55, 6, 83, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 15, 15, 76, 18, 18, 18, 43, 18, 18, 18, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 88, 2, 52, 0, 0, 0, 53, 3, 15, 15, 15, 15, 15, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 2, 52, 0, 0, 4, 85, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
-C.List_8co13 = Isolate.makeConstantList([0, 0, 0, 0, 0, 53, 3, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 81, 2, 1, 1, 62, 5, 6, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 81, 2, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 3, 17, 17, 17, 17, 66, 75, 18, 18, 18, 18, 18, 68, 2, 52, 0, 0, 0, 0, 55, 56, 7, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0, 0, 0]);
-C.List_8co14 = Isolate.makeConstantList([0, 0, 0, 4, 85, 16, 16, 16, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 11, 50, 3, 85, 16, 16, 16, 16, 16, 16, 89, 10, 0, 0, 0, 0, 0, 0, 53, 51, 7, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 2, 52, 0, 0, 4, 85, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 17, 17, 17, 15, 15, 15, 17, 17, 17, 15, 15, 15, 15, 15, 15, 14, 14, 81, 2, 52, 0, 0, 0, 0]);
-C.List_8co15 = Isolate.makeConstantList([0, 0, 0, 53, 1, 3, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 16, 16, 16, 75, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 73, 17, 17, 17, 9, 54, 0, 0, 0, 0, 0, 0, 0, 53, 1, 3, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 17, 17, 14, 14, 84, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 17, 17, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0, 0]);
+C.List_8co = Isolate.makeConstantList([0, 0, 0, 0, 53, 3, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 81, 20, 83, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 15, 15, 17, 17, 17, 17, 17, 17, 17, 15, 15, 92, 75, 18, 18, 68, 2, 1, 52, 0, 0, 0, 0, 0, 0]);
+C.List_8co0 = Isolate.makeConstantList([0, 0, 0, 53, 3, 85, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 95, 76, 18, 18, 74, 93, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 9, 5, 126, 6, 17, 17, 15, 15, 15, 15, 14, 14, 14, 82, 9, 54, 0, 0, 0, 0, 0, 55, 56, 7, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 14, 14, 81, 2, 52, 0, 0, 0, 0, 0, 53, 3, 15, 15, 29, 15, 15, 15, 15, 20, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+C.List_8co1 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0, 0, 0, 53, 3, 85, 16, 16, 16, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 14, 14, 14, 14, 81, 49, 60, 15, 15, 15, 87, 16, 16, 16, 16, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 10, 0, 4, 83, 14, 14, 14, 14, 14, 14, 76, 18, 18, 18, 18, 18, 18, 18, 18, 74, 93, 92, 75, 18, 18, 18, 69, 10, 0, 0, 0]);
+C.List_8co10 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 55, 56, 7, 85, 16, 17, 17, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 9, 54, 4, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 16, 16, 16, 16, 16, 16, 16, 87, 89, 10, 0, 0, 0, 53, 3, 85, 16, 16, 17, 17, 17, 15, 15, 15, 15, 17, 17, 16, 16, 16, 82, 9, 5, 54, 0, 0, 0, 0, 0]);
+C.List_8co100 = Isolate.makeConstantList([0, 0, 0, 55, 5, 6, 83, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 15, 15, 15, 75, 18, 18, 18, 18, 18, 18, 74, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 16, 16, 88, 11, 50, 52, 0, 0, 0, 0, 0, 53, 3, 15, 15, 15, 15, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 10, 0, 0, 55, 6, 85, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 2, 52, 0, 0, 0]);
+C.List_8co101 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 9, 54, 0, 0, 4, 80, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 16, 16, 87, 89, 9, 54, 0, 0, 55, 5, 56, 7, 21, 21, 21, 21, 21, 21, 21, 21, 15, 15, 15, 15, 15, 15, 15, 84, 84, 84, 82, 9, 5, 5, 54, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0]);
+C.List_8co102 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 53, 3, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 2, 52, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 81, 2, 1, 1, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 3, 17, 17, 17, 17, 17, 17, 17, 17, 2, 1, 52, 0, 0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 2, 1, 1, 1, 3, 15, 15, 15, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0]);
+C.List_8co103 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 15, 14, 14, 14, 14, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 84, 82, 9, 54, 0, 0, 0, 0, 0, 0, 59, 8, 7, 16, 16, 77, 18, 18, 18, 18, 65, 17, 17, 17, 17, 17, 17, 17, 17, 67, 18, 63, 17, 17, 17, 67, 76, 18, 18, 73, 17, 17, 17, 2, 52, 0, 0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 16, 16, 16, 15, 15, 15, 15, 15, 14, 82, 9, 54, 0, 0, 0]);
+C.List_8co104 = Isolate.makeConstantList([0, 0, 0, 4, 80, 14, 14, 14, 15, 15, 15, 15, 24, 21, 21, 21, 21, 21, 21, 28, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 17, 17, 17, 16, 16, 16, 16, 16, 16, 16, 89, 10, 0, 0, 0, 0, 0, 55, 6, 17, 17, 76, 123, 63, 17, 17, 16, 16, 16, 16, 16, 16, 17, 17, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 17, 17, 17, 16, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 66, 75, 18, 74, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0, 0, 0]);
+C.List_8co105 = Isolate.makeConstantList([0, 0, 0, 0, 53, 3, 85, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 95, 76, 18, 18, 18, 18, 96, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 20, 15, 15, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 14, 81, 10, 0, 0, 0, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 49, 60, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+C.List_8co106 = Isolate.makeConstantList([0, 0, 0, 0, 0, 53, 3, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 81, 49, 60, 83, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 17, 17, 17, 15, 15, 15, 15, 15, 17, 17, 17, 124, 3, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 11, 50, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+C.List_8co107 = Isolate.makeConstantList([0, 0, 0, 0, 0, 53, 3, 85, 16, 16, 16, 16, 88, 20, 15, 15, 9, 56, 47, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 16, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 17, 11, 125, 0, 0, 0, 0, 0, 59, 7, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 81, 10, 0, 0, 0, 55, 6, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 16, 16, 16, 16, 16, 88, 11, 50, 52, 0, 0, 0, 0, 0, 0, 0]);
+C.List_8co108 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 83, 84, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 81, 11, 61, 5, 54, 53, 3, 15, 15, 15, 15, 15, 15, 15, 9, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 3, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 9, 5, 5, 5, 6, 15, 15, 14, 14, 14, 14, 17, 17, 17, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
+C.List_8co109 = Isolate.makeConstantList([0, 0, 0, 4, 80, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 14, 81, 2, 52, 0, 0, 0, 0, 53, 3, 80, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 88, 2, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 9, 54, 0, 0, 0, 0, 53, 1, 3, 17, 17, 17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 14, 14, 14, 14, 14, 14, 14, 14, 81, 2, 52, 0, 0, 0, 0, 0, 0, 0]);
+C.List_8co11 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 14, 14, 81, 10, 4, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 2, 52, 55, 6, 86, 87, 16, 16, 16, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 9, 5, 5, 54, 0, 0, 0]);
+C.List_8co110 = Isolate.makeConstantList([0, 0, 0, 0, 0, 55, 5, 6, 83, 84, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 82, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 17, 17, 17, 26, 28, 17, 17, 17, 9, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 5, 6, 86, 87, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 14, 14, 14, 14, 14, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
+C.List_8co111 = Isolate.makeConstantList([0, 0, 0, 4, 83, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 11, 61, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 17, 17, 21, 27, 17, 17, 17, 14, 14, 14, 17, 17, 17, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 17, 17, 17, 16, 16, 16, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 76, 18, 18, 18, 18, 123, 15, 15, 15, 15, 15, 2, 52, 0, 0, 0, 0, 0]);
+C.List_8co112 = Isolate.makeConstantList([0, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 81, 11, 125, 0, 0, 0, 53, 116, 17, 111, 26, 21, 21, 28, 101, 103, 103, 99, 17, 17, 2, 52, 53, 1, 1, 1, 58, 1, 1, 1, 52, 53, 3, 71, 18, 18, 74, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 81, 2, 1, 1, 1, 1, 52, 0, 0, 0, 0, 53, 3, 85, 16, 16, 16, 16, 16, 88, 10, 0, 0, 0]);
+C.List_8co113 = Isolate.makeConstantList([0, 0, 0, 4, 80, 14, 14, 15, 15, 15, 15, 15, 15, 15, 26, 21, 21, 28, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 17, 17, 17, 17, 16, 16, 16, 16, 87, 89, 9, 54, 0, 0, 0, 0, 0, 0, 4, 17, 17, 24, 21, 17, 17, 17, 17, 17, 14, 14, 14, 17, 17, 17, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 59, 7, 17, 17, 16, 16, 16, 16, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 75, 18, 18, 18, 18, 18, 18, 73, 15, 15, 2, 52, 0, 0, 0, 0, 0, 0]);
+C.List_8co114 = Isolate.makeConstantList([0, 0, 0, 4, 86, 87, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 15, 15, 15, 15, 92, 75, 18, 18, 18, 18, 74, 93, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 89, 9, 54, 0, 0, 0, 0, 0, 0, 4, 15, 15, 15, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 10, 0, 55, 6, 86, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 36, 15, 15, 15, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 11, 125, 0, 0, 0, 0]);
+C.List_8co115 = Isolate.makeConstantList([0, 0, 0, 0, 0, 55, 56, 7, 15, 15, 15, 15, 15, 15, 15, 15, 15, 2, 52, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 82, 9, 5, 54, 0, 0, 0, 110, 25, 112, 113, 27, 105, 104, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 1, 1, 1, 3, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 81, 2, 1, 1, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 3, 85, 16, 16, 88, 2, 52, 0, 0, 0]);
+C.List_8co116 = Isolate.makeConstantList([0, 0, 0, 4, 85, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 15, 15, 15, 15, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 10, 53, 3, 85, 16, 16, 16, 16, 16, 88, 9, 54, 0, 0, 0, 0, 0, 0, 4, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 2, 52, 0, 0, 0, 59, 7, 85, 16, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 81, 10, 0, 0, 0, 0, 0]);
+C.List_8co117 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 17, 17, 17, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 11, 125, 0, 59, 7, 15, 15, 15, 16, 16, 16, 89, 9, 54, 0, 0, 0, 0, 0, 53, 3, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 11, 125, 0, 0, 0, 0, 4, 86, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 81, 2, 52, 0, 0, 0, 0, 0]);
+C.List_8co118 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 82, 9, 5, 54, 0, 55, 5, 6, 86, 16, 16, 16, 16, 16, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 81, 49, 60, 15, 15, 15, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 14, 14, 14, 14, 15, 15, 16, 16, 16, 16, 16, 16, 16, 2, 52, 55, 6, 83, 14, 14, 14, 14, 14, 14, 14, 18, 18, 18, 18, 18, 18, 18, 18, 18, 94, 15, 15, 95, 18, 18, 18, 68, 10, 0, 0, 0]);
+C.List_8co119 = Isolate.makeConstantList([0, 0, 0, 4, 17, 17, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 82, 49, 7, 15, 15, 15, 15, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 81, 10, 0, 0, 0, 0, 0, 53, 3, 17, 17, 17, 17, 17, 17, 17, 17, 66, 75, 123, 63, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 67, 76, 74, 17, 17, 18, 17, 17, 2, 52, 0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 16, 16, 16, 15, 15, 15, 15, 15, 14, 14, 14, 14, 81, 10, 0, 0, 0]);
+C.List_8co12 = Isolate.makeConstantList([0, 0, 0, 0, 0, 53, 3, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 81, 2, 1, 1, 62, 5, 6, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 81, 2, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 3, 17, 17, 17, 17, 66, 75, 18, 18, 18, 18, 18, 68, 2, 52, 0, 0, 0, 0, 55, 56, 7, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0, 0, 0]);
+C.List_8co120 = Isolate.makeConstantList([0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 14, 14, 14, 15, 15, 15, 15, 9, 5, 54, 0, 0, 0, 0, 53, 1, 1, 3, 80, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 40, 41, 84, 82, 9, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 5, 5, 5, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 6, 21, 21, 21, 21, 21, 21, 27, 17, 17, 17, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+C.List_8co121 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 82, 9, 54, 0, 0, 0, 0, 0, 55, 6, 85, 16, 16, 16, 16, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 14, 14, 14, 14, 14, 81, 49, 60, 15, 15, 15, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 16, 16, 16, 16, 16, 16, 16, 2, 52, 55, 6, 80, 14, 14, 14, 14, 14, 14, 18, 18, 18, 18, 18, 18, 18, 18, 18, 93, 15, 15, 92, 18, 18, 18, 68, 10, 0, 0, 0]);
+C.List_8co13 = Isolate.makeConstantList([0, 0, 0, 4, 85, 16, 16, 16, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 11, 50, 3, 85, 16, 16, 16, 16, 16, 16, 89, 10, 0, 0, 0, 0, 0, 0, 53, 51, 7, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 2, 52, 0, 0, 4, 85, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 17, 17, 17, 15, 15, 15, 17, 17, 17, 15, 15, 15, 15, 15, 15, 14, 14, 81, 2, 52, 0, 0, 0, 0]);
+C.List_8co14 = Isolate.makeConstantList([0, 0, 0, 53, 1, 3, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 16, 16, 16, 75, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 73, 17, 17, 17, 9, 54, 0, 0, 0, 0, 0, 0, 0, 53, 1, 3, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 17, 17, 14, 14, 84, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 17, 17, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0, 0]);
+C.List_8co15 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 9, 5, 54, 0, 0, 53, 1, 51, 7, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 33, 34, 139, 84, 84, 84, 82, 9, 54, 0, 0, 0, 0, 0, 0, 0, 55, 5, 6, 21, 21, 21, 21, 21, 15, 15, 15, 15, 15, 15, 9, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 6, 21, 21, 21, 21, 21, 21, 21, 27, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 9, 5, 5, 5, 54, 0, 0, 0, 0, 0, 0]);
 C.List_8co16 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 55, 6, 86, 87, 16, 16, 16, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 16, 16, 16, 16, 16, 16, 16, 16, 16, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 55, 6, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 24, 21, 21, 21, 21, 21, 21, 21, 21, 21, 27, 17, 17, 17, 25, 21, 21, 21, 21, 21, 21, 21, 21, 21, 27, 16, 89, 9, 54, 0, 0, 0, 0, 0, 0, 0, 4, 86, 16, 16, 17, 17, 17, 15, 17, 17, 17, 16, 16, 16, 14, 14, 82, 9, 54, 0, 0, 0, 0, 0]);
-C.List_8co17 = Isolate.makeConstantList([0, 0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0, 0, 53, 3, 80, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 84, 82, 9, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 1, 1, 1, 1, 1, 52, 0, 0, 0, 0, 0, 0, 55, 5, 5, 5, 6, 21, 45, 21, 17, 17, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-C.List_8co18 = Isolate.makeConstantList([0, 0, 0, 55, 5, 6, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 17, 17, 17, 17, 66, 75, 18, 18, 18, 18, 18, 74, 65, 17, 17, 17, 17, 17, 17, 84, 84, 84, 82, 9, 5, 54, 0, 0, 0, 0, 53, 3, 15, 15, 15, 16, 16, 16, 16, 16, 16, 16, 17, 17, 67, 76, 18, 18, 18, 73, 17, 17, 17, 17, 17, 18, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 17, 17, 17, 2, 52, 0, 0, 0, 0, 0, 55, 5, 5, 6, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0, 0, 0]);
-C.List_8co19 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 16, 75, 18, 18, 18, 18, 18, 18, 18, 37, 38, 18, 18, 18, 18, 70, 64, 17, 9, 5, 127, 1, 1, 1, 1, 1, 1, 1, 1, 3, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 16, 16, 17, 17, 15, 15, 15, 14, 14, 14, 81, 11, 8, 61, 6, 17, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 17, 17, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 51, 7, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 15, 15, 15, 11, 61, 54, 0, 0, 0, 0, 0, 0]);
-C.List_8co2 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0, 0, 0, 53, 3, 85, 16, 16, 16, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 14, 14, 14, 14, 81, 49, 60, 15, 15, 15, 87, 16, 16, 16, 16, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 10, 0, 4, 83, 14, 14, 14, 14, 14, 14, 76, 18, 18, 18, 18, 18, 18, 18, 18, 74, 93, 92, 75, 18, 18, 18, 69, 10, 0, 0, 0]);
-C.List_8co20 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 83, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 16, 16, 16, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 84, 82, 9, 54, 53, 1, 1, 1, 1, 1, 1, 1, 52, 0, 0, 0, 0, 0, 55, 5, 5, 5, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 14, 14, 14, 15, 15, 15, 15, 15, 14, 14, 14, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
-C.List_8co21 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 83, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 84, 84, 82, 9, 5, 127, 1, 3, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 59, 8, 7, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
-C.List_8co22 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 1, 1, 1, 1, 51, 61, 6, 83, 84, 84, 84, 84, 84, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 84, 82, 9, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 56, 7, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 15, 15, 10, 0, 4, 33, 34, 35, 70, 70, 70, 15, 15, 14, 14, 17, 17, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
-C.List_8co23 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 84, 84, 84, 14, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 81, 12, 83, 14, 15, 15, 15, 15, 15, 16, 16, 16, 16, 15, 15, 15, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 11, 61, 54, 55, 6, 80, 14, 14, 14, 14, 17, 17, 17, 17, 66, 75, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 68, 10, 0, 0, 0]);
-C.List_8co24 = Isolate.makeConstantList([0, 0, 0, 0, 53, 3, 80, 14, 14, 14, 14, 81, 2, 1, 52, 0, 0, 0, 0, 0, 0, 53, 1, 3, 80, 14, 14, 14, 14, 14, 81, 2, 1, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 3, 80, 14, 14, 14, 14, 14, 14, 81, 2, 1, 1, 1, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 1, 3, 15, 15, 15, 15, 15, 14, 14, 81, 10, 0, 0, 0, 0, 0, 0, 0, 53, 1, 1, 1, 1, 3, 80, 14, 14, 14, 14, 14, 14, 14, 14, 81, 2, 1, 1, 1, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-C.List_8co25 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 9, 5, 54, 0, 0, 53, 1, 51, 7, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 33, 34, 139, 84, 84, 84, 82, 9, 54, 0, 0, 0, 0, 0, 0, 0, 55, 5, 6, 21, 21, 21, 21, 21, 15, 15, 15, 15, 15, 15, 9, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 6, 21, 21, 21, 21, 21, 21, 21, 27, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 9, 5, 5, 5, 54, 0, 0, 0, 0, 0, 0]);
-C.List_8co26 = Isolate.makeConstantList([0, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 11, 50, 52, 0, 0, 0, 0, 53, 3, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 84, 82, 9, 5, 54, 0, 0, 107, 108, 109, 106, 106, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 1, 1, 1, 1, 3, 15, 15, 15, 15, 15, 15, 2, 1, 1, 1, 52, 0, 0, 0, 0, 0, 0, 55, 5, 5, 5, 5, 5, 54, 0, 0, 0, 0, 0, 53, 1, 1, 1, 1, 52, 0, 0, 0, 0]);
-C.List_8co27 = Isolate.makeConstantList([0, 0, 0, 55, 6, 86, 87, 16, 16, 16, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 67, 76, 123, 90, 16, 16, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 9, 56, 47, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 16, 16, 16, 16, 88, 11, 125, 0, 0, 0, 0, 0, 0, 59, 7, 85, 16, 16, 17, 17, 17, 17, 17, 16, 16, 16, 14, 14, 14, 14, 81, 10, 0, 0, 0, 0, 0]);
-C.List_8co28 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 55, 6, 86, 16, 16, 16, 17, 17, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 16, 16, 16, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 4, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 21, 21, 21, 21, 21, 21, 21, 21, 27, 17, 17, 17, 17, 17, 25, 21, 21, 21, 21, 21, 21, 21, 27, 16, 16, 16, 89, 9, 54, 0, 0, 0, 0, 0, 55, 6, 85, 16, 16, 17, 17, 15, 15, 15, 15, 17, 17, 16, 16, 16, 14, 14, 82, 10, 0, 0, 0, 0, 0]);
-C.List_8co29 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 5, 5, 5, 5, 5, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 5, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-C.List_8co3 = Isolate.makeConstantList([0, 0, 0, 0, 0, 55, 6, 86, 16, 16, 16, 16, 16, 16, 16, 16, 16, 14, 14, 14, 14, 16, 16, 16, 16, 16, 16, 16, 17, 17, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 17, 17, 15, 15, 15, 15, 15, 75, 18, 18, 18, 74, 65, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 82, 124, 3, 80, 14, 14, 14, 14, 14, 14, 14, 14, 14, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 2, 52, 0, 0, 0]);
-C.List_8co30 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 86, 87, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 89, 20, 86, 14, 16, 16, 16, 16, 15, 15, 15, 15, 15, 9, 5, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 6, 15, 15, 15, 15, 15, 25, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 9, 54, 0, 0, 0, 0, 0, 0, 55, 5, 5, 5, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 85, 16, 25, 21, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-C.List_8co31 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 86, 16, 16, 16, 16, 16, 14, 14, 14, 14, 14, 14, 16, 16, 16, 89, 9, 5, 6, 17, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 15, 15, 15, 15, 15, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 9, 6, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 85, 16, 16, 16, 16, 16, 16, 16, 16, 84, 84, 84, 82, 9, 54, 0, 0, 0, 0, 0, 0, 0]);
-C.List_8co32 = Isolate.makeConstantList([0, 0, 0, 4, 85, 16, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 76, 18, 18, 18, 18, 18, 18, 123, 16, 16, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 14, 14, 14, 82, 20, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 2, 1, 1, 1, 1, 51, 7, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 16, 16, 16, 16, 16, 89, 10, 0, 0, 55, 6, 15, 15, 14, 14, 14, 16, 16, 16, 16, 14, 14, 81, 2, 1, 1, 1, 1, 52, 0, 0, 0, 0, 0, 0, 0]);
-C.List_8co33 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 83, 84, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 15, 15, 9, 54, 4, 80, 14, 81, 2, 51, 7, 15, 15, 14, 14, 17, 17, 17, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
-C.List_8co34 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 86, 16, 16, 16, 16, 16, 14, 14, 14, 14, 16, 16, 16, 88, 11, 125, 0, 59, 7, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0, 0, 0, 0, 55, 5, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 25, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 9, 54, 55, 6, 21, 21, 21, 21, 21, 21, 21, 21, 21, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 86, 16, 16, 16, 16, 16, 25, 21, 21, 9, 5, 5, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0]);
-C.List_8co35 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 53, 3, 85, 16, 16, 16, 17, 17, 17, 14, 14, 14, 14, 14, 14, 14, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 9, 54, 0, 4, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 25, 21, 27, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 25, 21, 21, 21, 27, 16, 16, 16, 16, 16, 88, 11, 61, 54, 0, 0, 0, 4, 86, 16, 16, 17, 17, 17, 15, 15, 15, 39, 15, 15, 17, 17, 14, 81, 11, 50, 1, 52, 0, 0, 0, 0, 0]);
-C.List_8co36 = Isolate.makeConstantList([0, 0, 0, 0, 0, 53, 1, 3, 71, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 68, 2, 1, 1, 1, 3, 15, 15, 15, 15, 15, 15, 15, 15, 9, 5, 5, 6, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 15, 15, 15, 15, 15, 9, 5, 5, 5, 54, 0, 0, 0, 0, 0, 59, 7, 21, 21, 28, 14, 14, 14, 14, 14, 14, 14, 15, 15, 17, 17, 14, 14, 81, 2, 52, 0, 0, 0, 0, 0, 0, 0, 0, 53, 3, 15, 15, 15, 15, 12, 15, 15, 15, 15, 15, 16, 16, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0, 0, 0, 0]);
-C.List_8co37 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 4, 86, 16, 16, 16, 16, 17, 17, 14, 14, 14, 14, 14, 14, 14, 14, 14, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 59, 7, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 25, 21, 21, 21, 21, 21, 21, 27, 17, 17, 17, 17, 17, 17, 17, 25, 21, 21, 21, 21, 21, 27, 16, 16, 16, 16, 16, 89, 10, 0, 0, 0, 0, 55, 6, 86, 16, 16, 17, 17, 15, 15, 15, 15, 15, 17, 17, 17, 17, 14, 14, 14, 81, 10, 0, 0, 0, 0, 0]);
-C.List_8co38 = Isolate.makeConstantList([0, 0, 0, 53, 3, 85, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 95, 76, 18, 18, 74, 93, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 9, 5, 126, 6, 17, 17, 15, 15, 15, 15, 14, 14, 14, 82, 9, 54, 0, 0, 0, 0, 0, 55, 56, 7, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 14, 14, 81, 2, 52, 0, 0, 0, 0, 0, 53, 3, 15, 15, 29, 15, 15, 15, 15, 20, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-C.List_8co39 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 53, 1, 1, 1, 3, 71, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 68, 11, 8, 61, 54, 0, 0, 53, 51, 8, 7, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 9, 5, 5, 5, 54, 0, 4, 21, 21, 21, 21, 28, 14, 14, 14, 14, 14, 14, 17, 17, 17, 17, 17, 81, 11, 125, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 3, 15, 15, 49, 60, 15, 15, 15, 15, 16, 16, 16, 16, 15, 15, 15, 15, 15, 10, 0, 0, 0, 0, 0, 0, 0]);
-C.List_8co4 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 9, 5, 5, 5, 54, 0, 0, 0, 53, 3, 80, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 14, 14, 14, 30, 31, 14, 14, 84, 82, 9, 5, 5, 5, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 5, 6, 15, 15, 15, 15, 15, 9, 5, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 5, 6, 21, 21, 21, 21, 21, 27, 17, 17, 17, 17, 17, 17, 17, 9, 5, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-C.List_8co40 = Isolate.makeConstantList([0, 0, 0, 0, 55, 5, 5, 5, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 75, 18, 18, 18, 18, 18, 18, 18, 18, 18, 68, 11, 61, 54, 0, 0, 53, 3, 15, 15, 15, 15, 11, 8, 8, 60, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 16, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 84, 84, 82, 11, 47, 21, 21, 21, 28, 14, 14, 14, 14, 14, 14, 17, 17, 14, 81, 2, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0, 0, 0]);
-C.List_8co41 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 15, 15, 15, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 81, 10, 0, 0, 0, 0, 0, 4, 17, 17, 17, 17, 17, 17, 17, 17, 17, 75, 123, 63, 17, 17, 17, 77, 18, 18, 18, 18, 18, 18, 73, 17, 67, 18, 65, 17, 18, 17, 17, 17, 2, 52, 0, 0, 0, 55, 5, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 16, 16, 15, 15, 15, 15, 15, 14, 14, 14, 14, 81, 10, 0, 0, 0]);
+C.List_8co17 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 5, 5, 5, 5, 5, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 5, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+C.List_8co18 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 55, 6, 86, 16, 16, 16, 17, 17, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 16, 16, 16, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 4, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 21, 21, 21, 21, 21, 21, 21, 21, 27, 17, 17, 17, 17, 17, 25, 21, 21, 21, 21, 21, 21, 21, 27, 16, 16, 16, 89, 9, 54, 0, 0, 0, 0, 0, 55, 6, 85, 16, 16, 17, 17, 15, 15, 15, 15, 17, 17, 16, 16, 16, 14, 14, 82, 10, 0, 0, 0, 0, 0]);
+C.List_8co19 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 86, 16, 16, 16, 16, 16, 14, 14, 14, 14, 16, 16, 16, 88, 11, 125, 0, 59, 7, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0, 0, 0, 0, 55, 5, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 25, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 9, 54, 55, 6, 21, 21, 21, 21, 21, 21, 21, 21, 21, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 86, 16, 16, 16, 16, 16, 25, 21, 21, 9, 5, 5, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0]);
+C.List_8co2 = Isolate.makeConstantList([0, 0, 0, 0, 0, 55, 6, 86, 16, 16, 16, 16, 16, 16, 16, 16, 16, 14, 14, 14, 14, 16, 16, 16, 16, 16, 16, 16, 17, 17, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 17, 17, 15, 15, 15, 15, 15, 75, 18, 18, 18, 74, 65, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 82, 124, 3, 80, 14, 14, 14, 14, 14, 14, 14, 14, 14, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 2, 52, 0, 0, 0]);
+C.List_8co20 = Isolate.makeConstantList([0, 0, 0, 0, 55, 5, 5, 5, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 75, 18, 18, 18, 18, 18, 18, 18, 18, 18, 68, 11, 61, 54, 0, 0, 53, 3, 15, 15, 15, 15, 11, 8, 8, 60, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 16, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 84, 84, 82, 11, 47, 21, 21, 21, 28, 14, 14, 14, 14, 14, 14, 17, 17, 14, 81, 2, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0, 0, 0]);
+C.List_8co21 = Isolate.makeConstantList([0, 0, 0, 4, 86, 16, 16, 16, 16, 16, 16, 17, 17, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 67, 76, 18, 18, 18, 123, 90, 16, 16, 16, 16, 16, 15, 15, 15, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 14, 84, 82, 48, 47, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 16, 16, 16, 16, 16, 89, 9, 54, 0, 0, 0, 55, 5, 6, 83, 14, 16, 16, 16, 16, 16, 16, 16, 14, 14, 14, 14, 14, 81, 2, 1, 52, 0, 0, 0, 0, 0]);
+C.List_8co22 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 86, 87, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 89, 20, 86, 14, 16, 16, 16, 16, 15, 15, 15, 15, 15, 9, 5, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 6, 15, 15, 15, 15, 15, 25, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 9, 54, 0, 0, 0, 0, 0, 0, 55, 5, 5, 5, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 85, 16, 25, 21, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+C.List_8co23 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 86, 16, 16, 16, 16, 16, 14, 14, 14, 14, 14, 14, 16, 16, 16, 89, 9, 5, 6, 17, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 15, 15, 15, 15, 15, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 9, 6, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 85, 16, 16, 16, 16, 16, 16, 16, 16, 84, 84, 84, 82, 9, 54, 0, 0, 0, 0, 0, 0, 0]);
+C.List_8co24 = Isolate.makeConstantList([0, 0, 0, 55, 6, 86, 87, 16, 16, 16, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 67, 76, 123, 90, 16, 16, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 9, 56, 47, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 16, 16, 16, 16, 88, 11, 125, 0, 0, 0, 0, 0, 0, 59, 7, 85, 16, 16, 17, 17, 17, 17, 17, 16, 16, 16, 14, 14, 14, 14, 81, 10, 0, 0, 0, 0, 0]);
+C.List_8co25 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 83, 84, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 15, 15, 9, 54, 4, 80, 14, 81, 2, 51, 7, 15, 15, 14, 14, 17, 17, 17, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
+C.List_8co26 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 53, 3, 85, 16, 16, 16, 17, 17, 17, 14, 14, 14, 14, 14, 14, 14, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 9, 54, 0, 4, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 25, 21, 27, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 25, 21, 21, 21, 27, 16, 16, 16, 16, 16, 88, 11, 61, 54, 0, 0, 0, 4, 86, 16, 16, 17, 17, 17, 15, 15, 15, 39, 15, 15, 17, 17, 14, 81, 11, 50, 1, 52, 0, 0, 0, 0, 0]);
+C.List_8co27 = Isolate.makeConstantList([0, 0, 0, 0, 0, 53, 1, 3, 71, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 68, 2, 1, 1, 1, 3, 15, 15, 15, 15, 15, 15, 15, 15, 9, 5, 5, 6, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 15, 15, 15, 15, 15, 9, 5, 5, 5, 54, 0, 0, 0, 0, 0, 59, 7, 21, 21, 28, 14, 14, 14, 14, 14, 14, 14, 15, 15, 17, 17, 14, 14, 81, 2, 52, 0, 0, 0, 0, 0, 0, 0, 0, 53, 3, 15, 15, 15, 15, 12, 15, 15, 15, 15, 15, 16, 16, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0, 0, 0, 0]);
+C.List_8co28 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 4, 86, 16, 16, 16, 16, 17, 17, 14, 14, 14, 14, 14, 14, 14, 14, 14, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 59, 7, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 25, 21, 21, 21, 21, 21, 21, 27, 17, 17, 17, 17, 17, 17, 17, 25, 21, 21, 21, 21, 21, 27, 16, 16, 16, 16, 16, 89, 10, 0, 0, 0, 0, 55, 6, 86, 16, 16, 17, 17, 15, 15, 15, 15, 15, 17, 17, 17, 17, 14, 14, 14, 81, 10, 0, 0, 0, 0, 0]);
+C.List_8co29 = Isolate.makeConstantList([0, 0, 0, 4, 85, 16, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 76, 18, 18, 18, 18, 18, 18, 123, 16, 16, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 14, 14, 14, 82, 20, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 2, 1, 1, 1, 1, 51, 7, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 16, 16, 16, 16, 16, 89, 10, 0, 0, 55, 6, 15, 15, 14, 14, 14, 16, 16, 16, 16, 14, 14, 81, 2, 1, 1, 1, 1, 52, 0, 0, 0, 0, 0, 0, 0]);
+C.List_8co3 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 9, 5, 5, 5, 54, 0, 0, 0, 53, 3, 80, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 14, 14, 14, 30, 31, 14, 14, 84, 82, 9, 5, 5, 5, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 5, 6, 15, 15, 15, 15, 15, 9, 5, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 5, 6, 21, 21, 21, 21, 21, 27, 17, 17, 17, 17, 17, 17, 17, 9, 5, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+C.List_8co30 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 53, 1, 1, 1, 3, 71, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 68, 11, 8, 61, 54, 0, 0, 53, 51, 8, 7, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 9, 5, 5, 5, 54, 0, 4, 21, 21, 21, 21, 28, 14, 14, 14, 14, 14, 14, 17, 17, 17, 17, 17, 81, 11, 125, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 3, 15, 15, 49, 60, 15, 15, 15, 15, 16, 16, 16, 16, 15, 15, 15, 15, 15, 10, 0, 0, 0, 0, 0, 0, 0]);
+C.List_8co31 = Isolate.makeConstantList([0, 0, 0, 4, 80, 14, 14, 15, 15, 15, 15, 15, 15, 25, 21, 21, 21, 21, 21, 27, 15, 15, 15, 15, 15, 17, 17, 17, 17, 14, 14, 14, 14, 44, 17, 17, 15, 15, 15, 16, 16, 16, 88, 10, 0, 0, 0, 0, 0, 4, 17, 17, 67, 18, 18, 123, 63, 17, 17, 16, 16, 16, 16, 17, 17, 2, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 3, 17, 17, 16, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 9, 5, 54, 0, 0, 0, 0]);
+C.List_8co32 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 15, 15, 15, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 81, 10, 0, 0, 0, 0, 0, 4, 17, 17, 17, 17, 17, 17, 17, 17, 17, 75, 123, 63, 17, 17, 17, 77, 18, 18, 18, 18, 18, 18, 73, 17, 67, 18, 65, 17, 18, 17, 17, 17, 2, 52, 0, 0, 0, 55, 5, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 16, 16, 15, 15, 15, 15, 15, 14, 14, 14, 14, 81, 10, 0, 0, 0]);
+C.List_8co33 = Isolate.makeConstantList([0, 0, 0, 0, 55, 5, 6, 86, 87, 16, 17, 17, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 17, 17, 17, 17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 9, 127, 3, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 16, 16, 16, 16, 16, 16, 88, 2, 52, 0, 0, 0, 0, 53, 3, 85, 16, 16, 17, 17, 17, 15, 15, 17, 17, 17, 16, 16, 14, 14, 84, 82, 10, 0, 0, 0, 0, 0]);
+C.List_8co34 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 0, 55, 56, 7, 85, 16, 16, 16, 14, 14, 14, 14, 14, 14, 14, 14, 16, 16, 16, 87, 87, 87, 16, 16, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 85, 16, 16, 17, 17, 15, 17, 17, 16, 16, 16, 14, 14, 82, 9, 54, 0, 0, 0, 0, 0, 0]);
+C.List_8co35 = Isolate.makeConstantList([0, 0, 0, 4, 85, 16, 16, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 18, 18, 18, 18, 18, 18, 18, 74, 15, 15, 15, 15, 15, 17, 17, 17, 2, 3, 17, 17, 17, 17, 15, 15, 14, 14, 14, 14, 81, 48, 47, 14, 14, 14, 14, 2, 1, 1, 1, 1, 52, 0, 0, 55, 5, 6, 15, 15, 15, 15, 15, 136, 137, 137, 138, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 16, 16, 16, 16, 88, 2, 52, 0, 0, 4, 15, 15, 14, 14, 14, 14, 15, 15, 15, 2, 1, 1, 1, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+C.List_8co36 = Isolate.makeConstantList([0, 0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0, 0, 53, 3, 80, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 84, 82, 9, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 1, 1, 1, 1, 1, 52, 0, 0, 0, 0, 0, 0, 55, 5, 5, 5, 6, 21, 45, 21, 17, 17, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+C.List_8co37 = Isolate.makeConstantList([0, 0, 0, 4, 85, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 75, 18, 18, 18, 18, 18, 74, 93, 15, 15, 15, 15, 15, 17, 17, 2, 52, 53, 3, 17, 17, 17, 17, 17, 14, 14, 14, 14, 14, 82, 124, 1, 1, 1, 1, 52, 0, 0, 0, 0, 0, 55, 5, 6, 15, 15, 15, 15, 15, 15, 15, 132, 133, 134, 135, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 16, 16, 88, 2, 52, 0, 0, 55, 6, 15, 15, 15, 26, 28, 15, 15, 15, 49, 61, 5, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+C.List_8co38 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 14, 14, 14, 14, 14, 15, 15, 15, 15, 14, 14, 14, 14, 14, 82, 10, 0, 0, 0, 0, 0, 55, 6, 17, 17, 17, 17, 17, 17, 17, 66, 18, 63, 17, 17, 17, 17, 17, 17, 17, 67, 76, 18, 123, 63, 17, 17, 76, 74, 65, 18, 65, 17, 17, 17, 10, 0, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 16, 16, 15, 15, 15, 15, 15, 14, 14, 14, 82, 10, 0, 0, 0]);
+C.List_8co39 = Isolate.makeConstantList([0, 0, 0, 4, 17, 17, 17, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 49, 60, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 14, 14, 14, 81, 2, 52, 0, 0, 0, 0, 0, 0, 53, 1, 3, 17, 17, 17, 17, 17, 17, 17, 66, 75, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 74, 65, 17, 17, 18, 63, 17, 10, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 16, 16, 16, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 81, 10, 0, 0, 0]);
+C.List_8co4 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 53, 51, 8, 7, 15, 15, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 81, 2, 4, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 17, 17, 17, 17, 15, 15, 15, 15, 15, 17, 17, 17, 2, 52, 59, 8, 7, 15, 15, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 9, 5, 5, 5, 54, 0, 0, 0, 0, 0, 0]);
+C.List_8co40 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 86, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 88, 124, 1, 3, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 9, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 25, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 9, 54, 0, 0, 55, 5, 5, 6, 21, 21, 21, 21, 9, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 86, 16, 16, 16, 25, 21, 9, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+C.List_8co41 = Isolate.makeConstantList([0, 0, 0, 0, 0, 4, 72, 18, 18, 18, 18, 123, 90, 16, 16, 16, 16, 91, 76, 18, 18, 18, 18, 18, 18, 18, 18, 18, 123, 15, 15, 15, 15, 15, 11, 8, 8, 8, 8, 8, 8, 8, 50, 52, 0, 59, 7, 15, 15, 15, 15, 17, 17, 17, 15, 15, 15, 15, 15, 9, 5, 54, 0, 0, 0, 0, 0, 0, 53, 1, 1, 3, 80, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 17, 17, 14, 14, 81, 2, 52, 0, 0, 0, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 49, 60, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0]);
 C.List_8co42 = Isolate.makeConstantList([0, 0, 0, 53, 3, 17, 17, 17, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 81, 12, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 15, 15, 14, 14, 14, 14, 81, 2, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 1, 1, 1, 1, 1, 3, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 67, 76, 68, 10, 0, 0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 14, 81, 2, 1, 52, 0, 0, 0]);
-C.List_8co43 = Isolate.makeConstantList([0, 0, 0, 0, 55, 5, 6, 86, 87, 16, 17, 17, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 17, 17, 17, 17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 9, 127, 3, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 16, 16, 16, 16, 16, 16, 88, 2, 52, 0, 0, 0, 0, 53, 3, 85, 16, 16, 17, 17, 17, 15, 15, 17, 17, 17, 16, 16, 14, 14, 84, 82, 10, 0, 0, 0, 0, 0]);
-C.List_8co44 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 0, 55, 56, 7, 85, 16, 16, 16, 14, 14, 14, 14, 14, 14, 14, 14, 16, 16, 16, 87, 87, 87, 16, 16, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 85, 16, 16, 17, 17, 15, 17, 17, 16, 16, 16, 14, 14, 82, 9, 54, 0, 0, 0, 0, 0, 0]);
-C.List_8co45 = Isolate.makeConstantList([0, 0, 0, 4, 85, 16, 16, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 18, 18, 18, 18, 18, 18, 18, 74, 15, 15, 15, 15, 15, 17, 17, 17, 2, 3, 17, 17, 17, 17, 15, 15, 14, 14, 14, 14, 81, 48, 47, 14, 14, 14, 14, 2, 1, 1, 1, 1, 52, 0, 0, 55, 5, 6, 15, 15, 15, 15, 15, 136, 137, 137, 138, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 16, 16, 16, 16, 88, 2, 52, 0, 0, 4, 15, 15, 14, 14, 14, 14, 15, 15, 15, 2, 1, 1, 1, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-C.List_8co46 = Isolate.makeConstantList([0, 0, 0, 4, 17, 17, 17, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 14, 14, 81, 20, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 15, 15, 14, 14, 14, 14, 81, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 1, 3, 17, 17, 17, 17, 17, 17, 17, 17, 17, 66, 75, 18, 18, 18, 18, 18, 65, 17, 17, 17, 17, 67, 68, 2, 1, 52, 0, 0, 0, 55, 5, 7, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 81, 10, 0, 0, 0]);
-C.List_8co47 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 14, 14, 14, 14, 14, 15, 15, 15, 15, 14, 14, 14, 14, 14, 82, 10, 0, 0, 0, 0, 0, 55, 6, 17, 17, 17, 17, 17, 17, 17, 66, 18, 63, 17, 17, 17, 17, 17, 17, 17, 67, 76, 18, 123, 63, 17, 17, 76, 74, 65, 18, 65, 17, 17, 17, 10, 0, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 16, 16, 15, 15, 15, 15, 15, 14, 14, 14, 82, 10, 0, 0, 0]);
-C.List_8co48 = Isolate.makeConstantList([0, 0, 0, 4, 17, 17, 17, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 49, 60, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 14, 14, 14, 81, 2, 52, 0, 0, 0, 0, 0, 0, 53, 1, 3, 17, 17, 17, 17, 17, 17, 17, 66, 75, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 74, 65, 17, 17, 18, 63, 17, 10, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 16, 16, 16, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 81, 10, 0, 0, 0]);
-C.List_8co49 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 86, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 88, 124, 1, 3, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 9, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 25, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 9, 54, 0, 0, 55, 5, 5, 6, 21, 21, 21, 21, 9, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 86, 16, 16, 16, 25, 21, 9, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-C.List_8co5 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 53, 51, 8, 7, 15, 15, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 81, 2, 4, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 17, 17, 17, 17, 15, 15, 15, 15, 15, 17, 17, 17, 2, 52, 59, 8, 7, 15, 15, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 9, 5, 5, 5, 54, 0, 0, 0, 0, 0, 0]);
-C.List_8co50 = Isolate.makeConstantList([0, 0, 0, 0, 0, 4, 72, 18, 18, 18, 18, 123, 90, 16, 16, 16, 16, 91, 76, 18, 18, 18, 18, 18, 18, 18, 18, 18, 123, 15, 15, 15, 15, 15, 11, 8, 8, 8, 8, 8, 8, 8, 50, 52, 0, 59, 7, 15, 15, 15, 15, 17, 17, 17, 15, 15, 15, 15, 15, 9, 5, 54, 0, 0, 0, 0, 0, 0, 53, 1, 1, 3, 80, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 17, 17, 14, 14, 81, 2, 52, 0, 0, 0, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 49, 60, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0]);
-C.List_8co51 = Isolate.makeConstantList([0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 75, 18, 18, 18, 18, 18, 18, 18, 18, 18, 70, 69, 9, 5, 5, 54, 53, 1, 3, 15, 15, 15, 15, 15, 15, 15, 11, 8, 8, 8, 8, 8, 7, 16, 16, 16, 16, 16, 16, 16, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 82, 20, 21, 21, 21, 21, 28, 14, 14, 14, 14, 17, 17, 17, 15, 11, 61, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 15, 15, 15, 15, 15, 10, 0, 0, 0, 0, 0, 0]);
-C.List_8co52 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 70, 70, 69, 9, 5, 5, 127, 1, 3, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 16, 16, 16, 17, 17, 15, 15, 15, 15, 15, 14, 14, 14, 14, 81, 124, 51, 7, 21, 21, 21, 21, 23, 17, 17, 17, 17, 15, 15, 17, 17, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 15, 15, 15, 2, 52, 0, 0, 0, 0, 0, 0]);
-C.List_8co53 = Isolate.makeConstantList([0, 0, 0, 4, 86, 16, 16, 16, 16, 16, 16, 17, 17, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 67, 76, 18, 18, 18, 123, 90, 16, 16, 16, 16, 16, 15, 15, 15, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 14, 84, 82, 48, 47, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 16, 16, 16, 16, 16, 89, 9, 54, 0, 0, 0, 55, 5, 6, 83, 14, 16, 16, 16, 16, 16, 16, 16, 14, 14, 14, 14, 14, 81, 2, 1, 52, 0, 0, 0, 0, 0]);
-C.List_8co54 = Isolate.makeConstantList([0, 0, 0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 11, 50, 1, 52, 0, 0, 0, 53, 51, 7, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 81, 10, 0, 0, 0, 4, 111, 17, 117, 118, 117, 119, 119, 120, 101, 103, 99, 17, 17, 17, 2, 3, 71, 18, 69, 20, 72, 70, 68, 2, 3, 71, 18, 18, 18, 18, 18, 74, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 21, 45, 21, 10, 0, 0, 0, 53, 3, 85, 16, 16, 16, 16, 16, 16, 88, 10, 0, 0, 0]);
-C.List_8co55 = Isolate.makeConstantList([0, 0, 0, 4, 85, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 95, 18, 18, 18, 74, 93, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 9, 5, 54, 0, 0, 55, 5, 56, 7, 80, 14, 14, 14, 14, 82, 9, 54, 0, 0, 0, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 14, 14, 81, 2, 52, 0, 0, 0, 0, 4, 15, 15, 24, 21, 27, 15, 15, 15, 10, 6, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-C.List_8co56 = Isolate.makeConstantList([0, 0, 0, 55, 6, 83, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 81, 2, 1, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 17, 17, 26, 21, 21, 27, 17, 17, 14, 14, 14, 17, 17, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 17, 17, 17, 16, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 76, 18, 18, 123, 15, 15, 15, 15, 15, 15, 15, 2, 52, 0, 0, 0, 0]);
-C.List_8co57 = Isolate.makeConstantList([0, 0, 0, 0, 53, 3, 17, 17, 17, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 81, 2, 1, 57, 7, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 81, 2, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 3, 71, 18, 18, 18, 18, 18, 18, 123, 63, 17, 17, 67, 76, 68, 2, 52, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 11, 125, 0, 0, 0, 0, 0]);
-C.List_8co58 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 2, 1, 1, 1, 3, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 81, 10, 0, 0, 0, 4, 117, 111, 14, 76, 18, 74, 14, 101, 122, 100, 99, 66, 75, 18, 18, 18, 18, 68, 9, 126, 5, 6, 71, 18, 18, 18, 18, 18, 18, 18, 18, 18, 74, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 26, 21, 21, 2, 1, 52, 53, 3, 15, 15, 15, 15, 16, 16, 16, 16, 88, 10, 0, 0, 0]);
-C.List_8co59 = Isolate.makeConstantList([0, 0, 0, 0, 0, 59, 7, 71, 18, 123, 90, 16, 16, 16, 15, 15, 15, 15, 95, 76, 18, 18, 18, 18, 18, 18, 18, 123, 94, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 2, 58, 3, 15, 15, 15, 17, 17, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 53, 1, 1, 1, 1, 3, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 17, 17, 17, 14, 81, 2, 52, 0, 0, 0, 0, 0, 0, 55, 56, 7, 15, 15, 15, 15, 49, 60, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-C.List_8co6 = Isolate.makeConstantList([0, 0, 0, 4, 85, 16, 16, 16, 16, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 92, 18, 18, 18, 18, 74, 93, 15, 15, 15, 15, 15, 15, 11, 8, 61, 54, 0, 53, 1, 1, 1, 1, 3, 80, 14, 14, 14, 14, 81, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 130, 14, 14, 131, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 14, 14, 81, 2, 52, 0, 0, 0, 4, 15, 15, 15, 26, 21, 27, 15, 15, 2, 4, 15, 15, 15, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-C.List_8co60 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 55, 56, 7, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 82, 10, 0, 0, 53, 3, 111, 117, 111, 101, 122, 118, 121, 120, 102, 101, 99, 77, 18, 18, 18, 123, 63, 17, 10, 0, 0, 4, 17, 67, 76, 18, 18, 18, 18, 18, 18, 18, 18, 74, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 16, 16, 16, 16, 16, 88, 2, 3, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
-C.List_8co61 = Isolate.makeConstantList([0, 0, 0, 4, 80, 14, 14, 15, 15, 15, 15, 15, 15, 25, 21, 21, 21, 21, 21, 27, 15, 15, 15, 15, 15, 17, 17, 17, 17, 14, 14, 14, 14, 44, 17, 17, 15, 15, 15, 16, 16, 16, 88, 10, 0, 0, 0, 0, 0, 4, 17, 17, 67, 18, 18, 123, 63, 17, 17, 16, 16, 16, 16, 17, 17, 2, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 3, 17, 17, 16, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 9, 5, 54, 0, 0, 0, 0]);
-C.List_8co62 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 15, 14, 14, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 14, 14, 14, 14, 14, 14, 84, 82, 9, 5, 54, 0, 0, 0, 53, 1, 1, 1, 3, 16, 16, 16, 16, 16, 17, 17, 67, 76, 74, 65, 17, 17, 17, 17, 17, 17, 17, 17, 18, 17, 17, 17, 17, 17, 17, 17, 17, 15, 17, 17, 17, 17, 10, 0, 0, 0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0]);
-C.List_8co63 = Isolate.makeConstantList([0, 0, 0, 0, 0, 53, 51, 7, 85, 16, 16, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 16, 16, 16, 16, 89, 9, 6, 83, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 16, 16, 17, 17, 17, 17, 15, 15, 75, 18, 18, 18, 18, 18, 18, 18, 74, 65, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 81, 48, 47, 80, 14, 14, 14, 14, 17, 17, 17, 17, 16, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
-C.List_8co64 = Isolate.makeConstantList([0, 0, 0, 4, 80, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 9, 5, 54, 0, 0, 0, 0, 0, 0, 0, 55, 6, 17, 17, 26, 27, 17, 17, 17, 14, 14, 14, 17, 17, 17, 11, 125, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 17, 17, 17, 16, 16, 16, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 77, 18, 18, 18, 18, 18, 18, 123, 15, 15, 15, 15, 10, 0, 0, 0, 0, 0, 0]);
-C.List_8co65 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 4, 83, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 82, 9, 5, 54, 0, 0, 0, 0, 0, 4, 21, 21, 21, 21, 21, 21, 21, 21, 15, 15, 15, 15, 15, 15, 15, 9, 5, 5, 5, 5, 54, 0, 0, 0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 25, 21, 27, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0, 0]);
-C.List_8co66 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 5, 56, 8, 8, 7, 15, 15, 75, 18, 18, 18, 18, 18, 18, 18, 18, 18, 70, 70, 69, 10, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 49, 8, 8, 8, 8, 8, 8, 7, 16, 16, 16, 16, 16, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 9, 5, 56, 7, 21, 21, 21, 21, 28, 14, 14, 14, 14, 14, 14, 17, 17, 17, 17, 14, 82, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 51, 60, 15, 15, 15, 15, 16, 16, 16, 16, 15, 15, 15, 15, 15, 11, 125, 0, 0, 0, 0, 0, 0, 0]);
-C.List_8co67 = Isolate.makeConstantList([0, 0, 0, 0, 55, 6, 83, 84, 14, 14, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 81, 2, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 17, 17, 26, 21, 21, 21, 21, 23, 17, 17, 17, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 17, 17, 87, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 14, 14, 14, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 2, 52, 0, 0, 0]);
-C.List_8co68 = Isolate.makeConstantList([0, 0, 0, 4, 80, 14, 14, 15, 15, 15, 15, 15, 15, 26, 21, 21, 21, 21, 28, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 17, 17, 17, 16, 16, 16, 16, 16, 16, 16, 89, 9, 54, 0, 0, 0, 0, 0, 53, 3, 17, 17, 29, 17, 17, 17, 17, 17, 17, 16, 17, 17, 17, 17, 17, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 17, 17, 16, 16, 16, 16, 16, 16, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 66, 75, 18, 18, 18, 18, 74, 15, 15, 11, 125, 0, 0, 0, 0, 0, 0, 0]);
-C.List_8co69 = Isolate.makeConstantList([0, 0, 0, 53, 3, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 81, 49, 60, 80, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 15, 15, 13, 80, 14, 14, 14, 14, 15, 15, 17, 17, 17, 17, 17, 15, 15, 15, 15, 92, 75, 18, 18, 18, 18, 18, 68, 2, 52, 0, 0, 0, 0, 0]);
-C.List_8co7 = Isolate.makeConstantList([0, 0, 0, 0, 0, 53, 3, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 2, 52, 0, 0, 55, 5, 5, 6, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 82, 9, 54, 0, 0, 0, 0, 116, 111, 21, 114, 115, 21, 105, 103, 104, 1, 1, 1, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 1, 3, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 81, 2, 1, 1, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 3, 85, 16, 16, 16, 16, 88, 10, 0, 0, 0]);
-C.List_8co70 = Isolate.makeConstantList([0, 0, 0, 53, 3, 80, 14, 14, 15, 15, 15, 15, 14, 81, 2, 52, 0, 0, 0, 53, 1, 3, 80, 14, 14, 14, 14, 14, 14, 14, 14, 14, 81, 2, 52, 0, 0, 0, 0, 0, 0, 0, 53, 3, 80, 14, 14, 14, 14, 14, 16, 16, 16, 16, 16, 16, 16, 88, 2, 1, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 3, 15, 15, 15, 15, 15, 15, 15, 15, 14, 39, 82, 10, 0, 0, 0, 0, 0, 0, 53, 3, 17, 17, 17, 17, 17, 17, 17, 16, 16, 16, 16, 16, 14, 14, 14, 14, 14, 14, 81, 2, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-C.List_8co71 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 55, 5, 6, 83, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 82, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 6, 17, 17, 17, 17, 9, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 14, 14, 14, 14, 14, 14, 14, 14, 14, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
-C.List_8co72 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 84, 82, 9, 5, 6, 86, 87, 16, 16, 16, 16, 16, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 81, 49, 60, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 14, 14, 14, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 2, 52, 0, 4, 83, 14, 14, 14, 14, 14, 17, 17, 17, 75, 18, 18, 18, 18, 18, 18, 18, 18, 123, 94, 95, 76, 18, 18, 18, 68, 10, 0, 0, 0]);
-C.List_8co73 = Isolate.makeConstantList([0, 0, 0, 0, 0, 53, 1, 1, 1, 1, 1, 1, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 1, 1, 1, 1, 1, 1, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 1, 1, 1, 1, 1, 1, 1, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 1, 1, 1, 1, 1, 1, 1, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-C.List_8co74 = Isolate.makeConstantList([0, 0, 0, 0, 0, 59, 7, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 15, 15, 17, 17, 66, 75, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 74, 65, 17, 17, 17, 17, 9, 5, 5, 5, 5, 54, 0, 0, 0, 0, 53, 1, 3, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 76, 18, 18, 18, 18, 18, 73, 15, 15, 15, 15, 15, 17, 17, 17, 10, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 6, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0, 0, 0]);
-C.List_8co75 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-C.List_8co76 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 53, 3, 85, 16, 88, 49, 8, 60, 15, 15, 15, 15, 48, 50, 1, 1, 3, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 16, 16, 16, 16, 16, 16, 14, 14, 14, 17, 17, 17, 17, 17, 9, 54, 0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 81, 11, 61, 54, 0, 0, 4, 83, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 76, 18, 18, 18, 18, 18, 69, 9, 5, 54, 0, 0, 0, 0, 0, 0]);
-C.List_8co77 = Isolate.makeConstantList([0, 0, 0, 4, 80, 14, 14, 14, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 16, 16, 88, 2, 52, 0, 0, 0, 0, 55, 6, 17, 17, 18, 18, 18, 18, 18, 123, 17, 17, 17, 16, 16, 17, 17, 17, 10, 0, 0, 0, 0, 0, 0, 0, 55, 6, 17, 17, 17, 67, 76, 18, 18, 18, 123, 15, 15, 15, 15, 11, 61, 54, 0, 53, 1, 1, 3, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
-C.List_8co78 = Isolate.makeConstantList([0, 0, 0, 0, 0, 53, 1, 3, 80, 14, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 82, 9, 54, 0, 0, 4, 17, 111, 14, 117, 120, 79, 18, 74, 14, 101, 122, 99, 67, 76, 18, 123, 63, 17, 9, 54, 0, 0, 55, 6, 17, 17, 67, 76, 18, 18, 18, 18, 18, 18, 18, 18, 74, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
-C.List_8co79 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 6, 83, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 81, 2, 1, 1, 3, 80, 14, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 9, 127, 1, 1, 1, 62, 6, 15, 15, 14, 14, 14, 17, 17, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
-C.List_8co8 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 6, 86, 16, 16, 16, 16, 16, 16, 16, 87, 89, 9, 126, 6, 86, 87, 87, 87, 87, 87, 89, 9, 5, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 5, 5, 6, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 21, 21, 21, 21, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-C.List_8co80 = Isolate.makeConstantList([0, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 81, 49, 60, 80, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 17, 17, 17, 17, 15, 15, 15, 15, 11, 8, 47, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 2, 52, 0, 0, 0, 0, 0, 0, 0, 0]);
-C.List_8co81 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 82, 9, 5, 54, 0, 55, 5, 6, 86, 16, 16, 16, 16, 16, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 81, 49, 60, 15, 15, 15, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 14, 14, 14, 14, 15, 15, 16, 16, 16, 16, 16, 16, 16, 2, 52, 55, 6, 83, 14, 14, 14, 14, 14, 14, 14, 18, 18, 18, 18, 18, 18, 18, 18, 18, 94, 15, 15, 95, 18, 18, 18, 68, 10, 0, 0, 0]);
-C.List_8co82 = Isolate.makeConstantList([0, 0, 0, 0, 0, 4, 85, 16, 16, 16, 16, 16, 88, 49, 8, 8, 50, 3, 85, 16, 16, 16, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 17, 17, 2, 52, 0, 0, 0, 53, 3, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 81, 2, 52, 0, 0, 0, 59, 7, 80, 14, 14, 14, 14, 14, 14, 14, 14, 14, 16, 16, 16, 16, 16, 16, 16, 16, 16, 88, 2, 52, 0, 0, 0, 0, 0, 0]);
-C.List_8co83 = Isolate.makeConstantList([0, 0, 0, 0, 53, 3, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 16, 16, 88, 9, 54, 55, 6, 83, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 17, 17, 17, 66, 70, 70, 70, 18, 18, 18, 18, 18, 18, 21, 21, 21, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 84, 84, 82, 20, 80, 14, 14, 15, 15, 17, 17, 17, 17, 17, 17, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0]);
-C.List_8co84 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 0, 53, 3, 17, 17, 17, 17, 17, 17, 2, 51, 61, 5, 5, 5, 5, 5, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 81, 11, 61, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 2, 52, 4, 83, 84, 82, 9, 56, 7, 15, 15, 14, 14, 17, 17, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
-C.List_8co85 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 81, 12, 80, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 17, 9, 46, 83, 14, 14, 14, 14, 15, 17, 17, 17, 17, 17, 66, 75, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 68, 2, 1, 52, 0, 0, 0]);
-C.List_8co86 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 81, 2, 3, 80, 14, 14, 14, 14, 15, 15, 15, 15, 15, 9, 5, 6, 15, 15, 15, 15, 15, 16, 16, 16, 89, 10, 0, 0, 0, 0, 0, 0, 53, 1, 3, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 9, 54, 0, 0, 0, 53, 3, 17, 17, 17, 16, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 81, 10, 0, 0, 0, 0, 0, 0]);
-C.List_8co87 = Isolate.makeConstantList([0, 0, 0, 4, 85, 16, 16, 16, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 15, 15, 15, 15, 15, 92, 75, 18, 18, 74, 93, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 16, 89, 9, 54, 0, 0, 0, 0, 0, 53, 3, 15, 15, 15, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 2, 52, 0, 4, 86, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 17, 17, 15, 15, 15, 15, 15, 15, 17, 17, 15, 15, 15, 15, 15, 15, 15, 14, 14, 82, 10, 0, 0, 0, 0]);
-C.List_8co88 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 55, 56, 8, 8, 8, 60, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 53, 1, 3, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 16, 16, 14, 14, 14, 14, 17, 17, 17, 17, 10, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 15, 15, 15, 9, 54, 0, 53, 3, 80, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 76, 18, 18, 18, 18, 18, 18, 18, 18, 70, 69, 9, 54, 0, 0, 0, 0, 0]);
-C.List_8co89 = Isolate.makeConstantList([0, 0, 0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 53, 1, 1, 1, 3, 17, 17, 17, 17, 17, 17, 17, 15, 15, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 16, 16, 16, 14, 14, 14, 14, 14, 14, 81, 2, 62, 5, 5, 6, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 9, 54, 0, 53, 3, 80, 14, 14, 14, 14, 14, 14, 14, 14, 76, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 69, 9, 54, 0, 0, 0, 0]);
-C.List_8co9 = Isolate.makeConstantList([0, 0, 0, 0, 0, 4, 85, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 17, 17, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 17, 17, 17, 17, 17, 17, 17, 16, 16, 16, 16, 17, 17, 17, 17, 17, 17, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 17, 2, 52, 0, 53, 3, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 81, 2, 52, 0, 53, 3, 80, 14, 14, 14, 14, 14, 14, 14, 14, 14, 16, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 2, 52, 0, 0, 0, 0, 0]);
-C.List_8co90 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 82, 9, 54, 0, 0, 0, 0, 0, 55, 6, 85, 16, 16, 16, 16, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 14, 14, 14, 14, 14, 81, 49, 60, 15, 15, 15, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 16, 16, 16, 16, 16, 16, 16, 2, 52, 55, 6, 80, 14, 14, 14, 14, 14, 14, 18, 18, 18, 18, 18, 18, 18, 18, 18, 93, 15, 15, 92, 18, 18, 18, 68, 10, 0, 0, 0]);
-C.List_8co91 = Isolate.makeConstantList([0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 14, 14, 14, 15, 15, 15, 15, 9, 5, 54, 0, 0, 0, 0, 53, 1, 1, 3, 80, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 40, 41, 84, 82, 9, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 5, 5, 5, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 6, 21, 21, 21, 21, 21, 21, 27, 17, 17, 17, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-C.List_8co92 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 17, 17, 17, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 81, 2, 1, 52, 53, 1, 3, 80, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 88, 10, 0, 0, 0, 0, 0, 0, 0, 0, 53, 3, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 10, 0, 0, 0, 0, 53, 3, 17, 17, 17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 81, 2, 52, 0, 0, 0, 0, 0, 0]);
-C.List_8co93 = Isolate.makeConstantList([0, 0, 0, 0, 53, 3, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 81, 20, 83, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 15, 15, 17, 17, 17, 17, 17, 17, 17, 15, 15, 92, 75, 18, 18, 68, 2, 1, 52, 0, 0, 0, 0, 0, 0]);
-C.List_8co94 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 17, 17, 17, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 11, 125, 0, 59, 7, 15, 15, 15, 16, 16, 16, 89, 9, 54, 0, 0, 0, 0, 0, 53, 3, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 11, 125, 0, 0, 0, 0, 4, 86, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 81, 2, 52, 0, 0, 0, 0, 0]);
-C.List_8co95 = Isolate.makeConstantList([0, 0, 0, 4, 85, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 15, 15, 15, 15, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 10, 53, 3, 85, 16, 16, 16, 16, 16, 88, 9, 54, 0, 0, 0, 0, 0, 0, 4, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 2, 52, 0, 0, 0, 59, 7, 85, 16, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 81, 10, 0, 0, 0, 0, 0]);
-C.List_8co96 = Isolate.makeConstantList([0, 0, 0, 4, 80, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 25, 21, 21, 27, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 16, 16, 88, 10, 0, 0, 0, 0, 0, 4, 17, 17, 76, 18, 18, 18, 123, 63, 17, 17, 16, 16, 16, 17, 17, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 6, 17, 17, 17, 16, 16, 16, 16, 16, 15, 15, 15, 15, 2, 1, 1, 3, 17, 17, 17, 17, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0]);
-C.List_8co97 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 59, 7, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 15, 15, 95, 76, 18, 18, 123, 94, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 14, 81, 10, 53, 3, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 2, 52, 55, 6, 86, 16, 16, 16, 16, 16, 16, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
-C.List_8co98 = Isolate.makeConstantList([0, 0, 0, 0, 0, 55, 56, 7, 15, 15, 15, 15, 15, 15, 15, 15, 15, 2, 52, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 82, 9, 5, 54, 0, 0, 0, 110, 25, 112, 113, 27, 105, 104, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 1, 1, 1, 3, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 81, 2, 1, 1, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 3, 85, 16, 16, 88, 2, 52, 0, 0, 0]);
-C.List_8co99 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 86, 87, 87, 87, 87, 87, 89, 9, 5, 54, 0, 55, 5, 5, 5, 5, 5, 5, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 9, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 21, 21, 21, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+C.List_8co43 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 70, 70, 69, 9, 5, 5, 127, 1, 3, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 16, 16, 16, 17, 17, 15, 15, 15, 15, 15, 14, 14, 14, 14, 81, 124, 51, 7, 21, 21, 21, 21, 23, 17, 17, 17, 17, 15, 15, 17, 17, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 15, 15, 15, 2, 52, 0, 0, 0, 0, 0, 0]);
+C.List_8co44 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 5, 56, 8, 8, 7, 15, 15, 75, 18, 18, 18, 18, 18, 18, 18, 18, 18, 70, 70, 69, 10, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 49, 8, 8, 8, 8, 8, 8, 7, 16, 16, 16, 16, 16, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 9, 5, 56, 7, 21, 21, 21, 21, 28, 14, 14, 14, 14, 14, 14, 17, 17, 17, 17, 14, 82, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 51, 60, 15, 15, 15, 15, 16, 16, 16, 16, 15, 15, 15, 15, 15, 11, 125, 0, 0, 0, 0, 0, 0, 0]);
+C.List_8co45 = Isolate.makeConstantList([0, 0, 0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 11, 50, 1, 52, 0, 0, 0, 53, 51, 7, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 81, 10, 0, 0, 0, 4, 111, 17, 117, 118, 117, 119, 119, 120, 101, 103, 99, 17, 17, 17, 2, 3, 71, 18, 69, 20, 72, 70, 68, 2, 3, 71, 18, 18, 18, 18, 18, 74, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 21, 45, 21, 10, 0, 0, 0, 53, 3, 85, 16, 16, 16, 16, 16, 16, 88, 10, 0, 0, 0]);
+C.List_8co46 = Isolate.makeConstantList([0, 0, 0, 4, 85, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 95, 18, 18, 18, 74, 93, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 9, 5, 54, 0, 0, 55, 5, 56, 7, 80, 14, 14, 14, 14, 82, 9, 54, 0, 0, 0, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 14, 14, 81, 2, 52, 0, 0, 0, 0, 4, 15, 15, 24, 21, 27, 15, 15, 15, 10, 6, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+C.List_8co47 = Isolate.makeConstantList([0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 75, 18, 18, 18, 18, 18, 18, 18, 18, 18, 70, 69, 9, 5, 5, 54, 53, 1, 3, 15, 15, 15, 15, 15, 15, 15, 11, 8, 8, 8, 8, 8, 7, 16, 16, 16, 16, 16, 16, 16, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 82, 20, 21, 21, 21, 21, 28, 14, 14, 14, 14, 17, 17, 17, 15, 11, 61, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 15, 15, 15, 15, 15, 10, 0, 0, 0, 0, 0, 0]);
+C.List_8co48 = Isolate.makeConstantList([0, 0, 0, 0, 53, 3, 17, 17, 17, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 81, 2, 1, 57, 7, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 81, 2, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 3, 71, 18, 18, 18, 18, 18, 18, 123, 63, 17, 17, 67, 76, 68, 2, 52, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 11, 125, 0, 0, 0, 0, 0]);
+C.List_8co49 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 2, 1, 1, 1, 3, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 81, 10, 0, 0, 0, 4, 117, 111, 14, 76, 18, 74, 14, 101, 122, 100, 99, 66, 75, 18, 18, 18, 18, 68, 9, 126, 5, 6, 71, 18, 18, 18, 18, 18, 18, 18, 18, 18, 74, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 26, 21, 21, 2, 1, 52, 53, 3, 15, 15, 15, 15, 16, 16, 16, 16, 88, 10, 0, 0, 0]);
+C.List_8co5 = Isolate.makeConstantList([0, 0, 0, 4, 85, 16, 16, 16, 16, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 92, 18, 18, 18, 18, 74, 93, 15, 15, 15, 15, 15, 15, 11, 8, 61, 54, 0, 53, 1, 1, 1, 1, 3, 80, 14, 14, 14, 14, 81, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 130, 14, 14, 131, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 14, 14, 81, 2, 52, 0, 0, 0, 4, 15, 15, 15, 26, 21, 27, 15, 15, 2, 4, 15, 15, 15, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+C.List_8co50 = Isolate.makeConstantList([0, 0, 0, 0, 0, 59, 7, 71, 18, 123, 90, 16, 16, 16, 15, 15, 15, 15, 95, 76, 18, 18, 18, 18, 18, 18, 18, 123, 94, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 2, 58, 3, 15, 15, 15, 17, 17, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 53, 1, 1, 1, 1, 3, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 17, 17, 17, 14, 81, 2, 52, 0, 0, 0, 0, 0, 0, 55, 56, 7, 15, 15, 15, 15, 49, 60, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+C.List_8co51 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 55, 56, 7, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 82, 10, 0, 0, 53, 3, 111, 117, 111, 101, 122, 118, 121, 120, 102, 101, 99, 77, 18, 18, 18, 123, 63, 17, 10, 0, 0, 4, 17, 67, 76, 18, 18, 18, 18, 18, 18, 18, 18, 74, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 16, 16, 16, 16, 16, 88, 2, 3, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
+C.List_8co52 = Isolate.makeConstantList([0, 0, 0, 55, 5, 6, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 17, 17, 17, 17, 66, 75, 18, 18, 18, 18, 18, 74, 65, 17, 17, 17, 17, 17, 17, 84, 84, 84, 82, 9, 5, 54, 0, 0, 0, 0, 53, 3, 15, 15, 15, 16, 16, 16, 16, 16, 16, 16, 17, 17, 67, 76, 18, 18, 18, 73, 17, 17, 17, 17, 17, 18, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 17, 17, 17, 2, 52, 0, 0, 0, 0, 0, 55, 5, 5, 6, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0, 0, 0]);
+C.List_8co53 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 15, 14, 14, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 14, 14, 14, 14, 14, 14, 84, 82, 9, 5, 54, 0, 0, 0, 53, 1, 1, 1, 3, 16, 16, 16, 16, 16, 17, 17, 67, 76, 74, 65, 17, 17, 17, 17, 17, 17, 17, 17, 18, 17, 17, 17, 17, 17, 17, 17, 17, 15, 17, 17, 17, 17, 10, 0, 0, 0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0]);
+C.List_8co54 = Isolate.makeConstantList([0, 0, 0, 0, 0, 53, 51, 7, 85, 16, 16, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 16, 16, 16, 16, 89, 9, 6, 83, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 16, 16, 17, 17, 17, 17, 15, 15, 75, 18, 18, 18, 18, 18, 18, 18, 74, 65, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 81, 48, 47, 80, 14, 14, 14, 14, 17, 17, 17, 17, 16, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
+C.List_8co55 = Isolate.makeConstantList([0, 0, 0, 4, 17, 17, 17, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 14, 14, 81, 20, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 15, 15, 14, 14, 14, 14, 81, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 1, 3, 17, 17, 17, 17, 17, 17, 17, 17, 17, 66, 75, 18, 18, 18, 18, 18, 65, 17, 17, 17, 17, 67, 68, 2, 1, 52, 0, 0, 0, 55, 5, 7, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 81, 10, 0, 0, 0]);
+C.List_8co56 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 4, 83, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 82, 9, 5, 54, 0, 0, 0, 0, 0, 4, 21, 21, 21, 21, 21, 21, 21, 21, 15, 15, 15, 15, 15, 15, 15, 9, 5, 5, 5, 5, 54, 0, 0, 0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 25, 21, 27, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0, 0]);
+C.List_8co57 = Isolate.makeConstantList([0, 0, 0, 4, 80, 14, 14, 15, 15, 15, 15, 15, 15, 26, 21, 21, 21, 21, 28, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 17, 17, 17, 16, 16, 16, 16, 16, 16, 16, 89, 9, 54, 0, 0, 0, 0, 0, 53, 3, 17, 17, 29, 17, 17, 17, 17, 17, 17, 16, 17, 17, 17, 17, 17, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 17, 17, 16, 16, 16, 16, 16, 16, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 66, 75, 18, 18, 18, 18, 74, 15, 15, 11, 125, 0, 0, 0, 0, 0, 0, 0]);
+C.List_8co58 = Isolate.makeConstantList([0, 0, 0, 0, 55, 6, 83, 84, 14, 14, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 81, 2, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 17, 17, 26, 21, 21, 21, 21, 23, 17, 17, 17, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 17, 17, 87, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 14, 14, 14, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 2, 52, 0, 0, 0]);
+C.List_8co59 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 53, 3, 85, 16, 88, 49, 8, 60, 15, 15, 15, 15, 48, 50, 1, 1, 3, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 16, 16, 16, 16, 16, 16, 14, 14, 14, 17, 17, 17, 17, 17, 9, 54, 0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 81, 11, 61, 54, 0, 0, 4, 83, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 76, 18, 18, 18, 18, 18, 69, 9, 5, 54, 0, 0, 0, 0, 0, 0]);
+C.List_8co6 = Isolate.makeConstantList([0, 0, 0, 0, 0, 53, 3, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 2, 52, 0, 0, 55, 5, 5, 6, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 82, 9, 54, 0, 0, 0, 0, 116, 111, 21, 114, 115, 21, 105, 103, 104, 1, 1, 1, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 1, 3, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 81, 2, 1, 1, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 3, 85, 16, 16, 16, 16, 88, 10, 0, 0, 0]);
+C.List_8co60 = Isolate.makeConstantList([0, 0, 0, 53, 3, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 81, 49, 60, 80, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 15, 15, 13, 80, 14, 14, 14, 14, 15, 15, 17, 17, 17, 17, 17, 15, 15, 15, 15, 92, 75, 18, 18, 18, 18, 18, 68, 2, 52, 0, 0, 0, 0, 0]);
+C.List_8co61 = Isolate.makeConstantList([0, 0, 0, 4, 80, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 9, 5, 54, 0, 0, 0, 0, 0, 0, 0, 55, 6, 17, 17, 26, 27, 17, 17, 17, 14, 14, 14, 17, 17, 17, 11, 125, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 17, 17, 17, 16, 16, 16, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 77, 18, 18, 18, 18, 18, 18, 123, 15, 15, 15, 15, 10, 0, 0, 0, 0, 0, 0]);
+C.List_8co62 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 55, 5, 6, 83, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 82, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 6, 17, 17, 17, 17, 9, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 14, 14, 14, 14, 14, 14, 14, 14, 14, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
+C.List_8co63 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 84, 82, 9, 5, 6, 86, 87, 16, 16, 16, 16, 16, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 81, 49, 60, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 14, 14, 14, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 2, 52, 0, 4, 83, 14, 14, 14, 14, 14, 17, 17, 17, 75, 18, 18, 18, 18, 18, 18, 18, 18, 123, 94, 95, 76, 18, 18, 18, 68, 10, 0, 0, 0]);
+C.List_8co64 = Isolate.makeConstantList([0, 0, 0, 53, 3, 80, 14, 14, 15, 15, 15, 15, 14, 81, 2, 52, 0, 0, 0, 53, 1, 3, 80, 14, 14, 14, 14, 14, 14, 14, 14, 14, 81, 2, 52, 0, 0, 0, 0, 0, 0, 0, 53, 3, 80, 14, 14, 14, 14, 14, 16, 16, 16, 16, 16, 16, 16, 88, 2, 1, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 3, 15, 15, 15, 15, 15, 15, 15, 15, 14, 39, 82, 10, 0, 0, 0, 0, 0, 0, 53, 3, 17, 17, 17, 17, 17, 17, 17, 16, 16, 16, 16, 16, 14, 14, 14, 14, 14, 14, 81, 2, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+C.List_8co65 = Isolate.makeConstantList([0, 0, 0, 0, 0, 59, 7, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 15, 15, 17, 17, 66, 75, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 74, 65, 17, 17, 17, 17, 9, 5, 5, 5, 5, 54, 0, 0, 0, 0, 53, 1, 3, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 76, 18, 18, 18, 18, 18, 73, 15, 15, 15, 15, 15, 17, 17, 17, 10, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 6, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0, 0, 0]);
+C.List_8co66 = Isolate.makeConstantList([0, 0, 0, 0, 0, 53, 1, 1, 1, 1, 1, 1, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 1, 1, 1, 1, 1, 1, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 1, 1, 1, 1, 1, 1, 1, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 1, 1, 1, 1, 1, 1, 1, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+C.List_8co67 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 16, 75, 18, 18, 18, 18, 18, 18, 18, 37, 38, 18, 18, 18, 18, 70, 64, 17, 9, 5, 127, 1, 1, 1, 1, 1, 1, 1, 1, 3, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 16, 16, 17, 17, 15, 15, 15, 14, 14, 14, 81, 11, 8, 61, 6, 17, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 17, 17, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 51, 7, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 15, 15, 15, 11, 61, 54, 0, 0, 0, 0, 0, 0]);
+C.List_8co68 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+C.List_8co69 = Isolate.makeConstantList([0, 0, 0, 4, 80, 14, 14, 14, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 16, 16, 88, 2, 52, 0, 0, 0, 0, 55, 6, 17, 17, 18, 18, 18, 18, 18, 123, 17, 17, 17, 16, 16, 17, 17, 17, 10, 0, 0, 0, 0, 0, 0, 0, 55, 6, 17, 17, 17, 67, 76, 18, 18, 18, 123, 15, 15, 15, 15, 11, 61, 54, 0, 53, 1, 1, 3, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
+C.List_8co7 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 6, 86, 16, 16, 16, 16, 16, 16, 16, 87, 89, 9, 126, 6, 86, 87, 87, 87, 87, 87, 89, 9, 5, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 5, 5, 6, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 21, 21, 21, 21, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+C.List_8co70 = Isolate.makeConstantList([0, 0, 0, 0, 0, 53, 1, 3, 80, 14, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 82, 9, 54, 0, 0, 4, 17, 111, 14, 117, 120, 79, 18, 74, 14, 101, 122, 99, 67, 76, 18, 123, 63, 17, 9, 54, 0, 0, 55, 6, 17, 17, 67, 76, 18, 18, 18, 18, 18, 18, 18, 18, 74, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
+C.List_8co71 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 6, 83, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 81, 2, 1, 1, 3, 80, 14, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 9, 127, 1, 1, 1, 62, 6, 15, 15, 14, 14, 14, 17, 17, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
+C.List_8co72 = Isolate.makeConstantList([0, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 81, 49, 60, 80, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 17, 17, 17, 17, 15, 15, 15, 15, 11, 8, 47, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 2, 52, 0, 0, 0, 0, 0, 0, 0, 0]);
+C.List_8co73 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 83, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 16, 16, 16, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 84, 82, 9, 54, 53, 1, 1, 1, 1, 1, 1, 1, 52, 0, 0, 0, 0, 0, 55, 5, 5, 5, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 14, 14, 14, 15, 15, 15, 15, 15, 14, 14, 14, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
+C.List_8co74 = Isolate.makeConstantList([0, 0, 0, 0, 0, 4, 85, 16, 16, 16, 16, 16, 88, 49, 8, 8, 50, 3, 85, 16, 16, 16, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 17, 17, 2, 52, 0, 0, 0, 53, 3, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 81, 2, 52, 0, 0, 0, 59, 7, 80, 14, 14, 14, 14, 14, 14, 14, 14, 14, 16, 16, 16, 16, 16, 16, 16, 16, 16, 88, 2, 52, 0, 0, 0, 0, 0, 0]);
+C.List_8co75 = Isolate.makeConstantList([0, 0, 0, 0, 53, 3, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 16, 16, 88, 9, 54, 55, 6, 83, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 17, 17, 17, 66, 70, 70, 70, 18, 18, 18, 18, 18, 18, 21, 21, 21, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 84, 84, 82, 20, 80, 14, 14, 15, 15, 17, 17, 17, 17, 17, 17, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0]);
+C.List_8co76 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 0, 53, 3, 17, 17, 17, 17, 17, 17, 2, 51, 61, 5, 5, 5, 5, 5, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 81, 11, 61, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 2, 52, 4, 83, 84, 82, 9, 56, 7, 15, 15, 14, 14, 17, 17, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
+C.List_8co77 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 81, 12, 80, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 17, 9, 46, 83, 14, 14, 14, 14, 15, 17, 17, 17, 17, 17, 66, 75, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 68, 2, 1, 52, 0, 0, 0]);
+C.List_8co78 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 59, 7, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 15, 15, 95, 76, 18, 18, 123, 94, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 14, 81, 10, 53, 3, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 2, 52, 55, 6, 86, 16, 16, 16, 16, 16, 16, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
+C.List_8co79 = Isolate.makeConstantList([0, 0, 0, 55, 6, 83, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 81, 2, 1, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 17, 17, 26, 21, 21, 27, 17, 17, 14, 14, 14, 17, 17, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 17, 17, 17, 16, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 76, 18, 18, 123, 15, 15, 15, 15, 15, 15, 15, 2, 52, 0, 0, 0, 0]);
+C.List_8co8 = Isolate.makeConstantList([0, 0, 0, 0, 0, 4, 85, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 17, 17, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 17, 17, 17, 17, 17, 17, 17, 16, 16, 16, 16, 17, 17, 17, 17, 17, 17, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 17, 2, 52, 0, 53, 3, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 81, 2, 52, 0, 53, 3, 80, 14, 14, 14, 14, 14, 14, 14, 14, 14, 16, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 2, 52, 0, 0, 0, 0, 0]);
+C.List_8co80 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 55, 56, 8, 8, 8, 60, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 53, 1, 3, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 16, 16, 14, 14, 14, 14, 17, 17, 17, 17, 10, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 15, 15, 15, 9, 54, 0, 53, 3, 80, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 76, 18, 18, 18, 18, 18, 18, 18, 18, 70, 69, 9, 54, 0, 0, 0, 0, 0]);
+C.List_8co81 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 81, 2, 3, 80, 14, 14, 14, 14, 15, 15, 15, 15, 15, 9, 5, 6, 15, 15, 15, 15, 15, 16, 16, 16, 89, 10, 0, 0, 0, 0, 0, 0, 53, 1, 3, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 9, 54, 0, 0, 0, 53, 3, 17, 17, 17, 16, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 81, 10, 0, 0, 0, 0, 0, 0]);
+C.List_8co82 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 83, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 84, 84, 82, 9, 5, 127, 1, 3, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 59, 8, 7, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
+C.List_8co83 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 1, 1, 1, 1, 51, 61, 6, 83, 84, 84, 84, 84, 84, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 84, 82, 9, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 56, 7, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 15, 15, 10, 0, 4, 33, 34, 35, 70, 70, 70, 15, 15, 14, 14, 17, 17, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
+C.List_8co84 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 17, 17, 17, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 81, 2, 1, 52, 53, 1, 3, 80, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 88, 10, 0, 0, 0, 0, 0, 0, 0, 0, 53, 3, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 10, 0, 0, 0, 0, 53, 3, 17, 17, 17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 81, 2, 52, 0, 0, 0, 0, 0, 0]);
+C.List_8co85 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 84, 84, 84, 14, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 81, 12, 83, 14, 15, 15, 15, 15, 15, 16, 16, 16, 16, 15, 15, 15, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 11, 61, 54, 55, 6, 80, 14, 14, 14, 14, 17, 17, 17, 17, 66, 75, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 68, 10, 0, 0, 0]);
+C.List_8co86 = Isolate.makeConstantList([0, 0, 0, 0, 53, 3, 80, 14, 14, 14, 14, 81, 2, 1, 52, 0, 0, 0, 0, 0, 0, 53, 1, 3, 80, 14, 14, 14, 14, 14, 81, 2, 1, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 3, 80, 14, 14, 14, 14, 14, 14, 81, 2, 1, 1, 1, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 1, 3, 15, 15, 15, 15, 15, 14, 14, 81, 10, 0, 0, 0, 0, 0, 0, 0, 53, 1, 1, 1, 1, 3, 80, 14, 14, 14, 14, 14, 14, 14, 14, 81, 2, 1, 1, 1, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+C.List_8co87 = Isolate.makeConstantList([0, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 11, 50, 52, 0, 0, 0, 0, 53, 3, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 84, 82, 9, 5, 54, 0, 0, 107, 108, 109, 106, 106, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 1, 1, 1, 1, 3, 15, 15, 15, 15, 15, 15, 2, 1, 1, 1, 52, 0, 0, 0, 0, 0, 0, 55, 5, 5, 5, 5, 5, 54, 0, 0, 0, 0, 0, 53, 1, 1, 1, 1, 52, 0, 0, 0, 0]);
+C.List_8co88 = Isolate.makeConstantList([0, 0, 0, 4, 85, 16, 16, 16, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 15, 15, 15, 15, 15, 92, 75, 18, 18, 74, 93, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 16, 89, 9, 54, 0, 0, 0, 0, 0, 53, 3, 15, 15, 15, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 2, 52, 0, 4, 86, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 17, 17, 15, 15, 15, 15, 15, 15, 17, 17, 15, 15, 15, 15, 15, 15, 15, 14, 14, 82, 10, 0, 0, 0, 0]);
+C.List_8co89 = Isolate.makeConstantList([0, 0, 0, 4, 80, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 25, 21, 21, 27, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 16, 16, 88, 10, 0, 0, 0, 0, 0, 4, 17, 17, 76, 18, 18, 18, 123, 63, 17, 17, 16, 16, 16, 17, 17, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 6, 17, 17, 17, 16, 16, 16, 16, 16, 15, 15, 15, 15, 2, 1, 1, 3, 17, 17, 17, 17, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0]);
+C.List_8co9 = Isolate.makeConstantList([0, 0, 0, 53, 3, 80, 14, 14, 14, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 16, 16, 88, 11, 125, 0, 0, 0, 0, 55, 6, 17, 117, 119, 119, 120, 79, 18, 18, 18, 17, 17, 17, 17, 16, 16, 17, 17, 10, 0, 0, 0, 0, 0, 55, 5, 6, 17, 17, 67, 76, 18, 18, 18, 18, 18, 18, 123, 15, 15, 15, 15, 15, 9, 5, 54, 0, 0, 59, 7, 17, 17, 17, 17, 17, 17, 17, 16, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
+C.List_8co90 = Isolate.makeConstantList([0, 0, 0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 53, 1, 1, 1, 3, 17, 17, 17, 17, 17, 17, 17, 15, 15, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 16, 16, 16, 14, 14, 14, 14, 14, 14, 81, 2, 62, 5, 5, 6, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 9, 54, 0, 53, 3, 80, 14, 14, 14, 14, 14, 14, 14, 14, 76, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 69, 9, 54, 0, 0, 0, 0]);
+C.List_8co91 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 86, 87, 87, 87, 87, 87, 89, 9, 5, 54, 0, 55, 5, 5, 5, 5, 5, 5, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 9, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 21, 21, 21, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+C.List_8co92 = Isolate.makeConstantList([0, 0, 0, 4, 80, 33, 34, 35, 15, 15, 15, 15, 15, 14, 81, 2, 1, 1, 1, 3, 80, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 14, 14, 81, 2, 52, 0, 0, 0, 0, 0, 0, 4, 80, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 88, 2, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 3, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 82, 9, 54, 0, 0, 0, 0, 0, 53, 3, 17, 17, 17, 17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 14, 14, 14, 14, 14, 14, 81, 2, 1, 1, 52, 0, 0, 0, 0, 0, 0, 0, 0]);
+C.List_8co93 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 53, 3, 17, 17, 17, 15, 15, 15, 15, 15, 15, 2, 1, 1, 52, 0, 0, 55, 56, 7, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 81, 2, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 1, 1, 1, 1, 1, 1, 1, 52, 0, 0, 0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 2, 62, 5, 5, 5, 127, 3, 15, 15, 14, 14, 17, 17, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0]);
+C.List_8co94 = Isolate.makeConstantList([0, 0, 0, 0, 53, 3, 80, 14, 14, 14, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 82, 9, 54, 0, 0, 0, 4, 17, 117, 111, 14, 14, 101, 122, 118, 119, 120, 99, 17, 17, 67, 76, 63, 17, 11, 125, 0, 0, 0, 0, 55, 6, 17, 17, 17, 67, 76, 18, 18, 18, 18, 18, 18, 18, 74, 15, 15, 15, 15, 15, 15, 15, 9, 5, 5, 6, 17, 17, 17, 17, 17, 17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
+C.List_8co95 = Isolate.makeConstantList([0, 0, 0, 55, 5, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0, 0, 0, 0, 53, 3, 17, 17, 17, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 16, 16, 14, 14, 14, 14, 81, 49, 8, 8, 61, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 59, 7, 80, 14, 14, 14, 14, 14, 14, 76, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 69, 9, 54, 0, 0, 0]);
+C.List_8co96 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 55, 6, 83, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 15, 95, 76, 18, 18, 18, 18, 18, 123, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 88, 2, 52, 0, 53, 3, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 2, 52, 0, 4, 86, 16, 16, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
+C.List_8co97 = Isolate.makeConstantList([0, 0, 0, 0, 0, 55, 6, 83, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 15, 15, 76, 18, 18, 18, 43, 18, 18, 18, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 88, 2, 52, 0, 0, 0, 53, 3, 15, 15, 15, 15, 15, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 2, 52, 0, 0, 4, 85, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
+C.List_8co98 = Isolate.makeConstantList([0, 0, 0, 53, 3, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 16, 16, 16, 89, 10, 0, 0, 59, 7, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 16, 89, 9, 5, 5, 6, 72, 70, 70, 18, 18, 21, 21, 21, 21, 21, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 84, 84, 82, 9, 5, 5, 46, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0, 0]);
+C.List_8co99 = Isolate.makeConstantList([0, 0, 0, 0, 0, 4, 86, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 17, 17, 17, 17, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 17, 17, 17, 17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 2, 1, 3, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 81, 10, 53, 3, 80, 14, 14, 14, 14, 14, 14, 14, 14, 14, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 2, 52, 0, 0, 0, 0]);
 C.List_A4p = Isolate.makeConstantList([558, 603, 615, 560, 560, 577, 560, 558, 611, 616, 560, 585, 586, 560, 617, 572, 558, 559, 560, 560, 607, 608, 560, 560, 560, 593, 574, 560, 558, 561, 550]);
 C.List_ADx = Isolate.makeConstantList([550, 558, 665, 666, 667, 660, 630, 560, 560, 558, 559, 585, 586, 560, 558, 559, 560, 563, 559, 560, 668, 559, 558, 113, 97, 97, 97, 97, 97, 98, 651]);
 C.List_AKW = Isolate.makeConstantList([797, 561, 797, 810, 794, 789, 879, 880, 828, 787, 857, 790, 828, 797, 561, 550, 550, 675, 139, 454, 651, 550, 823, 810, 811, 812, 810, 797, 562, 557, 113, 97]);
@@ -12636,6 +13982,7 @@ C.List_Jgx = Isolate.makeConstantList([550, 558, 559, 653, 653, 560, 560, 560, 5
 C.List_Jwp = Isolate.makeConstantList([550, 576, 552, 567, 574, 560, 570, 553, 554, 644, 645, 646, 647, 648, 630, 551, 649, 574, 560, 560, 560, 560, 558, 643, 643, 643, 643, 643, 558, 611, 550]);
 C.List_MYA = Isolate.makeConstantList([672, 673, 674, 651, 550, 550, 550, 550, 550, 550, 550, 550, 550, 550, 550, 550, 550, 550, 550, 550, 550, 675, 676, 666, 97, 97, 97, 97, 97, 98, 677]);
 C.List_MgR = Isolate.makeConstantList([551, 575, 553, 553, 553, 554, 574, 558, 559, 560, 560, 560, 560, 560, 560, 560, 576, 552, 567, 577, 570, 553, 578, 553, 567, 568, 570, 553, 554, 555, 550]);
+C.List_OBT = Isolate.makeConstantList(["o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "g", "f", "h", "m", "s", "x", "b", "w", "x", "w", "w", "w", "w", "w", "w", "w", "g", "g", "x", "g", "g", "g", "g", "s", "s", "g", "g", "g", "x", "s", "g", "w", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "m", "m", "m", "m", "m", "s", "s", "s", "s", "s", "s", "s", "s", "s", "s", "x", "s", "g", "g", "g", "g", "g", "h", "h", "h", "h", "h", "h", "h", "f", "f", "f", "f", "f", "x", "x", "m", "g", "g", "g", "m", "m", "m", "m", "g", "g", "g", "g", "g", "w", "w", "w", "w", "m", "g", "g", "g", "g", "g", "g", "s", "o", "o", "o", "o", "x", "x", "g", "g", "g", "g", "g", "g", "g", "g", "g", "g"]);
 C.List_P50 = Isolate.makeConstantList([566, 623, 624, 553, 553, 571, 559, 563, 625, 626, 627, 628, 628, 629, 630, 617, 566, 553, 553, 578, 553, 553, 589, 552, 553, 571, 559, 570, 600, 611, 550]);
 C.List_Tjc = Isolate.makeConstantList([550, 558, 559, 560, 560, 560, 560, 558, 561, 557, 550, 557, 557, 550, 557, 550, 558, 559, 560, 560, 560, 560, 558, 561, 558, 559, 558, 562, 550, 550, 550]);
 C.List_Wrv = Isolate.makeConstantList([558, 559, 560, 560, 560, 593, 574, 558, 594, 595, 560, 579, 580, 560, 596, 597, 558, 559, 560, 558, 598, 599, 558, 559, 560, 558, 559, 560, 558, 561, 550]);
@@ -12654,12 +14001,12 @@ C.List_oyU = Isolate.makeConstantList([550, 558, 113, 97, 97, 98, 661, 560, 560,
 C.List_zPV = Isolate.makeConstantList([113, 97, 98, 651, 550, 550, 550, 550, 550, 550, 550, 550, 550, 550, 550, 550, 550, 550, 550, 550, 550, 675, 113, 97, 97, 97, 97, 97, 97, 98, 651]);
 C.List_aJC = Isolate.makeConstantList([C.List_2Yi, C.List_Tjc, C.List_wYn, C.List_axI, C.List_k9A, C.List_goM, C.List_MgR, C.List_69t, C.List_gT2, C.List_w5B, C.List_Wrv, C.List_Hn1, C.List_coJ, C.List_sy0, C.List_A4p, C.List_mdt, C.List_P50, C.List_2xM, C.List_5aZ, C.List_Jwp, C.List_YWh, C.List_2z6, C.List_eAf, C.List_Jgx, C.List_BiQ, C.List_ADx, C.List_oyU, C.List_69P, C.List_Cx3, C.List_MYA, C.List_zPV]);
 C.List_empty = Isolate.makeConstantList([]);
-C.List_mBP = Isolate.makeConstantList([C.List_8co75, C.List_8co75, C.List_8co75, C.List_8co73, C.List_8co24, C.List_8co70, C.List_8co0, C.List_8co106, C.List_8co92, C.List_8co86, C.List_8co94, C.List_8co95, C.List_8co14, C.List_8co87, C.List_8co101, C.List_8co117, C.List_8co121, C.List_8co120, C.List_8co97, C.List_8co12, C.List_8co5, C.List_8co110, C.List_8co80, C.List_8co93, C.List_8co69, C.List_8co85, C.List_8co23, C.List_8co72, C.List_8co81, C.List_8co90, C.List_8co2, C.List_8co114, C.List_8co89, C.List_8co88, C.List_8co76, C.List_8co109, C.List_8co82, C.List_8co9, C.List_8co118, C.List_8co3, C.List_8co63, C.List_8co83, C.List_8co119, C.List_8co107, C.List_8co65, C.List_8co25, C.List_8co4, C.List_8co91, C.List_8co17, C.List_8co26, C.List_8co98, C.List_8co7, C.List_8co103, C.List_8co54, C.List_8co58, C.List_8co60, C.List_8co78, C.List_8co108, C.List_8co10, C.List_8co77, C.List_8co96, C.List_8co61, C.List_8co112, C.List_8co68, C.List_8co102, C.List_8co64, C.List_8co104, C.List_8co56, C.List_8co67, C.List_8co105, C.List_8co71, C.List_8co20, C.List_8co21, C.List_8co113, C.List_8co79, C.List_8co33, C.List_8co22, C.List_8co84, C.List_8co100, C.List_8co115, C.List_8co13, C.List_8co57, C.List_8co42, C.List_8co46, C.List_8co48, C.List_8co, C.List_8co41, C.List_8co47, C.List_8co116, C.List_8co62, C.List_8co18, C.List_8co74, C.List_8co15, C.List_8co19, C.List_8co52, C.List_8co51, C.List_8co40, C.List_8co66, C.List_8co39, C.List_8co36, C.List_8co50, C.List_8co59, C.List_8co111, C.List_8co38, C.List_8co55, C.List_8co6, C.List_8co1, C.List_8co45, C.List_8co32, C.List_8co53, C.List_8co27, C.List_8co43, C.List_8co11, C.List_8co35, C.List_8co37, C.List_8co28, C.List_8co16, C.List_8co44, C.List_8co31, C.List_8co34, C.List_8co49, C.List_8co30, C.List_8co8, C.List_8co99, C.List_8co29, C.List_8co75, C.List_8co75, C.List_8co75]);
+C.List_mBP = Isolate.makeConstantList([C.List_8co68, C.List_8co68, C.List_8co68, C.List_8co66, C.List_8co86, C.List_8co64, C.List_8co92, C.List_8co109, C.List_8co84, C.List_8co81, C.List_8co117, C.List_8co116, C.List_8co13, C.List_8co88, C.List_8co114, C.List_8co100, C.List_8co97, C.List_8co96, C.List_8co78, C.List_8co11, C.List_8co4, C.List_8co106, C.List_8co72, C.List_8co, C.List_8co60, C.List_8co77, C.List_8co85, C.List_8co63, C.List_8co118, C.List_8co121, C.List_8co1, C.List_8co95, C.List_8co90, C.List_8co80, C.List_8co59, C.List_8co107, C.List_8co74, C.List_8co8, C.List_8co99, C.List_8co2, C.List_8co54, C.List_8co75, C.List_8co98, C.List_8co101, C.List_8co56, C.List_8co15, C.List_8co3, C.List_8co120, C.List_8co36, C.List_8co87, C.List_8co115, C.List_8co6, C.List_8co112, C.List_8co45, C.List_8co49, C.List_8co51, C.List_8co70, C.List_8co94, C.List_8co9, C.List_8co69, C.List_8co89, C.List_8co31, C.List_8co104, C.List_8co57, C.List_8co113, C.List_8co61, C.List_8co111, C.List_8co79, C.List_8co58, C.List_8co110, C.List_8co62, C.List_8co73, C.List_8co82, C.List_8co108, C.List_8co71, C.List_8co25, C.List_8co83, C.List_8co76, C.List_8co93, C.List_8co102, C.List_8co12, C.List_8co48, C.List_8co42, C.List_8co55, C.List_8co39, C.List_8co119, C.List_8co32, C.List_8co38, C.List_8co103, C.List_8co53, C.List_8co52, C.List_8co65, C.List_8co14, C.List_8co67, C.List_8co43, C.List_8co47, C.List_8co20, C.List_8co44, C.List_8co30, C.List_8co27, C.List_8co41, C.List_8co50, C.List_8co105, C.List_8co0, C.List_8co46, C.List_8co5, C.List_8co37, C.List_8co35, C.List_8co29, C.List_8co21, C.List_8co24, C.List_8co33, C.List_8co10, C.List_8co26, C.List_8co28, C.List_8co18, C.List_8co16, C.List_8co34, C.List_8co23, C.List_8co19, C.List_8co40, C.List_8co22, C.List_8co7, C.List_8co91, C.List_8co17, C.List_8co68, C.List_8co68, C.List_8co68]);
 C.Window_methods = $.Window.prototype;
 $.CharacterSprite__duration = 500;
 $.CharacterSprite__spriteData = null;
 $.ImageCache__imgs = null;
-$.HeroSprite_velocity = 0.1;
+$.HeroSprite_velocity = 0.15;
 $.NPC_velocity = 0.05;
 $.TreasureChest_chestOpenSpriteSX = 0;
 $.TreasureChest_chestOpenSpriteSY = 0;
@@ -12752,6 +14099,9 @@ $.elementAt$1$ax = function(receiver, a0) {
 $.forEach$1$ax = function(receiver, a0) {
   return $.getInterceptor$ax(receiver).forEach$1(receiver, a0);
 };
+$.get$bottom$x = function(receiver) {
+  return $.getInterceptor$x(receiver).get$bottom(receiver);
+};
 $.get$canvas$x = function(receiver) {
   return $.getInterceptor$x(receiver).get$canvas(receiver);
 };
@@ -12770,20 +14120,23 @@ $.get$iterator$ax = function(receiver) {
 $.get$keyCode$x = function(receiver) {
   return $.getInterceptor$x(receiver).get$keyCode(receiver);
 };
+$.get$left$x = function(receiver) {
+  return $.getInterceptor$x(receiver).get$left(receiver);
+};
 $.get$length$asx = function(receiver) {
   return $.getInterceptor$asx(receiver).get$length(receiver);
 };
 $.get$name$x = function(receiver) {
   return $.getInterceptor$x(receiver).get$name(receiver);
 };
+$.get$right$x = function(receiver) {
+  return $.getInterceptor$x(receiver).get$right(receiver);
+};
 $.get$top$x = function(receiver) {
   return $.getInterceptor$x(receiver).get$top(receiver);
 };
 $.get$width$x = function(receiver) {
   return $.getInterceptor$x(receiver).get$width(receiver);
-};
-$.set$fillStyle$x = function(receiver, value) {
-  return $.getInterceptor$x(receiver).set$fillStyle(receiver, value);
 };
 $.split$1$s = function(receiver, a0) {
   return $.getInterceptor$s(receiver).split$1(receiver, a0);
@@ -12794,8 +14147,8 @@ $.start$0$x = function(receiver) {
 $.toDouble$0$n = function(receiver) {
   return $.getInterceptor$n(receiver).toDouble$0(receiver);
 };
-$.toInt$0$n = function(receiver) {
-  return $.getInterceptor$n(receiver).toInt$0(receiver);
+$.toInt$0$nx = function(receiver) {
+  return $.getInterceptor$nx(receiver).toInt$0(receiver);
 };
 $.toString$0 = function(receiver) {
   return $.getInterceptor(receiver).toString$0(receiver);
@@ -12805,87 +14158,139 @@ Isolate.$lazy($, "_imgCache", "ImageCache__imgCache", "get$ImageCache__imgCache"
   return new $.ImageCache();
 });
 Isolate.$lazy($, "additionalGrowth", "HeroStats_additionalGrowth", "get$HeroStats_additionalGrowth", function() {
-  return $.makeLiteralMap(["2", [1, 1, 0, 0, 7, 6, 0, 0], "3", [3, 3, 2, 2, 9, 8, 0, 0], "4", [3, 3, 4, 4, 16, 14, 11, 10], "5", [8, 7, 6, 6, 20, 18, 15, 14], "6", [12, 11, 6, 6, 23, 21, 19, 17], "7", [14, 13, 13, 12, 25, 23, 21, 19], "8", [18, 16, 16, 15, 31, 28, 24, 22], "9", [26, 24, 18, 16, 35, 32, 31, 28], "10", [31, 28, 27, 24, 39, 35, 35, 32], "11", [36, 33, 31, 28, 47, 42, 45, 41], "12", [44, 40, 36, 33, 48, 43, 53, 48], "13", [48, 43, 44, 40, 55, 50, 59, 53], "14", [56, 51, 51, 46, 63, 57, 65, 59], "15", [64, 58, 60, 54, 71, 64, 67, 60], "16", [68, 61, 66, 60, 77, 69, 90, 81], "17", [68, 61, 74, 67, 85, 77, 95, 86], "18", [81, 73, 80, 72, 100, 90, 103, 93], "19", [83, 75, 82, 74, 115, 104, 110, 99], "20", [88, 79, 84, 76, 123, 111, 123, 111], "21", [91, 82, 86, 78, 134, 121, 130, 117], "22", [93, 84, 86, 78, 143, 129, 141, 127], "23", [95, 86, 90, 81, 150, 135, 148, 133], "24", [99, 89, 94, 85, 155, 140, 156, 140], "25", [109, 98, 96, 87, 159, 143, 156, 140], "26", [113, 102, 101, 91, 165, 149, 163, 148], "27", [121, 109, 103, 93, 174, 157, 170, 153], "28", [126, 114, 111, 100, 180, 162, 175, 158], "29", [131, 118, 116, 105, 185, 167, 185, 167], "30", [136, 123, 126, 114, 195, 176, 195, 176]]);
+  return $.makeLiteralMap(["1", [0, 0, 0, 0, 0, 0, 0, 0], "2", [1, 1, 0, 0, 7, 6, 0, 0], "3", [3, 3, 2, 2, 9, 8, 0, 0], "4", [3, 3, 4, 4, 16, 14, 11, 10], "5", [8, 7, 6, 6, 20, 18, 15, 14], "6", [12, 11, 6, 6, 23, 21, 19, 17], "7", [14, 13, 13, 12, 25, 23, 21, 19], "8", [18, 16, 16, 15, 31, 28, 24, 22], "9", [26, 24, 18, 16, 35, 32, 31, 28], "10", [31, 28, 27, 24, 39, 35, 35, 32], "11", [36, 33, 31, 28, 47, 42, 45, 41], "12", [44, 40, 36, 33, 48, 43, 53, 48], "13", [48, 43, 44, 40, 55, 50, 59, 53], "14", [56, 51, 51, 46, 63, 57, 65, 59], "15", [64, 58, 60, 54, 71, 64, 67, 60], "16", [68, 61, 66, 60, 77, 69, 90, 81], "17", [68, 61, 74, 67, 85, 77, 95, 86], "18", [81, 73, 80, 72, 100, 90, 103, 93], "19", [83, 75, 82, 74, 115, 104, 110, 99], "20", [88, 79, 84, 76, 123, 111, 123, 111], "21", [91, 82, 86, 78, 134, 121, 130, 117], "22", [93, 84, 86, 78, 143, 129, 141, 127], "23", [95, 86, 90, 81, 150, 135, 148, 133], "24", [99, 89, 94, 85, 155, 140, 156, 140], "25", [109, 98, 96, 87, 159, 143, 156, 140], "26", [113, 102, 101, 91, 165, 149, 163, 148], "27", [121, 109, 103, 93, 174, 157, 170, 153], "28", [126, 114, 111, 100, 180, 162, 175, 158], "29", [131, 118, 116, 105, 185, 167, 185, 167], "30", [136, 123, 126, 114, 195, 176, 195, 176]]);
 });
 Isolate.$lazy($, "WeaponData", "stats_WeaponData", "get$stats_WeaponData", function() {
-  var t1, t2, t3, t4, t5, t6, t7;
+  var t1, t2, t3, t4, t5, t6, t7, t8;
   t1 = new $.Weapon(null, null, null, null);
   t1._name = "Bamboo Pole";
   t1._isEquip = false;
+  t1._cost = 10;
   t1._pow = 2;
   t2 = new $.Weapon(null, null, null, null);
   t2._name = "Club";
   t2._isEquip = false;
+  t2._cost = 60;
   t2._pow = 4;
   t3 = new $.Weapon(null, null, null, null);
   t3._name = "Copper Sword";
   t3._isEquip = false;
+  t3._cost = 180;
   t3._pow = 10;
   t4 = new $.Weapon(null, null, null, null);
   t4._name = "Hand axe";
   t4._isEquip = false;
+  t4._cost = 560;
   t4._pow = 15;
   t5 = new $.Weapon(null, null, null, null);
   t5._name = "Broad Sword";
   t5._isEquip = false;
+  t5._cost = 1500;
   t5._pow = 20;
   t6 = new $.Weapon(null, null, null, null);
   t6._name = "Flame Sword";
   t6._isEquip = false;
+  t6._cost = 9800;
   t6._pow = 28;
   t7 = new $.Weapon(null, null, null, null);
   t7._name = "Erdrick's Sword";
   t7._isEquip = false;
+  t7._cost = 0;
   t7._pow = 40;
-  return $.makeLiteralMap(["Bamboo Pole", t1, "Club", t2, "Copper Sword", t3, "Hand axe", t4, "Broad Sword", t5, "Flame Sword", t6, "Erdrick's Sword", t7]);
+  t8 = new $.Weapon(null, null, null, null);
+  t8._name = "Nothing";
+  t8._isEquip = false;
+  t8._cost = 0;
+  t8._pow = 0;
+  return $.makeLiteralMap(["Bamboo Pole", t1, "Club", t2, "Copper Sword", t3, "Hand axe", t4, "Broad Sword", t5, "Flame Sword", t6, "Erdrick's Sword", t7, "Nothing", t8]);
 });
 Isolate.$lazy($, "ShieldData", "stats_ShieldData", "get$stats_ShieldData", function() {
-  var t1, t2, t3;
+  var t1, t2, t3, t4;
   t1 = new $.Shield(null, null, null, null);
   t1._name = "Small Shield";
   t1._isEquip = false;
+  t1._cost = 90;
   t1._def = 4;
   t2 = new $.Shield(null, null, null, null);
   t2._name = "Large Shield Shield";
   t2._isEquip = false;
+  t2._cost = 800;
   t2._def = 10;
   t3 = new $.Shield(null, null, null, null);
   t3._name = "Silver Shield";
   t3._isEquip = false;
+  t3._cost = 14800;
   t3._def = 25;
-  return $.makeLiteralMap(["Small Shield", t1, "Large Shield", t2, "Silver Shield", t3]);
+  t4 = new $.Shield(null, null, null, null);
+  t4._name = "Nothing";
+  t4._isEquip = false;
+  t4._cost = 0;
+  t4._def = 0;
+  return $.makeLiteralMap(["Small Shield", t1, "Large Shield", t2, "Silver Shield", t3, "Nothing", t4]);
 });
 Isolate.$lazy($, "ArmorData", "stats_ArmorData", "get$stats_ArmorData", function() {
-  var t1, t2, t3, t4, t5, t6, t7;
+  var t1, t2, t3, t4, t5, t6, t7, t8;
   t1 = new $.Armor(null, null, null, null);
   t1._name = "Clothes";
   t1._isEquip = false;
+  t1._cost = 20;
   t1._def = 2;
   t2 = new $.Armor(null, null, null, null);
   t2._name = "Leather Armor";
   t2._isEquip = false;
+  t2._cost = 70;
   t2._def = 4;
   t3 = new $.Armor(null, null, null, null);
   t3._name = "Chain Mail";
   t3._isEquip = false;
+  t3._cost = 300;
   t3._def = 10;
   t4 = new $.Armor(null, null, null, null);
   t4._name = "Half Plate";
   t4._isEquip = false;
+  t4._cost = 1000;
   t4._def = 16;
   t5 = new $.Armor(null, null, null, null);
   t5._name = "Full Plate";
   t5._isEquip = false;
+  t5._cost = 3000;
   t5._def = 24;
   t6 = new $.Armor(null, null, null, null);
   t6._name = "Magic Armor";
   t6._isEquip = false;
+  t6._cost = 7700;
   t6._def = 24;
   t7 = new $.Armor(null, null, null, null);
   t7._name = "Erdrick's Armor";
   t7._isEquip = false;
+  t7._cost = 0;
   t7._def = 28;
-  return $.makeLiteralMap(["Clothes", t1, "Leather Armor", t2, "Chain Mail", t3, "Half Plate", t4, "Full Plate", t5, "Magic Armor", t6, "Erdrick's Armor", t7]);
+  t8 = new $.Armor(null, null, null, null);
+  t8._name = "Nothing";
+  t8._isEquip = false;
+  t8._cost = 0;
+  t8._def = 0;
+  return $.makeLiteralMap(["Clothes", t1, "Leather Armor", t2, "Chain Mail", t3, "Half Plate", t4, "Full Plate", t5, "Magic Armor", t6, "Erdrick's Armor", t7, "Nothing", t8]);
+});
+Isolate.$lazy($, "ItemData", "stats_ItemData", "get$stats_ItemData", function() {
+  var t1, t2, t3, t4;
+  t1 = new $.Item(null, null, null);
+  t1._name = "Herb";
+  t1._isEquip = false;
+  t1._cost = 24;
+  t2 = new $.Item(null, null, null);
+  t2._name = "Key";
+  t2._isEquip = false;
+  t2._cost = 38;
+  t3 = new $.Item(null, null, null);
+  t3._name = "Torch";
+  t3._isEquip = false;
+  t3._cost = 8;
+  t4 = new $.Item(null, null, null);
+  t4._name = "Wings";
+  t4._isEquip = false;
+  t4._cost = 70;
+  return $.makeLiteralMap(["Herb", t1, "Key", t2, "Torch", t3, "Wings", t4]);
 });
 Isolate.$lazy($, "ExpTable", "stats_ExpTable", "get$stats_ExpTable", function() {
   return [0, 0, 7, 23, 47, 110, 220, 450, 800, 1300, 2000, 2900, 4000, 5500, 7500, 10000, 13000, 17000, 21000, 25000, 29000, 33000, 37000, 41000, 45000, 49000, 53000, 57000, 61000, 65000, 65535];
@@ -12895,6 +14300,9 @@ Isolate.$lazy($, "FieldSpellTable", "stats_FieldSpellTable", "get$stats_FieldSpe
 });
 Isolate.$lazy($, "BattleSpellTable", "stats_BattleSpellTable", "get$stats_BattleSpellTable", function() {
   return $.makeLiteralMap(["Heal", [3, 4, "Replenishes lost Hit Points."], "Hurt", [4, 2, "Hurts fire at an enemy in battle."], "Sleep", [7, 2, "Puts an enemy to sleep in battle."], "Stop", [10, 2, "Prevents an enemy from using spells."], "HealMore", [17, 10, "Same as HEAL, only stronger"], "HurtMore", [19, 5, "Same as HURT, only stronger"]]);
+});
+Isolate.$lazy($, "SpellsTable", "stats_SpellsTable", "get$stats_SpellsTable", function() {
+  return $.makeLiteralMap(["3", "Heal", "4", "Hurt", "7", "Sleep", "9", "Radiant", "10", "Stop", "12", "Outside", "13", "Return", "15", "Repel", "17", "HealMore", "19", "HurtMore"]);
 });
 Isolate.$lazy($, "BattleItemTable", "stats_BattleItemTable", "get$stats_BattleItemTable", function() {
   return $.makeLiteralMap(["Herb", ["Restore 20-35 HP."], "Fairy Flute", ["A mysterious flute. Has some special effect when used."]]);
@@ -12969,7 +14377,7 @@ Isolate.$lazy($, "_toStringList", "Maps__toStringList", "get$Maps__toStringList"
   return $.List_List(null);
 });
 // Native classes
-$.defineNativeMethods("CanvasGradient|CanvasPattern|FileError|MediaError|MediaKeyError|Navigator|PositionError|SQLError|SVGAnimatedLength|SVGAnimatedNumber|SVGAnimatedNumberList", $.Interceptor);
+$.defineNativeMethods("CanvasGradient|CanvasPattern|FileError|MediaError|MediaKeyError|Navigator|PositionError|SQLError|SVGAnimatedLength|SVGAnimatedLengthList|SVGAnimatedNumber|SVGAnimatedNumberList|SVGAnimatedString", $.Interceptor);
 
 $.defineNativeMethods("HTMLAreaElement|HTMLBRElement|HTMLBaseElement|HTMLBodyElement|HTMLContentElement|HTMLDListElement|HTMLDataListElement|HTMLDetailsElement|HTMLDialogElement|HTMLDivElement|HTMLHRElement|HTMLHeadElement|HTMLHeadingElement|HTMLHtmlElement|HTMLLIElement|HTMLLabelElement|HTMLLegendElement|HTMLLinkElement|HTMLMenuElement|HTMLMeterElement|HTMLModElement|HTMLOptGroupElement|HTMLOptionElement|HTMLParagraphElement|HTMLPreElement|HTMLProgressElement|HTMLQuoteElement|HTMLShadowElement|HTMLSpanElement|HTMLStyleElement|HTMLTableCaptionElement|HTMLTableCellElement|HTMLTableColElement|HTMLTableDataCellElement|HTMLTableElement|HTMLTableHeaderCellElement|HTMLTableRowElement|HTMLTableSectionElement|HTMLTemplateElement|HTMLTitleElement|HTMLUListElement|HTMLUnknownElement", $.HtmlElement);
 
@@ -12984,6 +14392,8 @@ $.defineNativeMethods("HTMLCanvasElement", $.CanvasElement);
 $.defineNativeMethodsNonleaf("CanvasRenderingContext", $.CanvasRenderingContext);
 
 $.defineNativeMethods("CanvasRenderingContext2D", $.CanvasRenderingContext2D);
+
+$.defineNativeMethods("CDATASection|CharacterData|Comment|Text", $.CharacterData);
 
 $.defineNativeMethods("DOMError", $.DomError);
 
@@ -13023,7 +14433,7 @@ $.defineNativeMethods("HTMLMetaElement", $.MetaElement);
 
 $.defineNativeMethods("NavigatorUserMediaError", $.NavigatorUserMediaError);
 
-$.defineNativeMethods("Document|HTMLDocument", $.Node);
+$.defineNativeMethods("Document|DocumentFragment|DocumentType|Entity|HTMLDocument|Notation|ProcessingInstruction|SVGDocument|ShadowRoot", $.Node);
 
 $.defineNativeMethodsNonleaf("Node", $.Node);
 
@@ -13055,6 +14465,10 @@ $.defineNativeMethods("HTMLVideoElement", $.VideoElement);
 
 $.defineNativeMethods("DOMWindow|Window", $.Window);
 
+$.defineNativeMethods("Attr", $._Attr);
+
+$.defineNativeMethods("ClientRect", $._ClientRect);
+
 $.defineNativeMethods("SVGFEBlendElement", $.FEBlendElement);
 
 $.defineNativeMethods("SVGFEColorMatrixElement", $.FEColorMatrixElement);
@@ -13081,7 +14495,11 @@ $.defineNativeMethods("SVGFEMorphologyElement", $.FEMorphologyElement);
 
 $.defineNativeMethods("SVGFEOffsetElement", $.FEOffsetElement);
 
+$.defineNativeMethods("SVGFEPointLightElement", $.FEPointLightElement);
+
 $.defineNativeMethods("SVGFESpecularLightingElement", $.FESpecularLightingElement);
+
+$.defineNativeMethods("SVGFESpotLightElement", $.FESpotLightElement);
 
 $.defineNativeMethods("SVGFETileElement", $.FETileElement);
 
@@ -13091,7 +14509,7 @@ $.defineNativeMethods("SVGFilterElement", $.FilterElement);
 
 $.defineNativeMethods("SVGForeignObjectElement", $.ForeignObjectElement);
 
-$.defineNativeMethods("SVGAElement|SVGAltGlyphElement|SVGCircleElement|SVGClipPathElement|SVGDefsElement|SVGEllipseElement|SVGGElement|SVGLineElement|SVGPathElement|SVGPolygonElement|SVGPolylineElement|SVGSwitchElement|SVGTSpanElement|SVGTextContentElement|SVGTextElement|SVGTextPathElement|SVGTextPositioningElement", $.GraphicsElement);
+$.defineNativeMethods("SVGAElement|SVGCircleElement|SVGClipPathElement|SVGDefsElement|SVGEllipseElement|SVGGElement|SVGLineElement|SVGPathElement|SVGPolygonElement|SVGPolylineElement|SVGSwitchElement", $.GraphicsElement);
 
 $.defineNativeMethodsNonleaf("SVGGraphicsElement", $.GraphicsElement);
 
@@ -13107,11 +14525,17 @@ $.defineNativeMethods("SVGDescElement|SVGGradientElement|SVGLinearGradientElemen
 
 $.defineNativeMethodsNonleaf("SVGStyledElement", $.StyledElement);
 
-$.defineNativeMethods("SVGAnimateElement|SVGAnimateMotionElement|SVGAnimateTransformElement|SVGAnimationElement|SVGComponentTransferFunctionElement|SVGFEDistantLightElement|SVGFEFuncAElement|SVGFEFuncBElement|SVGFEFuncGElement|SVGFEFuncRElement|SVGFEMergeNodeElement|SVGFEPointLightElement|SVGFESpotLightElement|SVGMetadataElement|SVGScriptElement|SVGSetElement|SVGStyleElement|SVGViewElement", $.SvgElement);
+$.defineNativeMethods("SVGAnimateElement|SVGAnimateMotionElement|SVGAnimateTransformElement|SVGAnimationElement|SVGComponentTransferFunctionElement|SVGFEDistantLightElement|SVGFEFuncAElement|SVGFEFuncBElement|SVGFEFuncGElement|SVGFEFuncRElement|SVGFEMergeNodeElement|SVGMetadataElement|SVGScriptElement|SVGSetElement|SVGStyleElement|SVGViewElement", $.SvgElement);
 
 $.defineNativeMethodsNonleaf("SVGElement", $.SvgElement);
 
 $.defineNativeMethods("SVGSVGElement", $.SvgSvgElement);
+
+$.defineNativeMethods("SVGTextPathElement", $.TextContentElement);
+
+$.defineNativeMethodsNonleaf("SVGTextContentElement", $.TextContentElement);
+
+$.defineNativeMethods("SVGAltGlyphElement|SVGTSpanElement|SVGTextElement|SVGTextPositioningElement", $.TextPositioningElement);
 
 $.defineNativeMethods("SVGUseElement", $.UseElement);
 
