@@ -24,8 +24,8 @@ abstract class MapData {
   }
   
   void AddTriggerByRange(Map<String,Trigger> triggerContainer, Rect range, Trigger trigger) {
-    for (int r=range.left; r<=range.right; r++) {
-      for (int c=range.top; c<=range.bottom; c++) {
+    for (int c=range.left; c<=range.right; c++) {
+      for (int r=range.top; r<=range.bottom; r++) {
         triggerContainer["${c}:${r}"] = trigger;
       }
     }

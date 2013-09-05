@@ -143,16 +143,13 @@ class overworldMap extends MapData {
   Map<String,Trigger> getTriggeMap() {
     Map<String,Trigger> triggers = new Map<String,Trigger>();
     Trigger RadotomeTownEnterTrigger = new EnterTownTrigger("172:149", townName:"RadotomeTown");
-    triggers["123:116"] = RadotomeTownEnterTrigger;
-    triggers["124:116"] = RadotomeTownEnterTrigger;
-    triggers["125:116"] = RadotomeTownEnterTrigger;
-    triggers["126:116"] = RadotomeTownEnterTrigger;
+    AddTriggerByRange(triggers, new Rect(125,114,2,2), RadotomeTownEnterTrigger);
     
     Trigger RadotomeCastleEnterTrigger = new EnterTownTrigger("164:154", townName:"RadotomeCastle1");
-    triggers["114:120"] = RadotomeCastleEnterTrigger;
-    triggers["115:120"] = RadotomeCastleEnterTrigger;
-    triggers["116:120"] = RadotomeCastleEnterTrigger;
+    AddTriggerByRange(triggers, new Rect(114,120,2,0), RadotomeCastleEnterTrigger);
     
+    Trigger DungeonEnterTrigger = new EnterTownTrigger("85:58", townName:"Dungeon");
+    AddTriggerByRange(triggers, new Rect(85,58,1,1), RadotomeCastleEnterTrigger);
     return triggers;
   }
         

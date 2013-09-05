@@ -50,24 +50,10 @@ class RadotomeTown extends MapData {
   Map<String,Trigger> getTriggeMap() {
     Map<String,Trigger> triggers = new Map<String,Trigger>();
     
-    Trigger exitTownTrigger = new ExitTownTrigger("-43:28");
-    triggers["-43:28"] = exitTownTrigger;
-    triggers["-43:27"] = exitTownTrigger;
-    triggers["-43:26"] = exitTownTrigger;
-    triggers["-43:25"] = exitTownTrigger;
-    
-    triggers["25:28"] = exitTownTrigger;
-    triggers["25:27"] = exitTownTrigger;
-    triggers["25:26"] = exitTownTrigger;
-    triggers["25:25"] = exitTownTrigger;
-
-    triggers["-13:-6"] = exitTownTrigger;
-    triggers["-12:-6"] = exitTownTrigger;
-    triggers["-11:-6"] = exitTownTrigger;
-    triggers["-10:-6"] = exitTownTrigger;
-    triggers["-9:-6"] = exitTownTrigger;
-    triggers["-8:-6"] = exitTownTrigger;
-    triggers["-7:-6"] = exitTownTrigger;
+    Trigger exitTownTrigger = new ExitTownTrigger("43:28");
+    AddTriggerByRange(triggers, new Rect(46,23,7,0), exitTownTrigger);
+    AddTriggerByRange(triggers, new Rect(82,52,0,5), exitTownTrigger);
+    AddTriggerByRange(triggers, new Rect(19,52,0,5), exitTownTrigger);
     
     return triggers;
   }
@@ -83,9 +69,14 @@ class RadotomeTown extends MapData {
     
     List<Thing> npcs = new List<Thing>();
     
-    String heroName = gm.gameState.heroName;
+    npcs.add(new NPC(gm, "Merchant", name:"Merchant1", px:1090, py:1107, direction:DEF.DIR_LEFT, talkHandler:
+      (Game gm, HeroSprite talker, NPC talkee) {
+      talkee.ResetToIdle();
+      talkee.characterSprite.setAnimation(DEF.OppositeDirection(talker.direction));
+      gm.AddRequest(new RedrawRequest(gm));
+      gm.AddRequest(new PushRequest(gm, new MsgBox(gm, "*: Welcome!;This is an item shop.;Please come inside.")));
+    }));
     
-    npcs.add(new NPC(gm, "Merchant", name:"Merchant1", px:1090, py:1107, talkHandler:handleTalk));
     npcs.add(new NPC(gm, "Merchant", name:"Merchant2", px:491, py:544, talkHandler:
       (Game gm, HeroSprite talker, NPC talkee) {
         talkee.ResetToIdle();
@@ -113,15 +104,93 @@ class RadotomeTown extends MapData {
         gm.AddRequest(new PushRequest(gm, new BuySellMenu(gm,"Item",itmInfo)));
       }));
     
-    npcs.add(new NPC(gm, "Knight", name:"Knight1", px:468, py:1234, talkHandler:handleTalk));
-    npcs.add(new NPC(gm, "Knight", name:"Knight2", px:686, py:786, talkHandler:handleTalk));
-    npcs.add(new NPC(gm, "Knight", name:"Knight3", px:979, py:992, talkHandler:handleTalk));
-    npcs.add(new NPC(gm, "Oldman", name:"Oldman1", px:688, py:1281, talkHandler:handleTalk));
-    npcs.add(new NPC(gm, "Oldman", name:"Oldman2", px:1072, py:734, direction:DEF.DIR_RIGHT, talkHandler:handleTalk));
-    npcs.add(new NPC(gm, "Man", name:"Man1", px:591, py:899, behavior_type:NPC.BEHAVIOR_WALKING, talkHandler:handleTalk));
-    npcs.add(new NPC(gm, "Man", name:"Man2", px:1086, py:1309, behavior_type:NPC.BEHAVIOR_WALKING, talkHandler:handleTalk));
-    npcs.add(new NPC(gm, "Man", name:"Man3", px:979, py:739, talkHandler:handleTalk));
-    npcs.add(new NPC(gm, "Girl", name:"Girl1", px:816, py:1142, direction:DEF.DIR_RIGHT, talkHandler:handleTalk));
+    //npcs.add(new NPC(gm, "Knight", name:"Knight1", px:468, py:1234, talkHandler:handleTalk));
+    npcs.add(new NPC(gm, "Knight", name:"Knight2", px:686, py:786, talkHandler:
+      (Game gm, HeroSprite talker, NPC talkee) {
+      talkee.ResetToIdle();
+      talkee.characterSprite.setAnimation(DEF.OppositeDirection(talker.direction));
+      gm.AddRequest(new RedrawRequest(gm));
+      
+      String msg1 = "*: Many brave young souls have set out from Radotome castle on their travels, only to perish.";
+      String msg2 = "*: But for you,;I wish the best of luck!";
+      gm.AddRequest(new PushRequest(gm, new MsgBox(gm, "${msg1};${msg2}")));
+    }));
+    
+    npcs.add(new NPC(gm, "Knight", name:"Knight3", px:979, py:992, talkHandler:
+      (Game gm, HeroSprite talker, NPC talkee) {
+      talkee.ResetToIdle();
+      talkee.characterSprite.setAnimation(DEF.OppositeDirection(talker.direction));
+      gm.AddRequest(new RedrawRequest(gm));
+      
+      String msg1 = "*: Are you a descendant of Erdrick?;Do you have any proof?";
+      String yesMsg = "*: Huh?!;You don't have the symbol.;Only TRUE descendants of Erdrick bear proof.";
+      String noMsg = "*: Only TRUE descendants of Erdrick bear proof.";
+      
+      gm.AddRequest(new PushRequest(gm, new YesNoMsgBox(gm,
+          selfDismissOnFinish:false,
+          initMsg:msg1,
+          yesMsg:yesMsg,
+          noMsg:noMsg)));
+    }));
+    
+    //npcs.add(new NPC(gm, "Oldman", name:"Oldman1", px:688, py:1281, talkHandler:handleTalk));
+    npcs.add(new NPC(gm, "Oldman", name:"Oldman2", px:1072, py:734, direction:DEF.DIR_RIGHT, talkHandler:
+      (Game gm, HeroSprite talker, NPC talkee) {
+      talkee.ResetToIdle();
+      talkee.characterSprite.setAnimation(DEF.OppositeDirection(talker.direction));
+      gm.AddRequest(new RedrawRequest(gm));
+      String msg1 = "*: I'm studying some spells that will help undo a curse.";
+      String msg2 = "*: If you're ever cursed,;come to me.;I will certainly help you.";
+      gm.AddRequest(new PushRequest(gm, new MsgBox(gm, "${msg1};${msg2}")));  
+    }));
+    
+    npcs.add(new NPC(gm, "Man", name:"Man1", px:591, py:899, behavior_type:NPC.BEHAVIOR_WALKING, talkHandler:
+      (Game gm, HeroSprite talker, NPC talkee) {
+      talkee.ResetToIdle();
+      talkee.characterSprite.setAnimation(DEF.OppositeDirection(talker.direction));
+      gm.AddRequest(new RedrawRequest(gm));
+      gm.AddRequest(new PushRequest(gm, new MsgBox(gm, "*: Welcome to the town of Radotome.")));  
+    }));
+    
+    npcs.add(new NPC(gm, "Man", name:"Man2", px:1086, py:1309, behavior_type:NPC.BEHAVIOR_WALKING, talkHandler:
+      (Game gm, HeroSprite talker, NPC talkee) {
+      talkee.ResetToIdle();
+      talkee.characterSprite.setAnimation(DEF.OppositeDirection(talker.direction));
+      gm.AddRequest(new RedrawRequest(gm));
+      
+      String msg1 = "*: South of Radotome castle, on the other side of the sea, you will see another castle that is enshrouded by a think fog.";
+      String msg2 = "*: That is the Dragonlord's castle. It's unimaginably frightful!";
+      gm.AddRequest(new PushRequest(gm, new MsgBox(gm, "${msg1};${msg2}")));
+    }));
+    
+    npcs.add(new NPC(gm, "Man", name:"Man3", px:979, py:739, talkHandler:
+      (Game gm, HeroSprite talker, NPC talkee) {
+      talkee.ResetToIdle();
+      talkee.characterSprite.setAnimation(DEF.OppositeDirection(talker.direction));
+      gm.AddRequest(new RedrawRequest(gm));
+      
+      String msg1 = "*: Did you know?";
+      String yesMsg = "*: Oh...";
+      String noMsg = "*: It seems there's somewhere in this town that sells Keys";
+      
+      gm.AddRequest(new PushRequest(gm, new YesNoMsgBox(gm,
+          selfDismissOnFinish:false,
+          initMsg:msg1,
+          yesMsg:yesMsg,
+          noMsg:noMsg)));
+    }));
+    
+    npcs.add(new NPC(gm, "Girl", name:"Girl1", px:816, py:1142, direction:DEF.DIR_RIGHT, talkHandler:
+      (Game gm, HeroSprite talker, NPC talkee) {
+      talkee.ResetToIdle();
+      talkee.characterSprite.setAnimation(DEF.OppositeDirection(talker.direction));
+      gm.AddRequest(new RedrawRequest(gm));
+      
+      String msg1 = "*: No, I'm not Princess Gwaelin,;But hey,;You're one handsome stud!";
+      String msg2 = "*: I'm not letting you out of my sight!";
+      gm.AddRequest(new PushRequest(gm, new MsgBox(gm, "${msg1};${msg2}")));
+    }));
+    
     npcs.add(new NPC(gm, "Woman", name:"Woman1", px:691, py:1087, direction:DEF.DIR_LEFT, talkHandler:
       (Game gm, HeroSprite talker, NPC talkee) {
         talkee.ResetToIdle();
@@ -142,8 +211,15 @@ class RadotomeTown extends MapData {
       gm.AddRequest(new PushRequest(gm, new BuySellMenu(gm,"Item",itmInfo)));
     }));
     
-    npcs.add(new NPC(gm, "Soldier", name:"Soldier1", px:1069, py:867, behavior_type:NPC.BEHAVIOR_WALKING, talkHandler:handleTalk));
-    npcs.add(new NPC(gm, "Soldier", name:"Soldier2", px:1258, py:449, talkHandler:handleTalk));
+    npcs.add(new NPC(gm, "Soldier", name:"Soldier1", px:1069, py:867, behavior_type:NPC.BEHAVIOR_WALKING, talkHandler:
+      (Game gm, HeroSprite talker, NPC talkee) {
+      talkee.ResetToIdle();
+      talkee.characterSprite.setAnimation(DEF.OppositeDirection(talker.direction));
+      gm.AddRequest(new RedrawRequest(gm));
+      
+      String msg1 = "*: The legendary minstrel, Garin, played a silver harp. I heard it was buried with him inside his grave.";
+      gm.AddRequest(new PushRequest(gm, new MsgBox(gm, msg1)));
+    }));
     
     return npcs;
   }
