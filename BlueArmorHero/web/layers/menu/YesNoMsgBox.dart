@@ -1,19 +1,37 @@
 part of DQ;
 
+typedef void HandleSelection(Game gm);
+
 class YesNoMsgBox extends MsgBox {
   
   String _yesMsg;
   String _noMsg;
   
   bool isFirstMsg;
+  HandleSelection _yesHandler = null;
+  HandleSelection _noHandler = null;
   
-  YesNoMsgBox(Game game, {String initMsg, String yesMsg, String noMsg}): super(game,initMsg) {
+  YesNoMsgBox(Game game, 
+      { String initMsg, 
+        String yesMsg, 
+        String noMsg,
+        HandleSelection yesHandler:null,
+        HandleSelection noHandler:null,
+        bool selfDismissOnFinish:false}): super(game,initMsg,selfDismissOnFinish:selfDismissOnFinish) {
+    
     _yesMsg = yesMsg;
     _noMsg = noMsg;
+    _yesHandler = yesHandler;
+    _noHandler = noHandler;
     
     isFirstMsg = true;
   }
     
+  bool _bgDirty = true;
+  void setDirty() {
+    _bgDirty = true;  
+  }
+  
   void draw(CanvasRenderingContext2D ctx) {
     
     if (_state == "STATE_WAIT_TO_DISMISS") {
@@ -29,7 +47,7 @@ class YesNoMsgBox extends MsgBox {
       
       _waitingCounter = 0;
       if (isCursorVisible) {
-        ctx.fillStyle = DEF.menuBGColor;
+        _guiCtx.fillStyle = DEF.menuBGColor;
         _guiCtx.fillRect(nextIconPx, nextIconPy, _TextWriter.fontWidth, _TextWriter.fontHeight);
         isCursorVisible = false;
       }
@@ -37,6 +55,12 @@ class YesNoMsgBox extends MsgBox {
         _TextWriter.DrawChar(_guiCtx, "~", nextIconPx, nextIconPy, _TextWriter.scale );
         isCursorVisible = true;
       }
+      return;
+    }
+    
+    if (_state == "STATE_WAIT_DECISION") {
+      drawBorder(_guiCtx);
+      _state = "STATE_WRITING_2";
       return;
     }
     
@@ -59,7 +83,12 @@ class YesNoMsgBox extends MsgBox {
           _state = "STATE_WAIT_DECISION";  
         }
         else {
-          _state = "STATE_WAIT_TO_DISMISS";
+          if (!_selfDismiss) {
+            _state = "STATE_DONE";
+          }
+          else {
+            _state = "STATE_WAIT_TO_DISMISS";
+          }
         }
       }
       else {
@@ -76,7 +105,19 @@ class YesNoMsgBox extends MsgBox {
   void activate({Map<String,dynamic> args: null}) { 
     if (_state == "STATE_WAIT_DECISION") {
       if (args != null && args.containsKey("UserSelection")) {
+        
         var item = args["UserSelection"];
+        if (item[0] == "Yes") {
+          if (_yesHandler != null) {
+            _yesHandler(_game);
+          }
+        }
+        else {
+          if (_noHandler != null) {
+            _noHandler(_game);
+          }
+        }
+        
         drawBorder(_guiCtx);
         _TextWriter.MessageToWrite = item[1];
         _TextWriter.NewPage();

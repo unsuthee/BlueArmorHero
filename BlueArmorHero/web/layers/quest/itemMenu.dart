@@ -64,7 +64,10 @@ class itemMenu extends Layer {
   
   void activate({Map<String,dynamic> args: null}) { 
     if (args != null && args.containsKey("UserSelection")) {
-      _currentAction = args["UserSelection"][1];
+      _currentAction = DONE_ACTION;
+      if (args["UserSelection"] != null) {
+        _currentAction = args["UserSelection"][1];
+      }
     }
   }
   
@@ -124,7 +127,8 @@ class itemMenu extends Layer {
       case DEF.KEYBOARD_PRIMARY:
         _game.AddRequest(new PushRequest(_game, new DecisionBox.fromList(_game, new Rect(px+width+10,py,100,80), [["Use" ,USE_ACTION],
                                                                                               ["Drop"  ,DROP_ACTION],
-                                                                                              ["Done"  ,DONE_ACTION]])));
+                                                                                              ["Done"  ,DONE_ACTION]],
+                                                                                              allowCancel:true)));
         break;
       case DEF.KEYBOARD_SECONDARY:
         _game.guiCanvasCtx.clearRect(0,0,_game.guiCanvas.width,_game.guiCanvas.height);

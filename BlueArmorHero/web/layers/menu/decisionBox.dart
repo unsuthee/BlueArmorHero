@@ -39,13 +39,15 @@ class DecisionBox extends Layer {
   }
   
   String _msg = null;
+  bool _allowCancel = false;
   
-  DecisionBox.fromList(Game game, Rect box, List<List<dynamic>> items) {
+  DecisionBox.fromList(Game game, Rect box, List<List<dynamic>> items, {bool allowCancel:false}) {
     _game = game;
     _guiCanvas = game.guiCanvas;
     _guiCtx = game.guiCanvasCtx;
     
     _items = items;
+    _allowCancel = allowCancel;
     
     _drawingBox = box;
     _TextWriter = new TextWriter2(new Rect( 
@@ -86,8 +88,9 @@ class DecisionBox extends Layer {
     }
   }
   
-  void InitTextWriter(Rect box, List<List<String,dynamic>> items) {
+  void InitTextWriter(Rect box, List<List<String,dynamic>> items, {bool allowCancel:false}) {
     _items = items;
+    _allowCancel = allowCancel;
     
     _drawingBox = box;
     _TextWriter = new TextWriter2(new Rect( 
@@ -235,6 +238,12 @@ class DecisionBox extends Layer {
         }
         break;
       case DEF.KEYBOARD_SECONDARY:
+        if (_allowCancel) {
+          _guiCtx.clearRect(_drawingBox.left, _drawingBox.top, _drawingBox.width, _drawingBox.height);
+          _game.AddRequest(new PopRequest(_game,activateParams:{"UserSelection":null}));
+          _game.AddRequest(new RedrawRequest(_game));
+          _state = "STATE_DONE";
+        }
         break;
     }
   }

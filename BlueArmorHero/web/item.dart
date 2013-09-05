@@ -17,6 +17,7 @@ class Item {
   Item(String name, {int cost:0}) {
     _name = name;
     _isEquip = false;
+    _cost = cost;
   }
   
   void Equip() {

@@ -5,7 +5,7 @@ class AnnotateTask extends BattleTask {
   Game _game;
   List<String> _msg;
   
-  AnnotateTask(Game gm, List<String> msg) {
+  AnnotateTask(Game gm, List<String> msg, {bool selfDismissOnFinish:false}) {
     _game = gm;  
     _msg = msg;
   }
@@ -26,7 +26,7 @@ class AnnotateTask extends BattleTask {
     
     String msg = _msg[0];
     _msg.removeAt(0);
-    _game.AddRequest(new PushRequest(_game, new MsgBox(_game,msg)));  
+    _game.AddRequest(new PushRequest(_game, new MsgBox(_game,msg,selfDismissOnFinish:true)));  
   }
   
   void draw(CanvasRenderingContext2D ctx) {

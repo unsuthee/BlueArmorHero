@@ -27,7 +27,7 @@ class MsgBox extends Layer {
   bool isCursorVisible = false;
   
   bool _selfDismiss = false;
-  final num _waitingToDismissTime = 1000;
+  final num _waitingToDismissTime = 500;
   
   // Handlers
   OnCompleteMsg _onCompleteMsgHandler = null;
@@ -93,7 +93,7 @@ class MsgBox extends Layer {
       
       _waitingCounter = 0;
       if (isCursorVisible) {
-        ctx.fillStyle = DEF.menuBGColor;
+        _guiCtx.fillStyle = DEF.menuBGColor;
         _guiCtx.fillRect(nextIconPx, nextIconPy, _TextWriter.fontWidth, _TextWriter.fontHeight);
         isCursorVisible = false;
       }

@@ -67,6 +67,9 @@ class GameState {
   List<Item> _inventory = [];
   List<Item> get Inventory => _inventory;
   
+  bool isInventoryFull() {
+    return (_inventory.length >= _inventoryCapacity);
+  }
   bool AddItem(Item item) {
     if (_inventory.length >= _inventoryCapacity) {
       return false;

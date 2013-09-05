@@ -235,7 +235,8 @@ class MapLayer extends Layer {
         _game.AddRequest(new PushRequest(_game, new questMenu(_game,this)));
         break;
       case DEF.KEYBOARD_SECONDARY:
-        LaunchBattle("M_Magician","Forest");
+        _game.AddRequest(new PushRequest(_game, new BuySellMenu(_game,"Weapon")));
+        //LaunchBattle("M_Magician","Forest");
         break;
       case DEF.KEYBOARD_ATL_1: // Talk
         _pendingHandleTalk = true;
