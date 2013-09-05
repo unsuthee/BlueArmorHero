@@ -128,8 +128,7 @@ class Game extends LayerManager {
   void startNewGame()
   {
     pushLayer(new MapLayer(this, new overworldMap()));
-    pushLayer(new MapLayer(this, MapData.createMapByName("RadotomeTown")));
-    
+    //pushLayer(new MapLayer(this, MapData.createMapByName("RadotomeTown")));
     //pushLayer(new MapLayer(this, new RadotomeCastle1()));
     //pushLayer(new MapLayer(this, new RadotomeCastle2()));
     

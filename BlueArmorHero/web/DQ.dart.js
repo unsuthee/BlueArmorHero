@@ -126,6 +126,56 @@ main: function() {
   $.Game$();
 },
 
+MonsterStats_getZoneByPos: function(x, y) {
+  var t1;
+  if (x >= 0 && y >= 0 && y < 8 && x < 8) {
+    if (y >>> 0 !== y || y >= 8)
+      throw $.ioore(y);
+    t1 = C.List_2jN[y];
+    if (x >>> 0 !== x || x >= t1.length)
+      throw $.ioore(x);
+    return t1[x];
+  }
+  return 0;
+},
+
+MonsterStats_getMonsterByZone: function(zoneId) {
+  var t1 = $.getInterceptor$n(zoneId);
+  if (t1.$ge(zoneId, 0) && t1.$lt(zoneId, 8)) {
+    if (zoneId >>> 0 !== zoneId || zoneId >= 8)
+      throw $.ioore(zoneId);
+    return C.List_XaM[zoneId];
+  }
+  return C.List_5VY;
+},
+
+MonsterStats_createMonsterBattler: function($name) {
+  switch ($name) {
+    case "M_Slimer":
+      return $.Battler$("Slime", 3, 0, 0, 0, 1, 1, 1, 3, 0, 0, 0, 5, false, null, false, 0.25, 0, false, 0, 15);
+    case "M_RedSlimer":
+      return $.Battler$("Red Slime", 3, 0, 0, 0, 1, 1, 2, 4, 0, 0, 0, 7, false, null, false, 0.25, 0, false, 0, 15);
+    case "M_Drakeer":
+      return $.Battler$("Drakee", 6, 0, 0, 0, 1, 2, 2, 5, 0, 0, 0, 9, false, null, false, 0.25, 0, false, 0, 15);
+    case "M_Ghost":
+      return $.Battler$("Ghost", 8, 0, 0, 0, 4, 3, 3, 6, 0, 0, 0, 11, false, null, false, 0.25, 0, false, 0, 15);
+    case "M_Magician":
+      return $.Battler$("Magician", 12, 0, 0, 0, 1, 4, 9, 10, 0, 0, 0, 11, false, new $.MonsterStats_createMonsterBattler_closure(), false, 0.25, 0, false, 0, 0);
+    case "M_Magidrakeer":
+      return $.Battler$("Magidrakee", 14, 0, 0, 0, 1, 5, 9, 12, 0, 0, 0, 14, false, new $.MonsterStats_createMonsterBattler_closure0(), false, 0.25, 0, false, 0, 0);
+    case "M_Scorpionr":
+      return $.Battler$("Scorpion", 16, 0, 0, 0, 1, 6, 12, 16, 0, 0, 0, 18, false, null, false, 0.25, 0, false, 0, 15);
+    case "M_Skeletonr":
+      return $.Battler$("Skeleton", 22, 0, 0, 0, 4, 11, 22, 23, 0, 0, 0, 28, false, null, false, 0.25, 0, false, 0, 15);
+    case "M_Wolfr":
+      return $.Battler$("Wolf", 30, 0, 0, 0, 2, 16, 37, 26, 0, 0, 0, 40, false, null, false, 0.25, 0, false, 1, 15);
+    case "M_Warlockr":
+      return $.Battler$("Warlock", 22, 0, 0, 0, 2, 13, 26, 23, 0, 0, 0, 28, false, new $.MonsterStats_createMonsterBattler_closure1(), false, 0.25, 0, false, 3, 1);
+    default:
+      return;
+  }
+},
+
 DEF_OppositeDirection: function(direction) {
   switch (direction) {
     case 1:
@@ -184,6 +234,32 @@ MapData_createMapByName: function(mapName) {
       newMap = null;
   }
   return newMap;
+},
+
+stats_getOverworldTerranByTileId: function(tileId) {
+  var t1, tile;
+  t1 = $.getInterceptor$n(tileId);
+  if (t1.$ge(tileId, 0) && t1.$lt(tileId, 140)) {
+    if (tileId >>> 0 !== tileId || tileId >= 140)
+      throw $.ioore(tileId);
+    tile = C.List_OBT[tileId];
+  } else
+    tile = "o";
+  switch (tile) {
+    case "g":
+    case "b":
+      return "Grass";
+    case "f":
+      return "Forest";
+    case "h":
+      return "Mountain";
+    case "s":
+      return "Dessert";
+    case "w":
+      return "Swarm";
+    default:
+      return "Grass";
+  }
 },
 
 stats_isPassableTerran: function(tileId) {
@@ -293,7 +369,6 @@ Game: {"": "LayerManager;canvas>,canvasCtx,bgCanvas<,bgCanvasCtx,guiCanvas<,guiC
   startNewGame$0: function() {
     var t1, t2;
     this.pushLayer$1($.MapLayer$(this, $.overworldMap$()));
-    this.pushLayer$1($.MapLayer$(this, $.MapData_createMapByName("RadotomeTown")));
     t1 = window;
     t2 = this.get$tick();
     C.Window_methods._ensureRequestAnimationFrame$0(t1);
@@ -425,6 +500,74 @@ Game$: function() {
 Game_closure: {"": "Closure;this_0",
   call$1: function(me) {
     this.this_0.startNewGame$0();
+  }
+},
+
+MonsterStats_createMonsterBattler_closure: {"": "Closure;",
+  call$2: function(atk, def) {
+    var t1;
+    if (!atk.get$IsStoping())
+      if (C.C__Random.nextInt$1(100) < 50) {
+        t1 = new $.MonsterHurtSpell(null, null, null);
+        t1.attacker = atk;
+        t1.defender = def;
+        t1._isHurtMore = false;
+        return t1;
+      }
+    t1 = new $.MonsterAtkAction(null, null);
+    t1.attacker = atk;
+    t1.defender = def;
+    return t1;
+  }
+},
+
+MonsterStats_createMonsterBattler_closure0: {"": "Closure;",
+  call$2: function(atk, def) {
+    var t1;
+    if (!atk.get$IsStoping())
+      if (C.C__Random.nextInt$1(100) < 50) {
+        t1 = new $.MonsterHurtSpell(null, null, null);
+        t1.attacker = atk;
+        t1.defender = def;
+        t1._isHurtMore = false;
+        return t1;
+      }
+    t1 = new $.MonsterAtkAction(null, null);
+    t1.attacker = atk;
+    t1.defender = def;
+    return t1;
+  }
+},
+
+MonsterStats_createMonsterBattler_closure1: {"": "Closure;",
+  call$2: function(atk, def) {
+    var t1;
+    if (atk.get$IsStoping()) {
+      t1 = new $.MonsterAtkAction(null, null);
+      t1.attacker = atk;
+      t1.defender = def;
+      return t1;
+    }
+    if (!def.get$IsSleeping()) {
+      if (C.C__Random.nextInt$1(100) < 25) {
+        t1 = new $.SleepSpell(null, null);
+        t1.attacker = atk;
+        t1.defender = def;
+        return t1;
+      }
+      if (C.C__Random.nextInt$1(100) < 50) {
+        t1 = new $.MonsterHurtSpell(null, null, null);
+        t1.attacker = atk;
+        t1.defender = def;
+        t1._isHurtMore = false;
+        return t1;
+      } else {
+        t1 = new $.MonsterAtkAction(null, null);
+        t1.attacker = atk;
+        t1.defender = def;
+        return t1;
+      }
+    }
   }
 },
 
@@ -1156,6 +1299,26 @@ Sprite: {"": "Object;src_x,src_y,src_id",
 },
 
 GameState: {"": "Object;_stats,_inventoryCapacity,_inventory",
+  createHeroBattler$0: function() {
+    var t1, t2, t3, t4, t5, t6, t7, t8, t9, t10;
+    t1 = this._stats;
+    t2 = t1._name;
+    t3 = t1._STR;
+    t4 = t1._AGI;
+    t1 = $.$add$ns(t3, t1.currentWeapon.get$pow());
+    t5 = this._stats;
+    t5 = $.$add$ns($.$add$ns(t5._AGI, t5.currentArmor.get$def()), t5.currentShield.get$def());
+    t6 = this._stats;
+    t7 = t6._HP;
+    t8 = t6._Level;
+    if (t8 == null)
+      throw t8.$lt();
+    t8 = t8 < 3;
+    t9 = t8 ? 0 : t6._MP;
+    t10 = t6._MaxHP;
+    t8 = t8 ? 0 : t6._MaxMP;
+    return $.HeroBattler$(t2, t4, t1, t5, t7, t10, t8, t9, t3, t6._EXP, false);
+  },
   getBattleSpells$0: function() {
     var spells, t1, spell, t2;
     spells = [];
@@ -1222,12 +1385,15 @@ GameState$: function() {
 
 },
 
-Item: {"": "Object;_name,_isEquip,_cost",
+Item: {"": "Object;_name,_isEquip,_isEquipable,_cost<",
   get$name: function(_) {
     return this._name;
   },
   get$IsEquip: function() {
     return this._isEquip;
+  },
+  get$IsEquipable: function() {
+    return this._isEquipable;
   },
   get$cost: function() {
     return this._cost;
@@ -1252,7 +1418,7 @@ Item: {"": "Object;_name,_isEquip,_cost",
   }
 },
 
-Weapon: {"": "Item;_pow,_name,_isEquip,_cost",
+Weapon: {"": "Item;_pow,_name,_isEquip,_isEquipable,_cost",
   get$pow: function() {
     return this._pow;
   },
@@ -1270,7 +1436,7 @@ Weapon: {"": "Item;_pow,_name,_isEquip,_cost",
   }
 },
 
-Armor: {"": "Item;_def,_name,_isEquip,_cost",
+Armor: {"": "Item;_def,_name,_isEquip,_isEquipable,_cost",
   get$def: function() {
     return this._def;
   },
@@ -1288,7 +1454,7 @@ Armor: {"": "Item;_def,_name,_isEquip,_cost",
   }
 },
 
-Shield: {"": "Item;_def,_name,_isEquip,_cost",
+Shield: {"": "Item;_def,_name,_isEquip,_isEquipable,_cost",
   get$def: function() {
     return this._def;
   },
@@ -1392,6 +1558,9 @@ Battler: {"": "Object;_name,_STR,_ATK,_DEF,_AGI,_CriticalHitChance,_DodgeChance,
     if (this._isSleeping)
       this.sleepingChance = 100;
   },
+  get$IsStoping: function() {
+    return this._isStoping;
+  },
   _onGetActionHandler$2: function(arg0, arg1) {
     return this._onGetActionHandler.call$2(arg0, arg1);
   },
@@ -1411,7 +1580,51 @@ Battler: {"": "Object;_name,_STR,_ATK,_DEF,_AGI,_CriticalHitChance,_DodgeChance,
       t1.defender = def;
       return t1;
     }
-  }
+  },
+  Battler$21$AGI$ATK$Crit$DEF$Dodge$Exp$Gp$Hp$MaxHp$MaxMp$Mp$STR$dragonLord$getActionHandler$golem$grpFactor$hurtResist$magicArmor$sleepResist$stopResist: function($name, AGI, ATK, Crit, DEF, Dodge, Exp, Gp, Hp, MaxHp, MaxMp, Mp, STR, dragonLord, getActionHandler, golem, grpFactor, hurtResist, magicArmor, sleepResist, stopResist) {
+    this._name = $name;
+    this._STR = STR;
+    this._AGI = AGI;
+    this._CriticalHitChance = Crit;
+    this._DodgeChance = Dodge;
+    this._EXP = Exp;
+    this._GP = Gp;
+    if ($.$le$n(ATK, 0))
+      this._ATK = STR;
+    else
+      this._ATK = ATK;
+    if ($.$le$n(DEF, 0))
+      this._DEF = AGI;
+    else
+      this._DEF = DEF;
+    this._HP = Hp;
+    this._MP = Mp;
+    if ($.$eq(MaxHp, 0))
+      this._MaxHP = this._HP;
+    else
+      this._MaxHP = MaxHp;
+    if ($.$eq(MaxMp, 0))
+      this._MaxMP = this._MP;
+    else
+      this._MaxMP = MaxMp;
+    this._HURT_RESIST = hurtResist;
+    this._STOP_RESIST = stopResist;
+    this._SLEEP_RESIST = sleepResist;
+    this._GroupFactor = grpFactor;
+    this._HasMagicArmor = magicArmor;
+    this._isGolem = golem;
+    this._isDragonLord = dragonLord;
+    this._isSleeping = false;
+    this._isStoping = false;
+    this._onGetActionHandler = getActionHandler;
+  },
+  static: {
+Battler$: function($name, AGI, ATK, Crit, DEF, Dodge, Exp, Gp, Hp, MaxHp, MaxMp, Mp, STR, dragonLord, getActionHandler, golem, grpFactor, hurtResist, magicArmor, sleepResist, stopResist) {
+  var t1 = new $.Battler(null, null, null, null, null, 32, null, null, null, null, null, null, null, null, null, null, null, 100, null, null, false, null, null, null, null);
+  t1.Battler$21$AGI$ATK$Crit$DEF$Dodge$Exp$Gp$Hp$MaxHp$MaxMp$Mp$STR$dragonLord$getActionHandler$golem$grpFactor$hurtResist$magicArmor$sleepResist$stopResist($name, AGI, ATK, Crit, DEF, Dodge, Exp, Gp, Hp, MaxHp, MaxMp, Mp, STR, dragonLord, getActionHandler, golem, grpFactor, hurtResist, magicArmor, sleepResist, stopResist);
+  return t1;
+}}
+
 },
 
 HeroBattler: {"": "Battler;_name,_STR,_ATK,_DEF,_AGI,_CriticalHitChance,_DodgeChance,_HURT_RESIST,_STOP_RESIST,_SLEEP_RESIST,_EXP,_GP,_HasMagicArmor,_GroupFactor,_isDragonLord,_isGolem,_isSleeping,sleepingChance,_isStoping,_onGetActionHandler,_isFlee,_HP,_MP,_MaxHP,_MaxMP",
@@ -1420,7 +1633,14 @@ HeroBattler: {"": "Battler;_name,_STR,_ATK,_DEF,_AGI,_CriticalHitChance,_DodgeCh
   },
   getAction$2: function(atk, def) {
     return;
-  }
+  },
+  static: {
+HeroBattler$: function($name, AGI, ATK, DEF, Hp, MaxHp, MaxMp, Mp, STR, XP, magicArmor) {
+  var t1 = new $.HeroBattler(null, null, null, null, null, 32, null, null, null, null, null, null, null, null, null, null, null, 100, null, null, false, null, null, null, null);
+  t1.Battler$21$AGI$ATK$Crit$DEF$Dodge$Exp$Gp$Hp$MaxHp$MaxMp$Mp$STR$dragonLord$getActionHandler$golem$grpFactor$hurtResist$magicArmor$sleepResist$stopResist($name, AGI, ATK, 32, DEF, 0, XP, 0, Hp, MaxHp, MaxMp, Mp, STR, false, null, false, 1, 0, magicArmor, 0, 0);
+  return t1;
+}}
+
 },
 
 HeroAtkAction: {"": "BattleAction;attacker,defender",
@@ -2096,7 +2316,7 @@ BattleItemMenu$: function(game, menu, items) {
 
 },
 
-battleMenu: {"": "Layer;_game,_gameState,_monster,_background,_bgDirty,bgRect,_liblib2$_state,_HpBarTextWriter,HpbarBox,pad,gap,_heroBattler,_monsterBattler,_BattlersQueue,_tasks,rng",
+battleMenu: {"": "Layer;_game,_gameState,_monster,_background,_bgDirty,bgRect,_liblib2$_state?,_HpBarTextWriter,HpbarBox,pad,gap,_heroBattler,_monsterBattler,_BattlersQueue,_tasks,rng",
   IsHeroStartFirst$0: function() {
     var t1, heroOdd, monsOdd, t2;
     t1 = this.rng;
@@ -2617,9 +2837,38 @@ battleMenu: {"": "Layer;_game,_gameState,_monster,_background,_bgDirty,bgRect,_l
       default:
     }
   },
+  battleMenu$3$background$monster: function(game, background, monster) {
+    var t1, t2, t3, t4, t5, t6;
+    this._game = game;
+    this._gameState = game.get$gameState();
+    this._background = background;
+    this._monster = monster;
+    this._heroBattler = game.get$gameState().createHeroBattler$0();
+    this._monsterBattler = $.MonsterStats_createMonsterBattler(monster);
+    t1 = this.HpbarBox;
+    t2 = this.pad;
+    t3 = this.gap;
+    t4 = $.$add$ns($.$add$ns(t1.left, t2), t3);
+    t5 = $.$add$ns($.$add$ns(t1.top, t2), t3);
+    t6 = $.$sub$n($.$sub$n(t1.width, t2), t3);
+    t3 = $.$sub$n($.$sub$n(t1.height, t2), t3);
+    t2 = new $.TextWriter2(null, 1, 5, 5, 5, 5, 1, 2, 1, "Left", true, $.makeLiteralMap([]), true, null, 0, 16, 16, null, null, [], []);
+    t2.setupCharIndices$0();
+    t2._drawingRect = new $.Rect(t4, t5, t6, t3);
+    t2.NewPage$0();
+    this._HpBarTextWriter = t2;
+    t2 = this._HpBarTextWriter;
+    t2.set$AutoNewline;
+    t2._autoNewline = false;
+    this._HpBarTextWriter.set$color("#EEEEEE");
+  },
   static: {
 "": "battleMenu_dstPx,battleMenu_dstPy,battleMenu_srcWidth,battleMenu_srcHeight,battleMenu_dstWidth,battleMenu_dstHeight,battleMenu_STATE_TEST,battleMenu_STATE_BEGIN,battleMenu_STATE_FIRST_THINKING,battleMenu_STATE_SECOND_THINKING,battleMenu_STATE_PLAYER_WIN,battleMenu_STATE_PLAYER_LOSE,battleMenu_STATE_PLAYER_FLEE,battleMenu_STATE_MONS_FLEE",
-}
+battleMenu$: function(game, background, monster) {
+  var t1 = new $.battleMenu(null, null, null, null, true, new $.Rect(187, 85, 266, 234), "Begin_State", null, new $.Rect(32, 32, 122, 160), 5, 1, null, null, null, [], C.C__Random);
+  t1.battleMenu$3$background$monster(game, background, monster);
+  return t1;
+}}
 
 },
 
@@ -2972,7 +3221,7 @@ Layer: {"": "Object;",
   }
 },
 
-DecisionBox: {"": "Layer;_game,_TextWriter,_guiCanvas,_guiCtx,gap,pad,_drawingBox,_liblib2$_state,_waitingCounter,_currentBGColor,isCursorVisible,_items,_cursorIndex,_lastCursorIndex,_bgDirty,_msg,_allowCancel",
+DecisionBox: {"": "Layer;_game,_TextWriter,_guiCanvas,_guiCtx,gap,pad,_drawingBox,_liblib2$_state?,_waitingCounter,_currentBGColor,isCursorVisible,_items,_cursorIndex,_lastCursorIndex,_bgDirty,_msg,_allowCancel",
   setDirty$0: function() {
     this._bgDirty = true;
   },
@@ -3578,7 +3827,7 @@ YesNoMsgBox$: function(game, initMsg, noHandler, noMsg, selfDismissOnFinish, yes
 
 },
 
-MsgBox: {"": "Layer;_game,_TextWriter,_guiCanvas,_guiCtx,width*,height*,px,py,gap,pad,_liblib2$_state,_waitingCounter,_waitingTime,_currentBGColor,nextIconPx,nextIconPy,isCursorVisible,_selfDismiss,_waitingToDismissTime,_onCompleteMsgHandler",
+MsgBox: {"": "Layer;_game,_TextWriter,_guiCanvas,_guiCtx,width*,height*,px,py,gap,pad,_liblib2$_state?,_waitingCounter,_waitingTime,_currentBGColor,nextIconPx,nextIconPy,isCursorVisible,_selfDismiss,_waitingToDismissTime,_onCompleteMsgHandler",
   dismiss$0: function() {
     var t1, t2;
     this._guiCtx.clearRect(this.px, this.py, this.width, this.height);
@@ -3875,7 +4124,7 @@ MsgBox$: function(game, msg, onCompleteMsgHandler, selfDismissOnFinish) {
 
 },
 
-BuyItemListMenu: {"": "Layer;_gm,_decisionBox,_liblib2$_state,_tasks,launchItemList,isBuy",
+BuyItemListMenu: {"": "Layer;_gm,_decisionBox,_liblib2$_state?,_tasks,launchItemList,isBuy",
   whitespace$1: function(n) {
     var str, i;
     if (typeof n !== "number")
@@ -3983,30 +4232,44 @@ BuyItemListMenu: {"": "Layer;_gm,_decisionBox,_liblib2$_state,_tasks,launchItemL
           t1.AddRequest$1(t3);
           this._liblib2$_state = 2;
         } else {
-          t1 = t1.get$gameState();
-          t1.get$heroGold;
-          t1 = t1._stats.Gold;
-          t2 = toBuyItem.get$cost();
-          if (t1 == null)
-            throw t1.$le();
-          t3 = $.getInterceptor$x(toBuyItem);
-          if (t1 <= t2) {
-            msg = "The " + $.S(t3.get$name(toBuyItem)) + "...;Would you like to equip this right now?";
-            t1 = this._gm.get$gameState();
-            t1.get$heroName;
-            yesMsg = t1._stats._name + " equipped " + $.S(t3.get$name(toBuyItem));
-            t3 = this._gm;
-            t1 = t3.get$gameState();
-            t1.get$heroName;
-            t1 = $.YesNoMsgBox$(t3, msg, new $.BuyItemListMenu_OnKeyboardDown_closure(toBuyItem), "Here you go " + t1._stats._name, false, new $.BuyItemListMenu_OnKeyboardDown_closure0(toBuyItem), yesMsg);
-            t2 = new $.PushRequest(null, null, null);
-            t2._game = t3;
-            t2._pushLayer = t1;
-            t2._params = null;
-            t3.AddRequest$1(t2);
+          t2 = t1.get$gameState();
+          t2.get$heroGold;
+          t2 = t2._stats.Gold;
+          t3 = toBuyItem.get$cost();
+          if (t2 == null)
+            throw t2.$le();
+          if (t2 <= t3) {
+            if (toBuyItem.get$IsEquipable()) {
+              t1 = $.getInterceptor$x(toBuyItem);
+              msg = "The " + $.S(t1.get$name(toBuyItem)) + "...;Would you like to equip this right now?";
+              t2 = this._gm.get$gameState();
+              t2.get$heroName;
+              yesMsg = t2._stats._name + " equipped " + $.S(t1.get$name(toBuyItem));
+              t1 = this._gm;
+              t2 = t1.get$gameState();
+              t2.get$heroName;
+              t2 = $.YesNoMsgBox$(t1, msg, new $.BuyItemListMenu_OnKeyboardDown_closure(toBuyItem), "Here you go " + t2._stats._name, false, new $.BuyItemListMenu_OnKeyboardDown_closure0(toBuyItem), yesMsg);
+              t3 = new $.PushRequest(null, null, null);
+              t3._game = t1;
+              t3._pushLayer = t2;
+              t3._params = null;
+              t1.AddRequest$1(t3);
+            } else {
+              t2 = t1.get$gameState();
+              t2.get$heroName;
+              msg = "Here you go " + t2._stats._name;
+              t1.get$gameState().AddItem$1(toBuyItem);
+              t1 = this._gm;
+              t2 = $.MsgBox$(t1, msg, null, true);
+              t3 = new $.PushRequest(null, null, null);
+              t3._game = t1;
+              t3._pushLayer = t2;
+              t3._params = null;
+              t1.AddRequest$1(t3);
+            }
             this._liblib2$_state = 2;
           } else {
-            msg = "The " + $.S(t3.get$name(toBuyItem)) + "...;But you don't have enough money to purchase that.";
+            msg = "The " + $.S($.get$name$x(toBuyItem)) + "...;But you don't have enough money to purchase that.";
             t1 = this._gm;
             t2 = $.MsgBox$(t1, msg, null, true);
             t3 = new $.PushRequest(null, null, null);
@@ -4043,7 +4306,7 @@ BuyItemListMenu: {"": "Layer;_gm,_decisionBox,_liblib2$_state,_tasks,launchItemL
       ws = this.whitespace$1($.$sub$n(t2.$sub(horzSpace, t4), cost.length));
       itemList.push([$.S(t3.get$name(itm)) + ws + cost, itm]);
     }
-    t1 = $.$mul$n(t2.$sub(horzSpace, 6), 32);
+    t1 = $.$mul$n($.max(8, t2.$sub(horzSpace, 6)), 32);
     t2 = itemList.length;
     this._decisionBox = $.DecisionBox$fromList(this._gm, new $.Rect(128, 160, t1, t2 * 32), itemList, false);
   },
@@ -4074,7 +4337,7 @@ BuyItemListMenu_OnKeyboardDown_closure: {"": "Closure;toBuyItem_1",
   }
 },
 
-BuySellMenu: {"": "Layer;_gm,_decisionBox,_liblib2$_state,_tasks,itemInfo",
+BuySellMenu: {"": "Layer;_gm,_decisionBox,_liblib2$_state?,_tasks,itemInfo",
   activate$1$args: function(args) {
   },
   deactivate$1$args: function(args) {
@@ -4230,8 +4493,8 @@ BuySellMenu: {"": "Layer;_gm,_decisionBox,_liblib2$_state,_tasks,itemInfo",
   },
   OnKeyboardUp$1: function(e) {
   },
-  BuySellMenu$2: function(gm, shopname) {
-    var t1, t2, t3, t4, t5, t6;
+  BuySellMenu$3: function(gm, shopname, itmInfo) {
+    var t1, t2, t3;
     this._gm = gm;
     t1 = this._gm;
     t2 = "This is a " + shopname + " shop.;How may I help you?";
@@ -4239,27 +4502,196 @@ BuySellMenu: {"": "Layer;_gm,_decisionBox,_liblib2$_state,_tasks,itemInfo",
     t3._game = t1;
     t3._msg = [t2];
     this._tasks.push(t3);
-    t3 = $.get$stats_WeaponData();
-    t3 = t3.$index(t3, "Bamboo Pole");
-    t2 = $.get$stats_WeaponData();
-    t2 = t2.$index(t2, "Club");
-    t1 = $.get$stats_WeaponData();
-    t1 = t1.$index(t1, "Copper Sword");
-    t4 = $.get$stats_ArmorData();
-    t4 = t4.$index(t4, "Clothes");
-    t5 = $.get$stats_ArmorData();
-    t5 = t5.$index(t5, "Leather Armor");
-    t6 = $.get$stats_ShieldData();
-    this.itemInfo = [t3, t2, t1, t4, t5, t6.$index(t6, "Small Shield")];
+    this.itemInfo = itmInfo;
   },
   static: {
 "": "BuySellMenu_PRE_PENDING_STATE,BuySellMenu_BUY_PENDING_STATE,BuySellMenu_SELL_PENDING_STATE,BuySellMenu_POST_PENDING_STATE,BuySellMenu_BUY_ACTION,BuySellMenu_SELL_ACTION,BuySellMenu_END_ACTION",
-BuySellMenu$: function(gm, shopname) {
+BuySellMenu$: function(gm, shopname, itmInfo) {
   var t1 = new $.BuySellMenu(null, null, 0, [], null);
-  t1.BuySellMenu$2(gm, shopname);
+  t1.BuySellMenu$3(gm, shopname, itmInfo);
   return t1;
 }}
 
+},
+
+InnMenu: {"": "Layer;_gm,_tasks,_liblib2$_state?,_cost<",
+  activate$1$args: function(args) {
+  },
+  deactivate$1$args: function(args) {
+  },
+  deactivate$0: function() {
+    return this.deactivate$1$args(null);
+  },
+  setDirty$0: function() {
+  },
+  cleanup$0: function() {
+  },
+  draw$1: function(ctx) {
+    var t1, t2;
+    t1 = this._tasks;
+    t2 = t1.length;
+    if (t2 !== 0) {
+      if (0 >= t2)
+        throw $.ioore(0);
+      t1 = t1[0];
+      if (!t1.isComplete$0())
+        t1.draw$1(ctx);
+      return;
+    }
+  },
+  update$1: function(delta) {
+    var t1, t2, msg, t3;
+    t1 = this._tasks;
+    t2 = t1.length;
+    if (t2 !== 0) {
+      if (0 >= t2)
+        throw $.ioore(0);
+      t2 = t1[0];
+      if (!t2.isComplete$0())
+        t2.update$1(delta);
+      else {
+        t2.end$0();
+        C.JSArray_methods.removeAt$1(t1, 0);
+        t2 = t1.length;
+        if (t2 !== 0) {
+          if (0 >= t2)
+            throw $.ioore(0);
+          t1 = t1[0];
+          t1.start$0(t1);
+        }
+      }
+      return;
+    }
+    switch (this._liblib2$_state) {
+      case 0:
+        msg = "Welcome to Rimuldar Inn. It costs " + this._cost + "G a night to stay. Would you like to stay here?";
+        t1 = this._gm;
+        t2 = t1.get$gameState();
+        t2.get$Stats;
+        t2 = t2._stats.Gold;
+        t3 = this._cost;
+        if (t2 == null)
+          throw t2.$lt();
+        if (t2 < t3) {
+          t2 = new $.YesNoMsgBox(null, null, null, null, null, true, null, null, null, null, 512, 152, 64, 320, 2, 5, "STATE_IDLE", 0, 5, "#EEEEEE", null, null, false, false, 500, null);
+          t2.MsgBox$4$onCompleteMsgHandler$selfDismissOnFinish(t1, msg, null, false);
+          t2._yesMsg = "Sorry... but you don't have enough gold for that!";
+          t2._noMsg = "Have a nice day.";
+          t2._yesHandler = new $.InnMenu_update_closure(this);
+          t2._noHandler = new $.InnMenu_update_closure0(this);
+          t2.isFirstMsg = true;
+          t3 = new $.PushRequest(null, null, null);
+          t3._game = t1;
+          t3._pushLayer = t2;
+          t3._params = null;
+          t1.AddRequest$1(t3);
+        } else {
+          t2 = new $.YesNoMsgBox(null, null, null, null, null, true, null, null, null, null, 512, 152, 64, 320, 2, 5, "STATE_IDLE", 0, 5, "#EEEEEE", null, null, false, false, 500, null);
+          t2.MsgBox$4$onCompleteMsgHandler$selfDismissOnFinish(t1, msg, null, false);
+          t2._yesMsg = "Thank you very much. Please enjoy your stay!";
+          t2._noMsg = "Have a nice day.";
+          t2._yesHandler = new $.InnMenu_update_closure1(this);
+          t2._noHandler = new $.InnMenu_update_closure2(this);
+          t2.isFirstMsg = true;
+          t3 = new $.PushRequest(null, null, null);
+          t3._game = t1;
+          t3._pushLayer = t2;
+          t3._params = null;
+          t1.AddRequest$1(t3);
+          this._liblib2$_state = 1;
+        }
+        break;
+      case 2:
+        t2 = new $.AnnotateTask(null, null);
+        t2._game = this._gm;
+        t2._msg = ["Sleeping... Zzz Zzz"];
+        t1.push(t2);
+        t2 = new $.AnnotateTask(null, null);
+        t2._game = this._gm;
+        t2._msg = ["Hope you enjoy your stay with us. Please come again!"];
+        t1.push(t2);
+        this._liblib2$_state = 5;
+        break;
+      case 5:
+        t1 = this._gm;
+        t2 = new $.PopRequest(null, null);
+        t2._game = t1;
+        t2._activateParams = null;
+        t1.AddRequest$1(t2);
+        t2 = this._gm;
+        t1 = new $.RedrawRequest(null);
+        t1._game = t2;
+        t2.AddRequest$1(t1);
+        break;
+      default:
+    }
+  },
+  OnKeyboardDown$1: function(e) {
+    switch ($.get$keyCode$x(e)) {
+      case 37:
+        break;
+      case 38:
+        break;
+      case 39:
+        break;
+      case 40:
+        break;
+      case 88:
+        break;
+      case 67:
+        this._liblib2$_state = 5;
+        break;
+      default:
+    }
+  },
+  OnKeyboardUp$1: function(e) {
+  },
+  static: {
+"": "InnMenu_PRE_STATE,InnMenu_DECISION_STATE,InnMenu_STAYING_STATE,InnMenu_DISMISS_STATE",
+}
+
+},
+
+InnMenu_update_closure: {"": "Closure;this_0",
+  call$1: function(gm) {
+    this.this_0.set$_liblib2$_state(5);
+  }
+},
+
+InnMenu_update_closure0: {"": "Closure;this_1",
+  call$1: function(gm) {
+    this.this_1.set$_liblib2$_state(5);
+  }
+},
+
+InnMenu_update_closure1: {"": "Closure;this_2",
+  call$1: function(gm) {
+    var t1, t2, t3, t4;
+    t1 = gm.get$gameState();
+    t1.get$Stats;
+    t1 = t1._stats;
+    t2 = t1.Gold;
+    t3 = this.this_2;
+    t4 = t3.get$_cost();
+    if (t2 == null)
+      throw t2.$sub();
+    t1.Gold = t2 - t4;
+    t4 = gm.get$gameState();
+    t4.get$Stats;
+    t4 = t4._stats;
+    t4._HP = t4._MaxHP;
+    t4 = gm.get$gameState();
+    t4.get$Stats;
+    t4 = t4._stats;
+    t4._MP = t4._MaxMP;
+    t3.set$_liblib2$_state(2);
+  }
+},
+
+InnMenu_update_closure2: {"": "Closure;this_3",
+  call$1: function(gm) {
+    this.this_3.set$_liblib2$_state(5);
+  }
 },
 
 HeroSprite: {"": "Object;_mapPx,_mapPy,_game,_mapData,_layer,_currSprite,_currState,_currDir",
@@ -4268,6 +4700,11 @@ HeroSprite: {"": "Object;_mapPx,_mapPy,_game,_mapData,_layer,_currSprite,_currSt
   },
   get$mapPy: function() {
     return this._mapPy;
+  },
+  get$name: function(_) {
+    var t1 = this._game.get$gameState();
+    t1.get$heroName;
+    return t1._stats._name;
   },
   get$direction: function() {
     return this._currDir;
@@ -4320,6 +4757,9 @@ HeroSprite: {"": "Object;_mapPx,_mapPy,_game,_mapData,_layer,_currSprite,_currSt
     startTileX = C.JSNumber_methods.$tdiv(px - 320, 32);
     startTileY = C.JSNumber_methods.$tdiv(py - 400, 32);
     return this._mapData.getTileIdByPos$2(startTileX, startTileY);
+  },
+  getCurrentTileId$0: function() {
+    return this.getCurrentTileId$2$px$py(-1, -1);
   },
   update$1: function(delta) {
     var t1, t2, t3, dist, rollbackPx, rollbackPy;
@@ -4841,7 +5281,7 @@ TreasureChest$: function(game, isClosed, px, py, size, talkHandler) {
 
 },
 
-SellItemListMenu: {"": "Layer;_game,_decisionBox,_liblib2$_state",
+SellItemListMenu: {"": "Layer;_game,_decisionBox,_liblib2$_state?",
   activate$1$args: function(args) {
   },
   deactivate$1$args: function(args) {
@@ -4937,8 +5377,8 @@ SellItemListMenu: {"": "Layer;_game,_decisionBox,_liblib2$_state",
       itemList.push([t2.get$name(itm), itm]);
     }
     t1 = $.$mul$n($.$sub$n(maxLen, 5), 32);
-    t2 = items.length;
-    this._decisionBox = $.DecisionBox$fromList(this._game, new $.Rect(128, 160, t1, (t2 - 2) * 32), itemList, false);
+    t2 = $.$mul$n($.max(items.length - 2, 5), 32);
+    this._decisionBox = $.DecisionBox$fromList(this._game, new $.Rect(128, 160, t1, t2), itemList, false);
   },
   static: {
 "": "SellItemListMenu_BROWSING_STATE,SellItemListMenu_DISMISSAL_STATE",
@@ -5765,104 +6205,30 @@ EquipMenu_drawItemListBox_closure1: {"": "Closure;",
   }
 },
 
-itemMenu: {"": "Layer;_game,_gameState,_TextWriter,width*,height*,px,py,gap,pad,timeElapse,blinkDuration,_cursorPos,_isDirty,_currentAction",
+itemMenu: {"": "Layer;_game,_gameState,_decisionBox,px,py,gap,pad,_currentAction",
+  initDecisionBox$0: function() {
+    var t1, items, itemList, maxLen, itm, t2;
+    t1 = this._game.get$gameState();
+    t1.get$Inventory;
+    items = t1._inventory;
+    itemList = [];
+    for (t1 = new $.ListIterator(items, items.length, 0, null), maxLen = 0; t1.moveNext$0();) {
+      itm = t1._liblib$_current;
+      t2 = $.getInterceptor$x(itm);
+      maxLen = $.max($.get$length$asx(t2.get$name(itm)), maxLen);
+      itemList.push([t2.get$name(itm), itm]);
+    }
+    t1 = $.$mul$n($.$sub$n(maxLen, 5), 32);
+    t2 = $.$mul$n($.max(items.length - 2, 5), 32);
+    return $.DecisionBox$fromList(this._game, new $.Rect(this.px, this.py, t1, t2), itemList, false);
+  },
   setDirty$0: function() {
-    this._isDirty = true;
+    var t1 = this._decisionBox;
+    t1.setDirty$0;
+    t1._bgDirty = true;
   },
   draw$1: function(ctx) {
-    var t1, t2, t3, t4, t5, t6, drawCursor, row, item, cursorStr;
-    if (this._isDirty) {
-      this._game.get$guiCanvasCtx().fillStyle = "#EEEEEE";
-      t1 = this.px;
-      t2 = this.py;
-      this._game.get$guiCanvasCtx().fillRect(t1, t2, this.width, this.height);
-      this._game.get$guiCanvasCtx().fillStyle = "#222222";
-      t3 = this._game.get$guiCanvasCtx();
-      t4 = this.pad;
-      t1 += t4;
-      t2 += t4;
-      t5 = this.width;
-      if (typeof t5 !== "number")
-        return this.draw$1$bailout1(1, t4, t1, t2, t5, t3);
-      t5 = t5 - t4 - t4;
-      t6 = this.height;
-      if (typeof t6 !== "number")
-        return this.draw$1$bailout1(2, t4, t1, t2, t5, t3, t6);
-      t3.fillRect(t1, t2, t5, t6 - t4 - t4);
-      drawCursor = this.timeElapse < this.blinkDuration / 2 && true;
-      for (t1 = this._gameState, t1.get$Inventory, t1 = t1._inventory, t1 = new $.ListIterator(t1, t1.length, 0, null), row = 0; t1.moveNext$0();) {
-        item = t1._liblib$_current;
-        if (drawCursor) {
-          t2 = this._cursorPos;
-          if (typeof t2 !== "number")
-            return this.draw$1$bailout1(3, 0, t1, t2, 0, 0, 0, row, item, drawCursor);
-          t2 = row === t2 * 2;
-        } else
-          t2 = false;
-        cursorStr = t2 ? ">" : " ";
-        this._TextWriter.WriteByRow$3(this._game.get$guiCanvasCtx(), cursorStr + $.S($.get$name$x(item)), row + 1);
-        row += 2;
-      }
-      this._isDirty = false;
-    }
-  },
-  draw$1$bailout1: function(state0, t4, t1, t2, t5, t3, t6, row, item, drawCursor) {
-    switch (state0) {
-      case 0:
-      default:
-        var cursorStr;
-        if (state0 === 3 || state0 === 2 || state0 === 1 || state0 === 0 && this._isDirty)
-          switch (state0) {
-            case 0:
-              this._game.get$guiCanvasCtx().fillStyle = "#EEEEEE";
-              t1 = this.px;
-              t2 = this.py;
-              this._game.get$guiCanvasCtx().fillRect(t1, t2, this.width, this.height);
-              this._game.get$guiCanvasCtx().fillStyle = "#222222";
-              t3 = this._game.get$guiCanvasCtx();
-              t4 = this.pad;
-              t1 += t4;
-              t2 += t4;
-              t5 = this.width;
-            case 1:
-              state0 = 0;
-              t5 = $.$sub$n($.$sub$n(t5, t4), t4);
-              t6 = this.height;
-            case 2:
-              state0 = 0;
-              t3.fillRect(t1, t2, t5, $.$sub$n($.$sub$n(t6, t4), t4));
-              drawCursor = this.timeElapse < this.blinkDuration / 2 && true;
-              t1 = this._gameState;
-              t1.get$Inventory;
-              t1 = t1._inventory;
-              t1 = new $.ListIterator(t1, t1.length, 0, null);
-              row = 0;
-            case 3:
-              L0:
-                while (true)
-                  switch (state0) {
-                    case 0:
-                      if (!t1.moveNext$0())
-                        break L0;
-                      item = t1._liblib$_current;
-                    case 3:
-                      if (state0 === 3 || state0 === 0 && drawCursor)
-                        switch (state0) {
-                          case 0:
-                            t2 = this._cursorPos;
-                          case 3:
-                            state0 = 0;
-                            t2 = row === $.$mul$n(t2, 2);
-                        }
-                      else
-                        t2 = false;
-                      cursorStr = t2 ? ">" : " ";
-                      this._TextWriter.WriteByRow$3(this._game.get$guiCanvasCtx(), cursorStr + $.S($.get$name$x(item)), row + 1);
-                      row += 2;
-                  }
-              this._isDirty = false;
-          }
-    }
+    this._decisionBox.draw$1(ctx);
   },
   activate$1$args: function(args) {
     if (args != null && args.containsKey$1("UserSelection")) {
@@ -5880,19 +6246,9 @@ itemMenu: {"": "Layer;_game,_gameState,_TextWriter,width*,height*,px,py,gap,pad,
   },
   update$1: function(delta) {
     var t1, t2, t3, item;
-    t1 = this.timeElapse;
-    if (typeof delta !== "number")
-      throw $.iae(delta);
-    this.timeElapse = t1 + delta;
-    t1 = this.timeElapse;
-    t2 = this.blinkDuration;
-    if (t1 > t2)
-      this.timeElapse = t1 - t2;
     t1 = this._gameState;
     t1.get$Inventory;
-    t1 = t1._inventory;
-    t2 = t1.length;
-    if (t2 === 0) {
+    if (t1._inventory.length === 0) {
       t1 = this._game;
       t2 = t1.get$guiCanvasCtx();
       t1 = t1.get$guiCanvas();
@@ -5909,30 +6265,55 @@ itemMenu: {"": "Layer;_game,_gameState,_TextWriter,width*,height*,px,py,gap,pad,
       t3.AddRequest$1(t1);
       return;
     }
+    this._decisionBox.update$1(delta);
     switch (this._currentAction) {
       case 1:
-        t3 = this._cursorPos;
-        if (t3 >>> 0 !== t3 || t3 >= t2)
-          throw $.ioore(t3);
-        item = t1[t3];
-        $.Primitives_printString("using " + $.S($.get$name$x(item)));
-        t3 = this._gameState;
-        t3.RemoveItem$1;
-        C.JSArray_methods.remove$1(t3._inventory, item);
-        this._cursorPos = 0;
-        this._isDirty = true;
+        t1 = this._decisionBox;
+        t1.getCurrentSelectedItem$0;
+        t2 = t1._items;
+        t1 = t1._cursorIndex;
+        if (t1 < 0 || t1 >= t2.length)
+          throw $.ioore(t1);
+        item = t2[t1];
+        t1 = $.getInterceptor$asx(item);
+        $.Primitives_printString("using " + $.S(t1.$index(item, 0)));
+        t2 = this._gameState;
+        t1 = t1.$index(item, 1);
+        t2.RemoveItem$1;
+        C.JSArray_methods.remove$1(t2._inventory, t1);
+        t1 = this._decisionBox;
+        t1.cleanup$0;
+        t2 = t1._guiCtx;
+        t1 = t1._drawingBox;
+        t2.clearRect(t1.left, t1.top, t1.width, t1.height);
+        this._decisionBox = this.initDecisionBox$0();
+        t1 = this._decisionBox;
+        t1.setDirty$0;
+        t1._bgDirty = true;
         break;
       case 2:
-        t3 = this._cursorPos;
-        if (t3 >>> 0 !== t3 || t3 >= t2)
-          throw $.ioore(t3);
-        item = t1[t3];
-        $.Primitives_printString("droping " + $.S($.get$name$x(item)));
-        t3 = this._gameState;
-        t3.RemoveItem$1;
-        C.JSArray_methods.remove$1(t3._inventory, item);
-        this._cursorPos = 0;
-        this._isDirty = true;
+        t1 = this._decisionBox;
+        t1.getCurrentSelectedItem$0;
+        t2 = t1._items;
+        t1 = t1._cursorIndex;
+        if (t1 < 0 || t1 >= t2.length)
+          throw $.ioore(t1);
+        item = t2[t1];
+        t1 = $.getInterceptor$asx(item);
+        $.Primitives_printString("droping " + $.S(t1.$index(item, 0)));
+        t2 = this._gameState;
+        t1 = t1.$index(item, 1);
+        t2.RemoveItem$1;
+        C.JSArray_methods.remove$1(t2._inventory, t1);
+        t1 = this._decisionBox;
+        t1.cleanup$0;
+        t2 = t1._guiCtx;
+        t1 = t1._drawingBox;
+        t2.clearRect(t1.left, t1.top, t1.width, t1.height);
+        this._decisionBox = this.initDecisionBox$0();
+        t1 = this._decisionBox;
+        t1.setDirty$0;
+        t1._bgDirty = true;
         break;
       default:
     }
@@ -5944,20 +6325,24 @@ itemMenu: {"": "Layer;_game,_gameState,_TextWriter,width*,height*,px,py,gap,pad,
       case 37:
         break;
       case 38:
-        this._cursorPos = $.max(0, $.$sub$n(this._cursorPos, 1));
-        this._isDirty = true;
+        this._decisionBox.MoveCursorUp$0();
+        t1 = this._decisionBox;
+        t1.setDirty$0;
+        t1._bgDirty = true;
         break;
       case 39:
         break;
       case 40:
-        t1 = this._gameState;
-        t1.get$Inventory;
-        this._cursorPos = $.min(t1._inventory.length - 1, $.$add$ns(this._cursorPos, 1));
-        this._isDirty = true;
+        this._decisionBox.MoveCursorDown$0();
+        t1 = this._decisionBox;
+        t1.setDirty$0;
+        t1._bgDirty = true;
         break;
       case 88:
         t1 = this._game;
-        t2 = this.width;
+        t2 = this._decisionBox;
+        t2.get$DrawingBox;
+        t2 = t2._drawingBox.width;
         if (typeof t2 !== "number")
           throw $.iae(t2);
         t2 = $.DecisionBox$fromList(t1, new $.Rect(this.px + t2 + 10, this.py, 100, 80), [["Use", 1], ["Drop", 2], ["Done", 3]], true);
@@ -6003,28 +6388,9 @@ itemMenu: {"": "Layer;_game,_gameState,_TextWriter,width*,height*,px,py,gap,pad,
       default:
     }
   },
-  itemMenu$2: function(game, gamestate) {
-    var t1, t2, t3, t4, t5;
-    this._game = game;
-    this._gameState = gamestate;
-    t1 = new $.TextWriter($.makeLiteralMap([]), ";", true, null, 1, 1, 1, 2, 1, "Left", null, 0, 16, 16);
-    t1.setupCharIndices$0();
-    this._TextWriter = t1;
-    t1 = this._TextWriter;
-    t2 = this.pad;
-    t3 = this.gap;
-    t4 = $.$sub$n($.$sub$n(this.width, t2), t3);
-    t5 = $.$sub$n($.$sub$n(this.height, t2), t3);
-    t1.set$drawingRect;
-    t1._drawingRect = new $.Rect(this.px + t2 + t3, this.py + t2 + t3, t4, t5);
-  },
   static: {
 "": "itemMenu_USE_ACTION,itemMenu_DROP_ACTION,itemMenu_DONE_ACTION",
-itemMenu$: function(game, gamestate) {
-  var t1 = new $.itemMenu(null, null, null, 256, 312, 192, 128, 1, 5, 0, 500, 0, true, 3);
-  t1.itemMenu$2(game, gamestate);
-  return t1;
-}}
+}
 
 },
 
@@ -6116,7 +6482,7 @@ MapLayer: {"": "Layer;_game,_gameState,_bgCanvas,_mainCanvas,_bgContext,_bgCanva
     this.drawNPCS$1(this._game.get$spriteCanvasCtx());
   },
   OnEnterNewSubTile$2: function(px, py) {
-    var t1, t2, posKey;
+    var t1, t2, posKey, monsList, hero;
     t1 = this._heroSprite;
     t1.get$mapPx;
     t1 = $.S(C.JSNumber_methods.toInt$0(t1._mapPx)) + ":";
@@ -6135,6 +6501,22 @@ MapLayer: {"": "Layer;_game,_gameState,_bgCanvas,_mainCanvas,_bgContext,_bgCanva
     if (this._triggerMap.containsKey$1(posKey)) {
       t1 = this._triggerMap;
       t1.$index(t1, posKey).execute$1(this._game);
+    } else {
+      t1 = this._heroSprite;
+      t1.get$mapPx;
+      t2 = C.JSNumber_methods.$tdiv(t1._mapPx - 461, 512);
+      t1.get$mapPy;
+      monsList = $.MonsterStats_getMonsterByZone($.MonsterStats_getZoneByPos(t2, C.JSNumber_methods.$tdiv(t1._mapPy - 537, 512)));
+      t1 = this._rng;
+      if (t1.nextInt$1(48) === 0) {
+        hero = this._heroSprite;
+        hero.ResetToIdle$0;
+        hero._currState = 0;
+        t1 = t1.nextInt$1(5);
+        if (t1 < 0 || t1 >= monsList.length)
+          throw $.ioore(t1);
+        this.LaunchBattle$2(monsList[t1], $.stats_getOverworldTerranByTileId(this._heroSprite.getCurrentTileId$0()));
+      }
     }
   },
   update$1: function(delta) {
@@ -6181,7 +6563,7 @@ MapLayer: {"": "Layer;_game,_gameState,_bgCanvas,_mainCanvas,_bgContext,_bgCanva
       if (!didTalk) {
         t2 = new $.AnnotateTask(null, null);
         t2._game = this._game;
-        t2._msg = ["There is no one to talk."];
+        t2._msg = ["There is no one in front of you."];
         t1.push(t2);
       }
       this._pendingHandleTalk = false;
@@ -6222,6 +6604,16 @@ MapLayer: {"": "Layer;_game,_gameState,_bgCanvas,_mainCanvas,_bgContext,_bgCanva
       this.OnEnterNewSubTile$2(this._lastTileSubPosX, this._lastTileSubPosY);
     }
   },
+  LaunchBattle$2: function(monster, terran) {
+    var t1, t2, t3;
+    t1 = this._game;
+    t2 = $.battleMenu$(t1, terran, monster);
+    t3 = new $.PushRequest(null, null, null);
+    t3._game = t1;
+    t3._pushLayer = t2;
+    t3._params = null;
+    t1.AddRequest$1(t3);
+  },
   OnKeyboardDown$1: function(e) {
     var t1, t2, t3;
     switch ($.get$keyCode$x(e)) {
@@ -6247,13 +6639,6 @@ MapLayer: {"": "Layer;_game,_gameState,_bgCanvas,_mainCanvas,_bgContext,_bgCanva
         t1.AddRequest$1(t3);
         break;
       case 67:
-        t1 = this._game;
-        t2 = $.BuySellMenu$(t1, "Weapon");
-        t3 = new $.PushRequest(null, null, null);
-        t3._game = t1;
-        t3._pushLayer = t2;
-        t3._params = null;
-        t1.AddRequest$1(t3);
         break;
       case 83:
         this._pendingHandleTalk = true;
@@ -6641,12 +7026,15 @@ questMenu: {"": "Layer;_game,_gameState,_mapLayer,_TextWriter,width*,height*,px,
               t3._game = t2;
               t2.AddRequest$1(t3);
             } else {
-              t1 = $.itemMenu$(t3, t1);
-              t2 = new $.PushRequest(null, null, null);
+              t2 = new $.itemMenu(null, null, null, 192, 128, 1, 5, 3);
               t2._game = t3;
-              t2._pushLayer = t1;
-              t2._params = null;
-              t3.AddRequest$1(t2);
+              t2._gameState = t1;
+              t2._decisionBox = t2.initDecisionBox$0();
+              t1 = new $.PushRequest(null, null, null);
+              t1._game = t3;
+              t1._pushLayer = t2;
+              t1._params = null;
+              t3.AddRequest$1(t1);
             }
             break;
           case 4:
@@ -7113,6 +7501,50 @@ MapData: {"": "Object;",
   },
   isPassable$1: function(tileId) {
     return true;
+  },
+  AddTriggerByRange$3: function(triggerContainer, range, trigger) {
+    var c, t1, r, t2, r0;
+    c = range.left;
+    if (typeof c !== "number")
+      return this.AddTriggerByRange$3$bailout(1, triggerContainer, c, trigger, range);
+    t1 = range.width;
+    if (typeof t1 !== "number")
+      return this.AddTriggerByRange$3$bailout(2, triggerContainer, c, trigger, range, t1);
+    r = range.top;
+    if (typeof r !== "number")
+      return this.AddTriggerByRange$3$bailout(3, triggerContainer, c, trigger, range, t1, r, C.JSNumber_methods);
+    t2 = range.height;
+    if (typeof t2 !== "number")
+      return this.AddTriggerByRange$3$bailout(4, triggerContainer, c, trigger, 0, t1, r, C.JSNumber_methods, t2);
+    t1 = c + t1;
+    t2 = r + t2;
+    for (; c <= t1; ++c)
+      for (r0 = r; r0 <= t2; ++r0)
+        triggerContainer.$indexSet(triggerContainer, $.S(c) + ":" + $.S(r0), trigger);
+  },
+  AddTriggerByRange$3$bailout: function(state0, triggerContainer, c, trigger, range, t1, r, t2, t3) {
+    switch (state0) {
+      case 0:
+        c = range.left;
+      case 1:
+        state0 = 0;
+        t1 = range.width;
+      case 2:
+        state0 = 0;
+        t2 = $.getInterceptor$ns(c);
+        r = range.top;
+      case 3:
+        state0 = 0;
+        t3 = range.height;
+      case 4:
+        var t4, c0, t5, r0, t6;
+        state0 = 0;
+        t4 = $.getInterceptor$ns(r);
+        c0 = c;
+        for (; t5 = $.getInterceptor$n(c0), t5.$le(c0, t2.$add(c, t1)); c0 = t5.$add(c0, 1))
+          for (r0 = r; t6 = $.getInterceptor$n(r0), t6.$le(r0, t4.$add(r, t3)); r0 = t6.$add(r0, 1))
+            triggerContainer.$indexSet(triggerContainer, $.S(c0) + ":" + $.S(r0), trigger);
+    }
   }
 },
 
@@ -7124,21 +7556,20 @@ overworldMap: {"": "MapData;world,_maxPX,_maxPY,_srcTileSize",
     return 1938;
   },
   getTriggeMap$0: function() {
-    var triggers, RadotomeTownEnterTrigger, RadotomeCastleEnterTrigger;
+    var triggers, RadotomeTownEnterTrigger, RadotomeCastleEnterTrigger, DungeonEnterTrigger;
     triggers = new $.HashMap(0, null, null, null, null);
     RadotomeTownEnterTrigger = new $.EnterTownTrigger(null, null);
     RadotomeTownEnterTrigger._liblib2$_key = "172:149";
     RadotomeTownEnterTrigger._townName = "RadotomeTown";
-    triggers.$indexSet(triggers, "123:116", RadotomeTownEnterTrigger);
-    triggers.$indexSet(triggers, "124:116", RadotomeTownEnterTrigger);
-    triggers.$indexSet(triggers, "125:116", RadotomeTownEnterTrigger);
-    triggers.$indexSet(triggers, "126:116", RadotomeTownEnterTrigger);
+    this.AddTriggerByRange$3(triggers, new $.Rect(125, 114, 2, 2), RadotomeTownEnterTrigger);
     RadotomeCastleEnterTrigger = new $.EnterTownTrigger(null, null);
     RadotomeCastleEnterTrigger._liblib2$_key = "164:154";
     RadotomeCastleEnterTrigger._townName = "RadotomeCastle1";
-    triggers.$indexSet(triggers, "114:120", RadotomeCastleEnterTrigger);
-    triggers.$indexSet(triggers, "115:120", RadotomeCastleEnterTrigger);
-    triggers.$indexSet(triggers, "116:120", RadotomeCastleEnterTrigger);
+    this.AddTriggerByRange$3(triggers, new $.Rect(114, 120, 2, 0), RadotomeCastleEnterTrigger);
+    DungeonEnterTrigger = new $.EnterTownTrigger(null, null);
+    DungeonEnterTrigger._liblib2$_key = "85:58";
+    DungeonEnterTrigger._townName = "Dungeon";
+    this.AddTriggerByRange$3(triggers, new $.Rect(85, 58, 1, 1), RadotomeCastleEnterTrigger);
     return triggers;
   },
   getSrcTileSize$0: function() {
@@ -7219,10 +7650,10 @@ overworldMap$: function() {
 
 RadotomeCastle1: {"": "MapData;world,_maxPX,_maxPY,_srcTileSize,_defaultTileId,_tilePerRow",
   getInitPosX$0: function() {
-    return 767;
+    return 699;
   },
   getInitPosY$0: function() {
-    return 638;
+    return 1293;
   },
   getSrcTileSize$0: function() {
     return this._srcTileSize;
@@ -7230,13 +7661,40 @@ RadotomeCastle1: {"": "MapData;world,_maxPX,_maxPY,_srcTileSize,_defaultTileId,_
   getSrcImageName$0: function() {
     return "TownImage";
   },
+  getNPC$1: function(gm) {
+    var npcs = $.List_List(null);
+    npcs.push($.NPC$(gm, "Soldier", 0, 3, 0, 0, "Soldier1", 658, 1278, new $.RadotomeCastle1_getNPC_closure()));
+    npcs.push($.NPC$(gm, "Soldier", 0, 4, 0, 0, "Soldier2", 751, 1278, new $.RadotomeCastle1_getNPC_closure0()));
+    npcs.push($.NPC$(gm, "Soldier", 1, 4, 0, 0, "Soldier3", 938, 1010, new $.RadotomeCastle1_getNPC_closure1()));
+    npcs.push($.NPC$(gm, "Soldier", 0, 4, 0, 0, "Soldier4", 783, 607, new $.RadotomeCastle1_getNPC_closure2()));
+    npcs.push($.NPC$(gm, "Soldier", 0, 4, 0, 0, "Soldier5", 783, 672, new $.RadotomeCastle1_getNPC_closure3()));
+    npcs.push($.NPC$(gm, "Soldier", 1, 2, 0, 0, "Soldier6", 914, 537, new $.RadotomeCastle1_getNPC_closure4()));
+    npcs.push($.NPC$(gm, "Oldman", 0, 4, 0, 0, "Oldman1", 1007, 1245, new $.RadotomeCastle1_getNPC_closure5()));
+    npcs.push($.NPC$(gm, "Girl", 1, 2, 0, 0, "Girl1", 618, 797, new $.RadotomeCastle1_getNPC_closure6()));
+    npcs.push($.NPC$(gm, "Man", 1, 2, 0, 0, "Man1", 751, 860, new $.RadotomeCastle1_getNPC_closure7()));
+    npcs.push($.NPC$(gm, "Girl", 0, 2, 0, 0, "Girl2", 594, 477, new $.RadotomeCastle1_getNPC_closure8()));
+    npcs.push($.NPC$(gm, "Man", 0, 2, 0, 0, "Man2", 624, 477, new $.RadotomeCastle1_getNPC_closure9()));
+    npcs.push($.NPC$(gm, "Knight", 0, 3, 0, 0, "Knight1", 400, 668, new $.RadotomeCastle1_getNPC_closure10()));
+    npcs.push($.NPC$(gm, "Merchant", 0, 2, 0, 0, "Merchant1", 431, 1107, new $.RadotomeCastle1_getNPC_closure11()));
+    npcs.push($.NPC$(gm, "Boy", 0, 2, 0, 0, "boy1", 566, 1217, new $.RadotomeCastle1_getNPC_closure12()));
+    npcs.push($.NPC$(gm, "Sage", 0, 2, 0, 0, "Sage", 989, 752, new $.RadotomeCastle1_getNPC_closure13()));
+    npcs.push($.NPC$(gm, "Merchant", 0, 2, 0, 0, "Merchant5", 1136, 449, new $.RadotomeCastle1_getNPC_closure14()));
+    npcs.push($.NPC$(gm, "Woman", 0, 2, 0, 0, "Woman4", 1009, 832, new $.RadotomeCastle1_getNPC_closure15()));
+    npcs.push($.NPC$(gm, "Soldier", 0, 1, 0, 0, "Soldier9", 466, 894, new $.RadotomeCastle1_getNPC_closure16()));
+    return npcs;
+  },
   getTriggeMap$0: function() {
-    var triggers, Castle2ndFloorEnterTrigger;
+    var triggers, Castle2ndFloorEnterTrigger, exitTownTrigger;
     triggers = new $.HashMap(0, null, null, null, null);
     Castle2ndFloorEnterTrigger = new $.EnterTownTrigger(null, null);
     Castle2ndFloorEnterTrigger._liblib2$_key = "172:149";
     Castle2ndFloorEnterTrigger._townName = "RadotomeCastle2";
     triggers.$indexSet(triggers, "49:39", Castle2ndFloorEnterTrigger);
+    exitTownTrigger = new $.ExitTownTrigger(null, null);
+    exitTownTrigger._liblib2$_key = "43:28";
+    exitTownTrigger._townName = null;
+    this.AddTriggerByRange$3(triggers, new $.Rect(42, 82, 3, 0), exitTownTrigger);
+    this.AddTriggerByRange$3(triggers, new $.Rect(37, 24, 14, 0), exitTownTrigger);
     return triggers;
   },
   getTileIdByPos$2: function(px, py) {
@@ -7298,13 +7756,319 @@ RadotomeCastle1: {"": "MapData;world,_maxPX,_maxPY,_srcTileSize,_defaultTileId,_
     this._maxPY = 31;
   },
   static: {
-"": "RadotomeCastle1_stairTriggerPosX,RadotomeCastle1_stairTriggerPosY",
+"": "RadotomeCastle1_stairPos,RadotomeCastle1_stairTriggerPosX,RadotomeCastle1_stairTriggerPosY",
 RadotomeCastle1$: function() {
   var t1 = new $.RadotomeCastle1(C.List_aJC, null, null, 16, 550, 20);
   t1.RadotomeCastle1$0();
   return t1;
 }}
 
+},
+
+RadotomeCastle1_getNPC_closure: {"": "Closure;",
+  call$3: function(gm, talker, talkee) {
+    var t1, t2;
+    talkee.ResetToIdle$0();
+    talkee.get$characterSprite().setAnimation$1($.DEF_OppositeDirection(talker.get$direction()));
+    t1 = new $.RedrawRequest(null);
+    t1._game = gm;
+    gm.AddRequest$1(t1);
+    t1 = $.MsgBox$(gm, "*: Welcome to Radotome Castle!", null, false);
+    t2 = new $.PushRequest(null, null, null);
+    t2._game = gm;
+    t2._pushLayer = t1;
+    t2._params = null;
+    gm.AddRequest$1(t2);
+  }
+},
+
+RadotomeCastle1_getNPC_closure0: {"": "Closure;",
+  call$3: function(gm, talker, talkee) {
+    var t1, t2;
+    talkee.ResetToIdle$0();
+    talkee.get$characterSprite().setAnimation$1($.DEF_OppositeDirection(talker.get$direction()));
+    t1 = new $.RedrawRequest(null);
+    t1._game = gm;
+    gm.AddRequest$1(t1);
+    t1 = $.MsgBox$(gm, "*: Welcome to Radotome Castle!", null, false);
+    t2 = new $.PushRequest(null, null, null);
+    t2._game = gm;
+    t2._pushLayer = t1;
+    t2._params = null;
+    gm.AddRequest$1(t2);
+  }
+},
+
+RadotomeCastle1_getNPC_closure1: {"": "Closure;",
+  call$3: function(gm, talker, talkee) {
+    var t1, t2;
+    talkee.ResetToIdle$0();
+    talkee.get$characterSprite().setAnimation$1($.DEF_OppositeDirection(talker.get$direction()));
+    t1 = new $.RedrawRequest(null);
+    t1._game = gm;
+    gm.AddRequest$1(t1);
+    t1 = $.MsgBox$(gm, "*: When you enter a cave,;it's good to have a torch because caves are filled with the powers of the darkness.;*: And, there are more monsters in caves than out in the countryside.", null, false);
+    t2 = new $.PushRequest(null, null, null);
+    t2._game = gm;
+    t2._pushLayer = t1;
+    t2._params = null;
+    gm.AddRequest$1(t2);
+  }
+},
+
+RadotomeCastle1_getNPC_closure2: {"": "Closure;",
+  call$3: function(gm, talker, talkee) {
+    var t1, t2;
+    talkee.ResetToIdle$0();
+    talkee.get$characterSprite().setAnimation$1($.DEF_OppositeDirection(talker.get$direction()));
+    t1 = new $.RedrawRequest(null);
+    t1._game = gm;
+    gm.AddRequest$1(t1);
+    t1 = $.MsgBox$(gm, "*: When you want to rest from your travles, come back.;*: The king will record your journey for you in the Imperial Scrolls of Honor.", null, false);
+    t2 = new $.PushRequest(null, null, null);
+    t2._game = gm;
+    t2._pushLayer = t1;
+    t2._params = null;
+    gm.AddRequest$1(t2);
+  }
+},
+
+RadotomeCastle1_getNPC_closure3: {"": "Closure;",
+  call$3: function(gm, talker, talkee) {
+    var t1, t2;
+    talkee.ResetToIdle$0();
+    talkee.get$characterSprite().setAnimation$1($.DEF_OppositeDirection(talker.get$direction()));
+    t1 = new $.RedrawRequest(null);
+    t1._game = gm;
+    gm.AddRequest$1(t1);
+    t1 = $.MsgBox$(gm, "*: A record of your journey can be written in the Imperial Scrolls of Honor.;*: When you return from a break, it can be resumed where you left off.", null, false);
+    t2 = new $.PushRequest(null, null, null);
+    t2._game = gm;
+    t2._pushLayer = t1;
+    t2._params = null;
+    gm.AddRequest$1(t2);
+  }
+},
+
+RadotomeCastle1_getNPC_closure4: {"": "Closure;",
+  call$3: function(gm, talker, talkee) {
+    var t1, t2;
+    talkee.ResetToIdle$0();
+    talkee.get$characterSprite().setAnimation$1($.DEF_OppositeDirection(talker.get$direction()));
+    t1 = new $.RedrawRequest(null);
+    t1._game = gm;
+    gm.AddRequest$1(t1);
+    t1 = $.MsgBox$(gm, "*: A key is necessary to open this door.;Also, I hear that the key will break after just one use.", null, false);
+    t2 = new $.PushRequest(null, null, null);
+    t2._game = gm;
+    t2._pushLayer = t1;
+    t2._params = null;
+    gm.AddRequest$1(t2);
+  }
+},
+
+RadotomeCastle1_getNPC_closure5: {"": "Closure;",
+  call$3: function(gm, talker, talkee) {
+    var t1, t2;
+    talkee.ResetToIdle$0();
+    talkee.get$characterSprite().setAnimation$1($.DEF_OppositeDirection(talker.get$direction()));
+    t1 = new $.RedrawRequest(null);
+    t1._game = gm;
+    gm.AddRequest$1(t1);
+    t1 = $.MsgBox$(gm, "*: When the dragon of darkness spreads its wings,;it marks the arrival of the descendant of Erdrick.;" + ("*: May the light shine upon the hero of legend, " + $.S($.get$name$x(talker)) + "!"), null, false);
+    t2 = new $.PushRequest(null, null, null);
+    t2._game = gm;
+    t2._pushLayer = t1;
+    t2._params = null;
+    gm.AddRequest$1(t2);
+  }
+},
+
+RadotomeCastle1_getNPC_closure6: {"": "Closure;",
+  call$3: function(gm, talker, talkee) {
+    var t1, t2;
+    talkee.ResetToIdle$0();
+    talkee.get$characterSprite().setAnimation$1($.DEF_OppositeDirection(talker.get$direction()));
+    t1 = new $.RedrawRequest(null);
+    t1._game = gm;
+    gm.AddRequest$1(t1);
+    t1 = $.MsgBox$(gm, "*: Oh, Princess Gwaelin...;Where could she be?;Could it be that she is dead?", null, false);
+    t2 = new $.PushRequest(null, null, null);
+    t2._game = gm;
+    t2._pushLayer = t1;
+    t2._params = null;
+    gm.AddRequest$1(t2);
+  }
+},
+
+RadotomeCastle1_getNPC_closure7: {"": "Closure;",
+  call$3: function(gm, talker, talkee) {
+    var t1, t2;
+    talkee.ResetToIdle$0();
+    talkee.get$characterSprite().setAnimation$1($.DEF_OppositeDirection(talker.get$direction()));
+    t1 = new $.RedrawRequest(null);
+    t1._game = gm;
+    gm.AddRequest$1(t1);
+    t1 = $.MsgBox$(gm, "*: This is Radotome castle.;Many people would gather here, since this place was a paradise.;*:  Then all the demons appeared.;;...[sigh]...", null, false);
+    t2 = new $.PushRequest(null, null, null);
+    t2._game = gm;
+    t2._pushLayer = t1;
+    t2._params = null;
+    gm.AddRequest$1(t2);
+  }
+},
+
+RadotomeCastle1_getNPC_closure8: {"": "Closure;",
+  call$3: function(gm, talker, talkee) {
+    var t1, t2;
+    talkee.ResetToIdle$0();
+    talkee.get$characterSprite().setAnimation$1($.DEF_OppositeDirection(talker.get$direction()));
+    t1 = new $.RedrawRequest(null);
+    t1._game = gm;
+    gm.AddRequest$1(t1);
+    t1 = $.MsgBox$(gm, "*: When I am together with my boyfriend...;*: I forget about the darkness that continues to blanket our world.;*: However, that is a lie... If the world is destroyed, he says that our love will be too.", null, false);
+    t2 = new $.PushRequest(null, null, null);
+    t2._game = gm;
+    t2._pushLayer = t1;
+    t2._params = null;
+    gm.AddRequest$1(t2);
+  }
+},
+
+RadotomeCastle1_getNPC_closure9: {"": "Closure;",
+  call$3: function(gm, talker, talkee) {
+    var t1, t2;
+    talkee.ResetToIdle$0();
+    talkee.get$characterSprite().setAnimation$1($.DEF_OppositeDirection(talker.get$direction()));
+    t1 = new $.RedrawRequest(null);
+    t1._game = gm;
+    gm.AddRequest$1(t1);
+    t1 = $.MsgBox$(gm, "*: My girlfriend and I will be together until the day we die.;*: But will the day come that my feelings will be shattered by demons?", null, false);
+    t2 = new $.PushRequest(null, null, null);
+    t2._game = gm;
+    t2._pushLayer = t1;
+    t2._params = null;
+    gm.AddRequest$1(t2);
+  }
+},
+
+RadotomeCastle1_getNPC_closure10: {"": "Closure;",
+  call$3: function(gm, talker, talkee) {
+    var t1, t2;
+    talkee.ResetToIdle$0();
+    talkee.get$characterSprite().setAnimation$1($.DEF_OppositeDirection(talker.get$direction()));
+    t1 = new $.RedrawRequest(null);
+    t1._game = gm;
+    gm.AddRequest$1(t1);
+    t1 = $.MsgBox$(gm, "*: To gain experience and levels,;you must fight monsters;" + ("*: When you do that noble " + $.S($.get$name$x(talker)) + ",;you may rise to the next level, and you'll become stronger."), null, false);
+    t2 = new $.PushRequest(null, null, null);
+    t2._game = gm;
+    t2._pushLayer = t1;
+    t2._params = null;
+    gm.AddRequest$1(t2);
+  }
+},
+
+RadotomeCastle1_getNPC_closure11: {"": "Closure;",
+  call$3: function(gm, talker, talkee) {
+    var t1, t2;
+    talkee.ResetToIdle$0();
+    talkee.get$characterSprite().setAnimation$1($.DEF_OppositeDirection(talker.get$direction()));
+    t1 = new $.RedrawRequest(null);
+    t1._game = gm;
+    gm.AddRequest$1(t1);
+    t1 = $.MsgBox$(gm, "*: I'm a traveling merchant.;Many of my colleagues were killed by minions of the Dragonlord;*: Because of this, I've collected mortifying and sorrowful memories of those times.", null, false);
+    t2 = new $.PushRequest(null, null, null);
+    t2._game = gm;
+    t2._pushLayer = t1;
+    t2._params = null;
+    gm.AddRequest$1(t2);
+  }
+},
+
+RadotomeCastle1_getNPC_closure12: {"": "Closure;",
+  call$3: function(gm, talker, talkee) {
+    var t1, t2;
+    talkee.ResetToIdle$0();
+    talkee.get$characterSprite().setAnimation$1($.DEF_OppositeDirection(talker.get$direction()));
+    t1 = new $.RedrawRequest(null);
+    t1._game = gm;
+    gm.AddRequest$1(t1);
+    t1 = $.YesNoMsgBox$(gm, "*: Did you hear?", null, "*: Rumor has it that there is a town that was destroyed by the demons.", false, null, "*: I'm shocked!");
+    t2 = new $.PushRequest(null, null, null);
+    t2._game = gm;
+    t2._pushLayer = t1;
+    t2._params = null;
+    gm.AddRequest$1(t2);
+  }
+},
+
+RadotomeCastle1_getNPC_closure13: {"": "Closure;",
+  call$3: function(gm, talker, talkee) {
+    var t1, t2;
+    talkee.ResetToIdle$0();
+    talkee.get$characterSprite().setAnimation$1($.DEF_OppositeDirection(talker.get$direction()));
+    t1 = new $.RedrawRequest(null);
+    t1._game = gm;
+    gm.AddRequest$1(t1);
+    t1 = $.MsgBox$(gm, "*: How did you get here?", null, false);
+    t2 = new $.PushRequest(null, null, null);
+    t2._game = gm;
+    t2._pushLayer = t1;
+    t2._params = null;
+    gm.AddRequest$1(t2);
+  }
+},
+
+RadotomeCastle1_getNPC_closure14: {"": "Closure;",
+  call$3: function(gm, talker, talkee) {
+    var t1, t2;
+    talkee.ResetToIdle$0();
+    talkee.get$characterSprite().setAnimation$1($.DEF_OppositeDirection(talker.get$direction()));
+    t1 = new $.RedrawRequest(null);
+    t1._game = gm;
+    gm.AddRequest$1(t1);
+    t1 = $.MsgBox$(gm, "*: How did you get here?", null, false);
+    t2 = new $.PushRequest(null, null, null);
+    t2._game = gm;
+    t2._pushLayer = t1;
+    t2._params = null;
+    gm.AddRequest$1(t2);
+  }
+},
+
+RadotomeCastle1_getNPC_closure15: {"": "Closure;",
+  call$3: function(gm, talker, talkee) {
+    var t1, t2;
+    talkee.ResetToIdle$0();
+    talkee.get$characterSprite().setAnimation$1($.DEF_OppositeDirection(talker.get$direction()));
+    t1 = new $.RedrawRequest(null);
+    t1._game = gm;
+    gm.AddRequest$1(t1);
+    t1 = $.MsgBox$(gm, "*: How did you get here?", null, false);
+    t2 = new $.PushRequest(null, null, null);
+    t2._game = gm;
+    t2._pushLayer = t1;
+    t2._params = null;
+    gm.AddRequest$1(t2);
+  }
+},
+
+RadotomeCastle1_getNPC_closure16: {"": "Closure;",
+  call$3: function(gm, talker, talkee) {
+    var t1, t2;
+    talkee.ResetToIdle$0();
+    talkee.get$characterSprite().setAnimation$1($.DEF_OppositeDirection(talker.get$direction()));
+    t1 = new $.RedrawRequest(null);
+    t1._game = gm;
+    gm.AddRequest$1(t1);
+    t1 = $.MsgBox$(gm, "*: How did you get here?", null, false);
+    t2 = new $.PushRequest(null, null, null);
+    t2._game = gm;
+    t2._pushLayer = t1;
+    t2._params = null;
+    gm.AddRequest$1(t2);
+  }
 },
 
 RadotomeCastle2: {"": "MapData;world,_maxPX,_maxPY,_srcTileSize,_defaultTileId,_tilePerRow",
@@ -7324,16 +8088,15 @@ RadotomeCastle2: {"": "MapData;world,_maxPX,_maxPY,_srcTileSize,_defaultTileId,_
     return triggers;
   },
   getNPC$1: function(gm) {
-    var t1, npcs, t2, heroName;
-    t1 = new $.RadotomeCastle2_getNPC_handleTalk();
+    var npcs, t1, heroName;
     npcs = $.List_List(null);
-    t2 = gm.get$gameState();
-    t2.get$heroName;
-    heroName = t2._stats._name;
+    t1 = gm.get$gameState();
+    t1.get$heroName;
+    heroName = t1._stats._name;
     npcs.push($.NPC$(gm, "King", 0, 2, 0, 0, "King Lorik", 496, 538, new $.RadotomeCastle2_getNPC_closure(C.JSString_methods.$add(C.JSString_methods.$add(C.JSString_methods.$add(C.JSString_methods.$add(C.JSString_methods.$add(C.JSString_methods.$add(C.JSString_methods.$add("King Lorik: Descendant of Erdrick, listen now to my words.", "It is told that in ages past Erdrick fought demons with a Ball of Light."), "Then came the Dragonlord who stole the precious globe and hid it in the darkness."), "Now, Hero, thou must help us recover the Ball of Light and restore peace to our land."), "The Dragonlord must be defeated."), "Take now whatever thou may find in these Treasure Chests to aid thee in thy quest."), "Then speak with the guards, for they have much knowledge that may aid thee."), "May the light shine upon thee, Hero."))));
     npcs.push($.NPC$(gm, "Adviser", 1, 2, 0, 0, "Adviser", 437, 576, new $.RadotomeCastle2_getNPC_closure0(heroName)));
-    npcs.push($.NPC$(gm, "Soldier", 0, 2, 0, 0, "Soldier1", 528, 800, t1));
-    npcs.push($.NPC$(gm, "Soldier", 0, 2, 0, 0, "Soldier2", 594, 800, t1));
+    npcs.push($.NPC$(gm, "Soldier", 0, 2, 0, 0, "Soldier1", 528, 800, new $.RadotomeCastle2_getNPC_closure1()));
+    npcs.push($.NPC$(gm, "Soldier", 0, 2, 0, 0, "Soldier2", 594, 800, new $.RadotomeCastle2_getNPC_closure2()));
     npcs.push($.TreasureChest$(gm, true, 533, 640, 32, null));
     npcs.push($.TreasureChest$(gm, true, 565, 640, 32, null));
     npcs.push($.TreasureChest$(gm, true, 597, 640, 32, null));
@@ -7466,6 +8229,40 @@ RadotomeCastle2_getNPC_closure0: {"": "Closure;heroName_1",
   }
 },
 
+RadotomeCastle2_getNPC_closure1: {"": "Closure;",
+  call$3: function(gm, talker, talkee) {
+    var t1, t2;
+    talkee.ResetToIdle$0();
+    talkee.get$characterSprite().setAnimation$1($.DEF_OppositeDirection(talker.get$direction()));
+    t1 = new $.RedrawRequest(null);
+    t1._game = gm;
+    gm.AddRequest$1(t1);
+    t1 = $.MsgBox$(gm, "*: Save up your money,;so that you can buy more expensive weapons are armor.;*: If you do that,;you will become stronger.", null, false);
+    t2 = new $.PushRequest(null, null, null);
+    t2._game = gm;
+    t2._pushLayer = t1;
+    t2._params = null;
+    gm.AddRequest$1(t2);
+  }
+},
+
+RadotomeCastle2_getNPC_closure2: {"": "Closure;",
+  call$3: function(gm, talker, talkee) {
+    var t1, t2;
+    talkee.ResetToIdle$0();
+    talkee.get$characterSprite().setAnimation$1($.DEF_OppositeDirection(talker.get$direction()));
+    t1 = new $.RedrawRequest(null);
+    t1._game = gm;
+    gm.AddRequest$1(t1);
+    t1 = $.MsgBox$(gm, "*: You should listen to people's stories, for they will often provide you with some good information.", null, false);
+    t2 = new $.PushRequest(null, null, null);
+    t2._game = gm;
+    t2._pushLayer = t1;
+    t2._params = null;
+    gm.AddRequest$1(t2);
+  }
+},
+
 RadotomeTown: {"": "MapData;world,_maxPX,_maxPY,_srcTileSize,_defaultTileId,_tilePerRow",
   getInitPosX$0: function() {
     return 336;
@@ -7477,49 +8274,28 @@ RadotomeTown: {"": "MapData;world,_maxPX,_maxPY,_srcTileSize,_defaultTileId,_til
     var triggers, exitTownTrigger;
     triggers = new $.HashMap(0, null, null, null, null);
     exitTownTrigger = new $.ExitTownTrigger(null, null);
-    exitTownTrigger._liblib2$_key = "-43:28";
+    exitTownTrigger._liblib2$_key = "43:28";
     exitTownTrigger._townName = null;
-    triggers.$indexSet(triggers, "-43:28", exitTownTrigger);
-    triggers.$indexSet(triggers, "-43:27", exitTownTrigger);
-    triggers.$indexSet(triggers, "-43:26", exitTownTrigger);
-    triggers.$indexSet(triggers, "-43:25", exitTownTrigger);
-    triggers.$indexSet(triggers, "25:28", exitTownTrigger);
-    triggers.$indexSet(triggers, "25:27", exitTownTrigger);
-    triggers.$indexSet(triggers, "25:26", exitTownTrigger);
-    triggers.$indexSet(triggers, "25:25", exitTownTrigger);
-    triggers.$indexSet(triggers, "-13:-6", exitTownTrigger);
-    triggers.$indexSet(triggers, "-12:-6", exitTownTrigger);
-    triggers.$indexSet(triggers, "-11:-6", exitTownTrigger);
-    triggers.$indexSet(triggers, "-10:-6", exitTownTrigger);
-    triggers.$indexSet(triggers, "-9:-6", exitTownTrigger);
-    triggers.$indexSet(triggers, "-8:-6", exitTownTrigger);
-    triggers.$indexSet(triggers, "-7:-6", exitTownTrigger);
+    this.AddTriggerByRange$3(triggers, new $.Rect(46, 23, 7, 0), exitTownTrigger);
+    this.AddTriggerByRange$3(triggers, new $.Rect(82, 52, 0, 5), exitTownTrigger);
+    this.AddTriggerByRange$3(triggers, new $.Rect(19, 52, 0, 5), exitTownTrigger);
     return triggers;
   },
   getNPC$1: function(gm) {
-    var t1, npcs, t2;
-    t1 = new $.RadotomeTown_getNPC_handleTalk();
-    npcs = $.List_List(null);
-    t2 = gm.get$gameState();
-    t2.get$heroName;
-    t2._stats;
-    npcs.push($.NPC$(gm, "Merchant", 1, 2, 0, 0, "Merchant1", 1090, 1107, t1));
-    npcs.push($.NPC$(gm, "Merchant", 0, 2, 0, 0, "Merchant2", 491, 544, t1));
-    npcs.push($.NPC$(gm, "Merchant", 0, 4, 0, 0, "Merchant3", 1167, 1212, t1));
-    npcs.push($.NPC$(gm, "Knight", 0, 2, 0, 0, "Knight1", 468, 1234, t1));
-    npcs.push($.NPC$(gm, "Knight", 0, 2, 0, 0, "Knight2", 686, 786, t1));
-    npcs.push($.NPC$(gm, "Knight", 0, 2, 0, 0, "Knight3", 979, 992, t1));
-    npcs.push($.NPC$(gm, "Oldman", 0, 2, 0, 0, "Oldman1", 688, 1281, t1));
-    npcs.push($.NPC$(gm, "Oldman", 0, 3, 0, 0, "Oldman2", 1072, 734, t1));
-    npcs.push($.NPC$(gm, "Man", 1, 2, 0, 0, "Man1", 591, 899, t1));
-    npcs.push($.NPC$(gm, "Man", 1, 2, 0, 0, "Man2", 1086, 1309, t1));
-    npcs.push($.NPC$(gm, "Man", 0, 2, 0, 0, "Man3", 979, 739, t1));
-    npcs.push($.NPC$(gm, "Girl", 1, 2, 0, 0, "Girl1", 816, 1142, t1));
-    npcs.push($.NPC$(gm, "Woman", 0, 4, 0, 0, "Woman1", 691, 1087, t1));
-    npcs.push($.NPC$(gm, "Woman", 0, 1, 0, 0, "Woman2", 590, 1278, t1));
-    npcs.push($.NPC$(gm, "Nan", 0, 4, 0, 0, "Nan1", 1134, 544, t1));
-    npcs.push($.NPC$(gm, "Soldier", 1, 2, 0, 0, "Soldier1", 1069, 867, t1));
-    npcs.push($.NPC$(gm, "Soldier", 0, 2, 0, 0, "Soldier2", 1258, 449, t1));
+    var npcs = $.List_List(null);
+    npcs.push($.NPC$(gm, "Merchant", 0, 4, 0, 0, "Merchant1", 1090, 1107, new $.RadotomeTown_getNPC_closure()));
+    npcs.push($.NPC$(gm, "Merchant", 0, 2, 0, 0, "Merchant2", 491, 544, new $.RadotomeTown_getNPC_closure0()));
+    npcs.push($.NPC$(gm, "Merchant", 0, 4, 0, 0, "Merchant3", 1167, 1212, new $.RadotomeTown_getNPC_closure1()));
+    npcs.push($.NPC$(gm, "Knight", 0, 2, 0, 0, "Knight2", 686, 786, new $.RadotomeTown_getNPC_closure2()));
+    npcs.push($.NPC$(gm, "Knight", 0, 2, 0, 0, "Knight3", 979, 992, new $.RadotomeTown_getNPC_closure3()));
+    npcs.push($.NPC$(gm, "Oldman", 0, 3, 0, 0, "Oldman2", 1072, 734, new $.RadotomeTown_getNPC_closure4()));
+    npcs.push($.NPC$(gm, "Man", 1, 2, 0, 0, "Man1", 591, 899, new $.RadotomeTown_getNPC_closure5()));
+    npcs.push($.NPC$(gm, "Man", 1, 2, 0, 0, "Man2", 1086, 1309, new $.RadotomeTown_getNPC_closure6()));
+    npcs.push($.NPC$(gm, "Man", 0, 2, 0, 0, "Man3", 979, 739, new $.RadotomeTown_getNPC_closure7()));
+    npcs.push($.NPC$(gm, "Girl", 0, 3, 0, 0, "Girl1", 816, 1142, new $.RadotomeTown_getNPC_closure8()));
+    npcs.push($.NPC$(gm, "Woman", 0, 4, 0, 0, "Woman1", 691, 1087, new $.RadotomeTown_getNPC_closure9()));
+    npcs.push($.NPC$(gm, "Nan", 0, 4, 0, 0, "Nan1", 1134, 544, new $.RadotomeTown_getNPC_closure10()));
+    npcs.push($.NPC$(gm, "Soldier", 1, 2, 0, 0, "Soldier1", 1069, 867, new $.RadotomeTown_getNPC_closure11()));
     return npcs;
   },
   getSrcTileSize$0: function() {
@@ -7595,7 +8371,7 @@ RadotomeTown$: function() {
 
 },
 
-RadotomeTown_getNPC_handleTalk: {"": "Closure;",
+RadotomeTown_getNPC_closure: {"": "Closure;",
   call$3: function(gm, talker, talkee) {
     var t1, t2;
     talkee.ResetToIdle$0();
@@ -7603,7 +8379,232 @@ RadotomeTown_getNPC_handleTalk: {"": "Closure;",
     t1 = new $.RedrawRequest(null);
     t1._game = gm;
     gm.AddRequest$1(t1);
-    t1 = $.MsgBox$(gm, $.get$name$x(talkee), null, false);
+    t1 = $.MsgBox$(gm, "*: Welcome!;This is an item shop.;Please come inside.", null, false);
+    t2 = new $.PushRequest(null, null, null);
+    t2._game = gm;
+    t2._pushLayer = t1;
+    t2._params = null;
+    gm.AddRequest$1(t2);
+  }
+},
+
+RadotomeTown_getNPC_closure0: {"": "Closure;",
+  call$3: function(gm, talker, talkee) {
+    var t1, t2, t3, t4, t5, t6;
+    talkee.ResetToIdle$0();
+    talkee.get$characterSprite().setAnimation$1($.DEF_OppositeDirection(talker.get$direction()));
+    t1 = new $.RedrawRequest(null);
+    t1._game = gm;
+    gm.AddRequest$1(t1);
+    t1 = $.get$stats_WeaponData();
+    t1 = t1.$index(t1, "Bamboo Pole");
+    t2 = $.get$stats_WeaponData();
+    t2 = t2.$index(t2, "Club");
+    t3 = $.get$stats_WeaponData();
+    t3 = t3.$index(t3, "Copper Sword");
+    t4 = $.get$stats_ArmorData();
+    t4 = t4.$index(t4, "Clothes");
+    t5 = $.get$stats_ArmorData();
+    t5 = t5.$index(t5, "Leather Armor");
+    t6 = $.get$stats_ShieldData();
+    t6 = $.BuySellMenu$(gm, "Weapon", [t1, t2, t3, t4, t5, t6.$index(t6, "Small Shield")]);
+    t5 = new $.PushRequest(null, null, null);
+    t5._game = gm;
+    t5._pushLayer = t6;
+    t5._params = null;
+    gm.AddRequest$1(t5);
+  }
+},
+
+RadotomeTown_getNPC_closure1: {"": "Closure;",
+  call$3: function(gm, talker, talkee) {
+    var t1, t2, t3;
+    talkee.ResetToIdle$0();
+    talkee.get$characterSprite().setAnimation$1($.DEF_OppositeDirection(talker.get$direction()));
+    t1 = new $.RedrawRequest(null);
+    t1._game = gm;
+    gm.AddRequest$1(t1);
+    t1 = $.get$stats_ItemData();
+    t1 = t1.$index(t1, "Herb");
+    t2 = $.get$stats_ItemData();
+    t2 = t2.$index(t2, "Wings");
+    t3 = $.get$stats_ItemData();
+    t3 = $.BuySellMenu$(gm, "Item", [t1, t2, t3.$index(t3, "Torch")]);
+    t2 = new $.PushRequest(null, null, null);
+    t2._game = gm;
+    t2._pushLayer = t3;
+    t2._params = null;
+    gm.AddRequest$1(t2);
+  }
+},
+
+RadotomeTown_getNPC_closure2: {"": "Closure;",
+  call$3: function(gm, talker, talkee) {
+    var t1, t2;
+    talkee.ResetToIdle$0();
+    talkee.get$characterSprite().setAnimation$1($.DEF_OppositeDirection(talker.get$direction()));
+    t1 = new $.RedrawRequest(null);
+    t1._game = gm;
+    gm.AddRequest$1(t1);
+    t1 = $.MsgBox$(gm, "*: Many brave young souls have set out from Radotome castle on their travels, only to perish.;*: But for you,;I wish the best of luck!", null, false);
+    t2 = new $.PushRequest(null, null, null);
+    t2._game = gm;
+    t2._pushLayer = t1;
+    t2._params = null;
+    gm.AddRequest$1(t2);
+  }
+},
+
+RadotomeTown_getNPC_closure3: {"": "Closure;",
+  call$3: function(gm, talker, talkee) {
+    var t1, t2;
+    talkee.ResetToIdle$0();
+    talkee.get$characterSprite().setAnimation$1($.DEF_OppositeDirection(talker.get$direction()));
+    t1 = new $.RedrawRequest(null);
+    t1._game = gm;
+    gm.AddRequest$1(t1);
+    t1 = $.YesNoMsgBox$(gm, "*: Are you a descendant of Erdrick?;Do you have any proof?", null, "*: Only TRUE descendants of Erdrick bear proof.", false, null, "*: Huh?!;You don't have the symbol.;Only TRUE descendants of Erdrick bear proof.");
+    t2 = new $.PushRequest(null, null, null);
+    t2._game = gm;
+    t2._pushLayer = t1;
+    t2._params = null;
+    gm.AddRequest$1(t2);
+  }
+},
+
+RadotomeTown_getNPC_closure4: {"": "Closure;",
+  call$3: function(gm, talker, talkee) {
+    var t1, t2;
+    talkee.ResetToIdle$0();
+    talkee.get$characterSprite().setAnimation$1($.DEF_OppositeDirection(talker.get$direction()));
+    t1 = new $.RedrawRequest(null);
+    t1._game = gm;
+    gm.AddRequest$1(t1);
+    t1 = $.MsgBox$(gm, "*: I'm studying some spells that will help undo a curse.;*: If you're ever cursed,;come to me.;I will certainly help you.", null, false);
+    t2 = new $.PushRequest(null, null, null);
+    t2._game = gm;
+    t2._pushLayer = t1;
+    t2._params = null;
+    gm.AddRequest$1(t2);
+  }
+},
+
+RadotomeTown_getNPC_closure5: {"": "Closure;",
+  call$3: function(gm, talker, talkee) {
+    var t1, t2;
+    talkee.ResetToIdle$0();
+    talkee.get$characterSprite().setAnimation$1($.DEF_OppositeDirection(talker.get$direction()));
+    t1 = new $.RedrawRequest(null);
+    t1._game = gm;
+    gm.AddRequest$1(t1);
+    t1 = $.MsgBox$(gm, "*: Welcome to the town of Radotome.", null, false);
+    t2 = new $.PushRequest(null, null, null);
+    t2._game = gm;
+    t2._pushLayer = t1;
+    t2._params = null;
+    gm.AddRequest$1(t2);
+  }
+},
+
+RadotomeTown_getNPC_closure6: {"": "Closure;",
+  call$3: function(gm, talker, talkee) {
+    var t1, t2;
+    talkee.ResetToIdle$0();
+    talkee.get$characterSprite().setAnimation$1($.DEF_OppositeDirection(talker.get$direction()));
+    t1 = new $.RedrawRequest(null);
+    t1._game = gm;
+    gm.AddRequest$1(t1);
+    t1 = $.MsgBox$(gm, "*: South of Radotome castle, on the other side of the sea, you will see another castle that is enshrouded by a think fog.;*: That is the Dragonlord's castle. It's unimaginably frightful!", null, false);
+    t2 = new $.PushRequest(null, null, null);
+    t2._game = gm;
+    t2._pushLayer = t1;
+    t2._params = null;
+    gm.AddRequest$1(t2);
+  }
+},
+
+RadotomeTown_getNPC_closure7: {"": "Closure;",
+  call$3: function(gm, talker, talkee) {
+    var t1, t2;
+    talkee.ResetToIdle$0();
+    talkee.get$characterSprite().setAnimation$1($.DEF_OppositeDirection(talker.get$direction()));
+    t1 = new $.RedrawRequest(null);
+    t1._game = gm;
+    gm.AddRequest$1(t1);
+    t1 = $.YesNoMsgBox$(gm, "*: Did you know?", null, "*: It seems there's somewhere in this town that sells Keys", false, null, "*: Oh...");
+    t2 = new $.PushRequest(null, null, null);
+    t2._game = gm;
+    t2._pushLayer = t1;
+    t2._params = null;
+    gm.AddRequest$1(t2);
+  }
+},
+
+RadotomeTown_getNPC_closure8: {"": "Closure;",
+  call$3: function(gm, talker, talkee) {
+    var t1, t2;
+    talkee.ResetToIdle$0();
+    talkee.get$characterSprite().setAnimation$1($.DEF_OppositeDirection(talker.get$direction()));
+    t1 = new $.RedrawRequest(null);
+    t1._game = gm;
+    gm.AddRequest$1(t1);
+    t1 = $.MsgBox$(gm, "*: No, I'm not Princess Gwaelin,;But hey,;You're one handsome stud!;*: I'm not letting you out of my sight!", null, false);
+    t2 = new $.PushRequest(null, null, null);
+    t2._game = gm;
+    t2._pushLayer = t1;
+    t2._params = null;
+    gm.AddRequest$1(t2);
+  }
+},
+
+RadotomeTown_getNPC_closure9: {"": "Closure;",
+  call$3: function(gm, talker, talkee) {
+    var t1, t2;
+    talkee.ResetToIdle$0();
+    talkee.get$characterSprite().setAnimation$1($.DEF_OppositeDirection(talker.get$direction()));
+    t1 = new $.RedrawRequest(null);
+    t1._game = gm;
+    gm.AddRequest$1(t1);
+    t1 = new $.InnMenu(null, [], 0, null);
+    t1._gm = gm;
+    t1._cost = 2;
+    t2 = new $.PushRequest(null, null, null);
+    t2._game = gm;
+    t2._pushLayer = t1;
+    t2._params = null;
+    gm.AddRequest$1(t2);
+  }
+},
+
+RadotomeTown_getNPC_closure10: {"": "Closure;",
+  call$3: function(gm, talker, talkee) {
+    var t1, t2;
+    talkee.ResetToIdle$0();
+    talkee.get$characterSprite().setAnimation$1($.DEF_OppositeDirection(talker.get$direction()));
+    t1 = new $.RedrawRequest(null);
+    t1._game = gm;
+    gm.AddRequest$1(t1);
+    t1 = $.get$stats_ItemData();
+    t1 = t1.$index(t1, "Holy Water");
+    t2 = $.get$stats_ItemData();
+    t2 = $.BuySellMenu$(gm, "Item", [t1, t2.$index(t2, "Key")]);
+    t1 = new $.PushRequest(null, null, null);
+    t1._game = gm;
+    t1._pushLayer = t2;
+    t1._params = null;
+    gm.AddRequest$1(t1);
+  }
+},
+
+RadotomeTown_getNPC_closure11: {"": "Closure;",
+  call$3: function(gm, talker, talkee) {
+    var t1, t2;
+    talkee.ResetToIdle$0();
+    talkee.get$characterSprite().setAnimation$1($.DEF_OppositeDirection(talker.get$direction()));
+    t1 = new $.RedrawRequest(null);
+    t1._game = gm;
+    gm.AddRequest$1(t1);
+    t1 = $.MsgBox$(gm, "*: The legendary minstrel, Garin, played a silver harp. I heard it was buried with him inside his grave.", null, false);
     t2 = new $.PushRequest(null, null, null);
     t2._game = gm;
     t2._pushLayer = t1;
@@ -12983,7 +13984,26 @@ RectBase: {"": "Object;",
     }
   },
   get$bottom: function(_) {
-    return $.$add$ns(this.get$top(this), this.get$height(this));
+    var t1, t2;
+    t1 = this.get$top(this);
+    if (typeof t1 !== "number")
+      return this.get$bottom$bailout(1, t1);
+    t2 = this.get$height(this);
+    if (typeof t2 !== "number")
+      return this.get$bottom$bailout(2, t1, t2);
+    return t1 + t2;
+  },
+  get$bottom$bailout: function(state0, t1, t2) {
+    switch (state0) {
+      case 0:
+        t1 = this.get$top(this);
+      case 1:
+        state0 = 0;
+        t2 = this.get$height(this);
+      case 2:
+        state0 = 0;
+        return $.$add$ns(t1, t2);
+    }
   },
   toString$0: function(_) {
     return "(" + $.S(this.get$left(this)) + ", " + $.S(this.get$top(this)) + ", " + $.S(this.get$width(this)) + ", " + $.S(this.get$height(this)) + ")";
@@ -13794,13 +14814,23 @@ Isolate.makeConstantList = function(list) {
   return list;
 };
 C.List_1Wj = Isolate.makeConstantList([797, 562, 550, 827, 790, 828, 794, 826, 561, 822, 802, 829, 793, 550, 792, 792, 830, 557, 557, 550, 550, 550, 831, 550, 550, 550, 550, 550, 550, 550, 797, 561]);
+C.List_2Vk = Isolate.makeConstantList([4, 1, 0, 0, 1, 3, 4, 5]);
+C.List_2Vk0 = Isolate.makeConstantList([3, 2, 1, 2, 3, 3, 4, 5]);
+C.List_2Vk1 = Isolate.makeConstantList([10, 10, 11, 12, 13, 13, 9, 8]);
+C.List_2Vk2 = Isolate.makeConstantList([10, 9, 8, 12, 12, 12, 8, 7]);
+C.List_2Vk3 = Isolate.makeConstantList([3, 3, 2, 2, 3, 5, 4, 5]);
+C.List_2Vk4 = Isolate.makeConstantList([5, 1, 1, 12, 9, 6, 6, 6]);
+C.List_2Vk5 = Isolate.makeConstantList([11, 11, 12, 13, 13, 12, 9, 9]);
+C.List_2Vk6 = Isolate.makeConstantList([5, 5, 4, 12, 12, 7, 7, 7]);
 C.List_2Yi = Isolate.makeConstantList([550, 551, 552, 553, 553, 553, 553, 554, 555, 550, 550, 550, 550, 550, 550, 550, 551, 552, 553, 553, 553, 553, 554, 555, 551, 552, 554, 556, 557, 550, 550]);
 C.List_2Zi = Isolate.makeConstantList([797, 561, 797, 810, 811, 811, 823, 810, 794, 789, 789, 789, 789, 874, 561, 550, 792, 792, 792, 875, 864, 550, 550, 572, 572, 572, 572, 572, 873, 168, 189, 97]);
+C.List_2jN = Isolate.makeConstantList([C.List_2Vk3, C.List_2Vk0, C.List_2Vk, C.List_2Vk4, C.List_2Vk6, C.List_2Vk2, C.List_2Vk1, C.List_2Vk5]);
 C.List_2xM = Isolate.makeConstantList([550, 558, 631, 632, 633, 560, 560, 560, 560, 626, 634, 635, 636, 637, 630, 560, 560, 560, 560, 638, 638, 638, 558, 559, 560, 560, 560, 560, 558, 611, 550]);
 C.List_2z6 = Isolate.makeConstantList([550, 558, 559, 560, 560, 560, 560, 560, 566, 554, 574, 579, 580, 560, 551, 575, 553, 553, 553, 567, 574, 560, 558, 559, 560, 560, 560, 560, 558, 650, 651]);
 C.List_3BG = Isolate.makeConstantList([797, 561, 550, 550, 550, 550, 550, 821, 853, 792, 821, 555, 550, 550, 550, 550, 792, 550, 557, 550, 844, 139, 97, 197, 114, 114, 189, 97, 97, 97, 97, 97]);
 C.List_3Bm = Isolate.makeConstantList([797, 561, 827, 789, 789, 789, 825, 789, 789, 825, 789, 789, 789, 826, 561, 885, 139, 131, 97, 219, 140, 886, 888, 888, 888, 889, 139, 130, 131, 98, 864, 871]);
 C.List_4Ky = Isolate.makeConstantList([823, 562, 557, 550, 550, 792, 550, 550, 806, 793, 834, 822, 807, 550, 792, 792, 550, 550, 827, 790, 828, 794, 825, 790, 828, 794, 789, 826, 561, 557, 823, 561]);
+C.List_5VY = Isolate.makeConstantList(["M_Slimer", "M_RedSlimer", "M_Slimer", "M_RedSlimer", "M_Slimer"]);
 C.List_5aZ = Isolate.makeConstantList([550, 558, 559, 560, 560, 560, 560, 560, 560, 626, 639, 640, 641, 642, 630, 560, 560, 560, 560, 560, 560, 560, 558, 643, 643, 643, 643, 643, 558, 611, 550]);
 C.List_5i6 = Isolate.makeConstantList([558, 559, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 560, 558]);
 C.List_5i60 = Isolate.makeConstantList([551, 679, 553, 553, 681, 553, 553, 681, 553, 553, 681, 553, 553, 553, 554]);
@@ -13808,129 +14838,129 @@ C.List_693 = Isolate.makeConstantList([797, 562, 550, 550, 550, 792, 550, 822, 8
 C.List_69P = Isolate.makeConstantList([650, 558, 113, 97, 97, 667, 660, 661, 560, 558, 559, 560, 560, 560, 558, 559, 560, 593, 574, 560, 593, 559, 558, 113, 97, 97, 97, 97, 97, 98, 651]);
 C.List_69t = Isolate.makeConstantList([558, 559, 560, 560, 560, 558, 559, 558, 559, 560, 560, 579, 580, 560, 581, 560, 558, 559, 560, 582, 560, 560, 560, 560, 560, 560, 560, 560, 558, 561, 550]);
 C.List_7eO = Isolate.makeConstantList([787, 788, 789, 789, 789, 789, 789, 789, 789, 789, 789, 789, 790, 791, 792, 792, 793, 794, 789, 789, 789, 789, 789, 789, 789, 789, 789, 789, 789, 789, 795, 555]);
-C.List_8co = Isolate.makeConstantList([0, 0, 0, 0, 53, 3, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 81, 20, 83, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 15, 15, 17, 17, 17, 17, 17, 17, 17, 15, 15, 92, 75, 18, 18, 68, 2, 1, 52, 0, 0, 0, 0, 0, 0]);
-C.List_8co0 = Isolate.makeConstantList([0, 0, 0, 53, 3, 85, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 95, 76, 18, 18, 74, 93, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 9, 5, 126, 6, 17, 17, 15, 15, 15, 15, 14, 14, 14, 82, 9, 54, 0, 0, 0, 0, 0, 55, 56, 7, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 14, 14, 81, 2, 52, 0, 0, 0, 0, 0, 53, 3, 15, 15, 29, 15, 15, 15, 15, 20, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-C.List_8co1 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0, 0, 0, 53, 3, 85, 16, 16, 16, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 14, 14, 14, 14, 81, 49, 60, 15, 15, 15, 87, 16, 16, 16, 16, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 10, 0, 4, 83, 14, 14, 14, 14, 14, 14, 76, 18, 18, 18, 18, 18, 18, 18, 18, 74, 93, 92, 75, 18, 18, 18, 69, 10, 0, 0, 0]);
-C.List_8co10 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 55, 56, 7, 85, 16, 17, 17, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 9, 54, 4, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 16, 16, 16, 16, 16, 16, 16, 87, 89, 10, 0, 0, 0, 53, 3, 85, 16, 16, 17, 17, 17, 15, 15, 15, 15, 17, 17, 16, 16, 16, 82, 9, 5, 54, 0, 0, 0, 0, 0]);
-C.List_8co100 = Isolate.makeConstantList([0, 0, 0, 55, 5, 6, 83, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 15, 15, 15, 75, 18, 18, 18, 18, 18, 18, 74, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 16, 16, 88, 11, 50, 52, 0, 0, 0, 0, 0, 53, 3, 15, 15, 15, 15, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 10, 0, 0, 55, 6, 85, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 2, 52, 0, 0, 0]);
-C.List_8co101 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 9, 54, 0, 0, 4, 80, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 16, 16, 87, 89, 9, 54, 0, 0, 55, 5, 56, 7, 21, 21, 21, 21, 21, 21, 21, 21, 15, 15, 15, 15, 15, 15, 15, 84, 84, 84, 82, 9, 5, 5, 54, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0]);
-C.List_8co102 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 53, 3, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 2, 52, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 81, 2, 1, 1, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 3, 17, 17, 17, 17, 17, 17, 17, 17, 2, 1, 52, 0, 0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 2, 1, 1, 1, 3, 15, 15, 15, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0]);
-C.List_8co103 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 15, 14, 14, 14, 14, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 84, 82, 9, 54, 0, 0, 0, 0, 0, 0, 59, 8, 7, 16, 16, 77, 18, 18, 18, 18, 65, 17, 17, 17, 17, 17, 17, 17, 17, 67, 18, 63, 17, 17, 17, 67, 76, 18, 18, 73, 17, 17, 17, 2, 52, 0, 0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 16, 16, 16, 15, 15, 15, 15, 15, 14, 82, 9, 54, 0, 0, 0]);
-C.List_8co104 = Isolate.makeConstantList([0, 0, 0, 4, 80, 14, 14, 14, 15, 15, 15, 15, 24, 21, 21, 21, 21, 21, 21, 28, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 17, 17, 17, 16, 16, 16, 16, 16, 16, 16, 89, 10, 0, 0, 0, 0, 0, 55, 6, 17, 17, 76, 123, 63, 17, 17, 16, 16, 16, 16, 16, 16, 17, 17, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 17, 17, 17, 16, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 66, 75, 18, 74, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0, 0, 0]);
-C.List_8co105 = Isolate.makeConstantList([0, 0, 0, 0, 53, 3, 85, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 95, 76, 18, 18, 18, 18, 96, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 20, 15, 15, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 14, 81, 10, 0, 0, 0, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 49, 60, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-C.List_8co106 = Isolate.makeConstantList([0, 0, 0, 0, 0, 53, 3, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 81, 49, 60, 83, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 17, 17, 17, 15, 15, 15, 15, 15, 17, 17, 17, 124, 3, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 11, 50, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-C.List_8co107 = Isolate.makeConstantList([0, 0, 0, 0, 0, 53, 3, 85, 16, 16, 16, 16, 88, 20, 15, 15, 9, 56, 47, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 16, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 17, 11, 125, 0, 0, 0, 0, 0, 59, 7, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 81, 10, 0, 0, 0, 55, 6, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 16, 16, 16, 16, 16, 88, 11, 50, 52, 0, 0, 0, 0, 0, 0, 0]);
-C.List_8co108 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 83, 84, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 81, 11, 61, 5, 54, 53, 3, 15, 15, 15, 15, 15, 15, 15, 9, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 3, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 9, 5, 5, 5, 6, 15, 15, 14, 14, 14, 14, 17, 17, 17, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
-C.List_8co109 = Isolate.makeConstantList([0, 0, 0, 4, 80, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 14, 81, 2, 52, 0, 0, 0, 0, 53, 3, 80, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 88, 2, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 9, 54, 0, 0, 0, 0, 53, 1, 3, 17, 17, 17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 14, 14, 14, 14, 14, 14, 14, 14, 81, 2, 52, 0, 0, 0, 0, 0, 0, 0]);
-C.List_8co11 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 14, 14, 81, 10, 4, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 2, 52, 55, 6, 86, 87, 16, 16, 16, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 9, 5, 5, 54, 0, 0, 0]);
-C.List_8co110 = Isolate.makeConstantList([0, 0, 0, 0, 0, 55, 5, 6, 83, 84, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 82, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 17, 17, 17, 26, 28, 17, 17, 17, 9, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 5, 6, 86, 87, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 14, 14, 14, 14, 14, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
-C.List_8co111 = Isolate.makeConstantList([0, 0, 0, 4, 83, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 11, 61, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 17, 17, 21, 27, 17, 17, 17, 14, 14, 14, 17, 17, 17, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 17, 17, 17, 16, 16, 16, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 76, 18, 18, 18, 18, 123, 15, 15, 15, 15, 15, 2, 52, 0, 0, 0, 0, 0]);
-C.List_8co112 = Isolate.makeConstantList([0, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 81, 11, 125, 0, 0, 0, 53, 116, 17, 111, 26, 21, 21, 28, 101, 103, 103, 99, 17, 17, 2, 52, 53, 1, 1, 1, 58, 1, 1, 1, 52, 53, 3, 71, 18, 18, 74, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 81, 2, 1, 1, 1, 1, 52, 0, 0, 0, 0, 53, 3, 85, 16, 16, 16, 16, 16, 88, 10, 0, 0, 0]);
-C.List_8co113 = Isolate.makeConstantList([0, 0, 0, 4, 80, 14, 14, 15, 15, 15, 15, 15, 15, 15, 26, 21, 21, 28, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 17, 17, 17, 17, 16, 16, 16, 16, 87, 89, 9, 54, 0, 0, 0, 0, 0, 0, 4, 17, 17, 24, 21, 17, 17, 17, 17, 17, 14, 14, 14, 17, 17, 17, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 59, 7, 17, 17, 16, 16, 16, 16, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 75, 18, 18, 18, 18, 18, 18, 73, 15, 15, 2, 52, 0, 0, 0, 0, 0, 0]);
-C.List_8co114 = Isolate.makeConstantList([0, 0, 0, 4, 86, 87, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 15, 15, 15, 15, 92, 75, 18, 18, 18, 18, 74, 93, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 89, 9, 54, 0, 0, 0, 0, 0, 0, 4, 15, 15, 15, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 10, 0, 55, 6, 86, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 36, 15, 15, 15, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 11, 125, 0, 0, 0, 0]);
-C.List_8co115 = Isolate.makeConstantList([0, 0, 0, 0, 0, 55, 56, 7, 15, 15, 15, 15, 15, 15, 15, 15, 15, 2, 52, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 82, 9, 5, 54, 0, 0, 0, 110, 25, 112, 113, 27, 105, 104, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 1, 1, 1, 3, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 81, 2, 1, 1, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 3, 85, 16, 16, 88, 2, 52, 0, 0, 0]);
-C.List_8co116 = Isolate.makeConstantList([0, 0, 0, 4, 85, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 15, 15, 15, 15, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 10, 53, 3, 85, 16, 16, 16, 16, 16, 88, 9, 54, 0, 0, 0, 0, 0, 0, 4, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 2, 52, 0, 0, 0, 59, 7, 85, 16, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 81, 10, 0, 0, 0, 0, 0]);
-C.List_8co117 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 17, 17, 17, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 11, 125, 0, 59, 7, 15, 15, 15, 16, 16, 16, 89, 9, 54, 0, 0, 0, 0, 0, 53, 3, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 11, 125, 0, 0, 0, 0, 4, 86, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 81, 2, 52, 0, 0, 0, 0, 0]);
-C.List_8co118 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 82, 9, 5, 54, 0, 55, 5, 6, 86, 16, 16, 16, 16, 16, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 81, 49, 60, 15, 15, 15, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 14, 14, 14, 14, 15, 15, 16, 16, 16, 16, 16, 16, 16, 2, 52, 55, 6, 83, 14, 14, 14, 14, 14, 14, 14, 18, 18, 18, 18, 18, 18, 18, 18, 18, 94, 15, 15, 95, 18, 18, 18, 68, 10, 0, 0, 0]);
-C.List_8co119 = Isolate.makeConstantList([0, 0, 0, 4, 17, 17, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 82, 49, 7, 15, 15, 15, 15, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 81, 10, 0, 0, 0, 0, 0, 53, 3, 17, 17, 17, 17, 17, 17, 17, 17, 66, 75, 123, 63, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 67, 76, 74, 17, 17, 18, 17, 17, 2, 52, 0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 16, 16, 16, 15, 15, 15, 15, 15, 14, 14, 14, 14, 81, 10, 0, 0, 0]);
-C.List_8co12 = Isolate.makeConstantList([0, 0, 0, 0, 0, 53, 3, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 81, 2, 1, 1, 62, 5, 6, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 81, 2, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 3, 17, 17, 17, 17, 66, 75, 18, 18, 18, 18, 18, 68, 2, 52, 0, 0, 0, 0, 55, 56, 7, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0, 0, 0]);
-C.List_8co120 = Isolate.makeConstantList([0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 14, 14, 14, 15, 15, 15, 15, 9, 5, 54, 0, 0, 0, 0, 53, 1, 1, 3, 80, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 40, 41, 84, 82, 9, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 5, 5, 5, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 6, 21, 21, 21, 21, 21, 21, 27, 17, 17, 17, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-C.List_8co121 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 82, 9, 54, 0, 0, 0, 0, 0, 55, 6, 85, 16, 16, 16, 16, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 14, 14, 14, 14, 14, 81, 49, 60, 15, 15, 15, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 16, 16, 16, 16, 16, 16, 16, 2, 52, 55, 6, 80, 14, 14, 14, 14, 14, 14, 18, 18, 18, 18, 18, 18, 18, 18, 18, 93, 15, 15, 92, 18, 18, 18, 68, 10, 0, 0, 0]);
-C.List_8co13 = Isolate.makeConstantList([0, 0, 0, 4, 85, 16, 16, 16, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 11, 50, 3, 85, 16, 16, 16, 16, 16, 16, 89, 10, 0, 0, 0, 0, 0, 0, 53, 51, 7, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 2, 52, 0, 0, 4, 85, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 17, 17, 17, 15, 15, 15, 17, 17, 17, 15, 15, 15, 15, 15, 15, 14, 14, 81, 2, 52, 0, 0, 0, 0]);
-C.List_8co14 = Isolate.makeConstantList([0, 0, 0, 53, 1, 3, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 16, 16, 16, 75, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 73, 17, 17, 17, 9, 54, 0, 0, 0, 0, 0, 0, 0, 53, 1, 3, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 17, 17, 14, 14, 84, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 17, 17, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0, 0]);
-C.List_8co15 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 9, 5, 54, 0, 0, 53, 1, 51, 7, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 33, 34, 139, 84, 84, 84, 82, 9, 54, 0, 0, 0, 0, 0, 0, 0, 55, 5, 6, 21, 21, 21, 21, 21, 15, 15, 15, 15, 15, 15, 9, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 6, 21, 21, 21, 21, 21, 21, 21, 27, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 9, 5, 5, 5, 54, 0, 0, 0, 0, 0, 0]);
-C.List_8co16 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 55, 6, 86, 87, 16, 16, 16, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 16, 16, 16, 16, 16, 16, 16, 16, 16, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 55, 6, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 24, 21, 21, 21, 21, 21, 21, 21, 21, 21, 27, 17, 17, 17, 25, 21, 21, 21, 21, 21, 21, 21, 21, 21, 27, 16, 89, 9, 54, 0, 0, 0, 0, 0, 0, 0, 4, 86, 16, 16, 17, 17, 17, 15, 17, 17, 17, 16, 16, 16, 14, 14, 82, 9, 54, 0, 0, 0, 0, 0]);
-C.List_8co17 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 5, 5, 5, 5, 5, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 5, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-C.List_8co18 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 55, 6, 86, 16, 16, 16, 17, 17, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 16, 16, 16, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 4, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 21, 21, 21, 21, 21, 21, 21, 21, 27, 17, 17, 17, 17, 17, 25, 21, 21, 21, 21, 21, 21, 21, 27, 16, 16, 16, 89, 9, 54, 0, 0, 0, 0, 0, 55, 6, 85, 16, 16, 17, 17, 15, 15, 15, 15, 17, 17, 16, 16, 16, 14, 14, 82, 10, 0, 0, 0, 0, 0]);
-C.List_8co19 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 86, 16, 16, 16, 16, 16, 14, 14, 14, 14, 16, 16, 16, 88, 11, 125, 0, 59, 7, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0, 0, 0, 0, 55, 5, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 25, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 9, 54, 55, 6, 21, 21, 21, 21, 21, 21, 21, 21, 21, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 86, 16, 16, 16, 16, 16, 25, 21, 21, 9, 5, 5, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0]);
-C.List_8co2 = Isolate.makeConstantList([0, 0, 0, 0, 0, 55, 6, 86, 16, 16, 16, 16, 16, 16, 16, 16, 16, 14, 14, 14, 14, 16, 16, 16, 16, 16, 16, 16, 17, 17, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 17, 17, 15, 15, 15, 15, 15, 75, 18, 18, 18, 74, 65, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 82, 124, 3, 80, 14, 14, 14, 14, 14, 14, 14, 14, 14, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 2, 52, 0, 0, 0]);
+C.List_8co = Isolate.makeConstantList([0, 0, 0, 0, 0, 55, 56, 7, 15, 15, 15, 15, 15, 15, 15, 15, 15, 2, 52, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 82, 9, 5, 54, 0, 0, 0, 110, 25, 112, 113, 27, 105, 104, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 1, 1, 1, 3, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 81, 2, 1, 1, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 3, 85, 16, 16, 88, 2, 52, 0, 0, 0]);
+C.List_8co0 = Isolate.makeConstantList([0, 0, 0, 4, 85, 16, 16, 16, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 15, 15, 15, 15, 15, 92, 75, 18, 18, 74, 93, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 16, 89, 9, 54, 0, 0, 0, 0, 0, 53, 3, 15, 15, 15, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 2, 52, 0, 4, 86, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 17, 17, 15, 15, 15, 15, 15, 15, 17, 17, 15, 15, 15, 15, 15, 15, 15, 14, 14, 82, 10, 0, 0, 0, 0]);
+C.List_8co1 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 53, 3, 85, 16, 16, 16, 17, 17, 17, 14, 14, 14, 14, 14, 14, 14, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 9, 54, 0, 4, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 25, 21, 27, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 25, 21, 21, 21, 27, 16, 16, 16, 16, 16, 88, 11, 61, 54, 0, 0, 0, 4, 86, 16, 16, 17, 17, 17, 15, 15, 15, 39, 15, 15, 17, 17, 14, 81, 11, 50, 1, 52, 0, 0, 0, 0, 0]);
+C.List_8co10 = Isolate.makeConstantList([0, 0, 0, 53, 3, 80, 14, 14, 14, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 16, 16, 88, 11, 125, 0, 0, 0, 0, 55, 6, 17, 117, 119, 119, 120, 79, 18, 18, 18, 17, 17, 17, 17, 16, 16, 17, 17, 10, 0, 0, 0, 0, 0, 55, 5, 6, 17, 17, 67, 76, 18, 18, 18, 18, 18, 18, 123, 15, 15, 15, 15, 15, 9, 5, 54, 0, 0, 59, 7, 17, 17, 17, 17, 17, 17, 17, 16, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
+C.List_8co100 = Isolate.makeConstantList([0, 0, 0, 4, 80, 33, 34, 35, 15, 15, 15, 15, 15, 14, 81, 2, 1, 1, 1, 3, 80, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 14, 14, 81, 2, 52, 0, 0, 0, 0, 0, 0, 4, 80, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 88, 2, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 3, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 82, 9, 54, 0, 0, 0, 0, 0, 53, 3, 17, 17, 17, 17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 14, 14, 14, 14, 14, 14, 81, 2, 1, 1, 52, 0, 0, 0, 0, 0, 0, 0, 0]);
+C.List_8co101 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 53, 3, 17, 17, 17, 15, 15, 15, 15, 15, 15, 2, 1, 1, 52, 0, 0, 55, 56, 7, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 81, 2, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 1, 1, 1, 1, 1, 1, 1, 52, 0, 0, 0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 2, 62, 5, 5, 5, 127, 3, 15, 15, 14, 14, 17, 17, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0]);
+C.List_8co102 = Isolate.makeConstantList([0, 0, 0, 55, 5, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0, 0, 0, 0, 53, 3, 17, 17, 17, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 16, 16, 14, 14, 14, 14, 81, 49, 8, 8, 61, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 59, 7, 80, 14, 14, 14, 14, 14, 14, 76, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 69, 9, 54, 0, 0, 0]);
+C.List_8co103 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 55, 6, 83, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 15, 95, 76, 18, 18, 18, 18, 18, 123, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 88, 2, 52, 0, 53, 3, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 2, 52, 0, 4, 86, 16, 16, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
+C.List_8co104 = Isolate.makeConstantList([0, 0, 0, 0, 0, 55, 6, 83, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 15, 15, 76, 18, 18, 18, 43, 18, 18, 18, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 88, 2, 52, 0, 0, 0, 53, 3, 15, 15, 15, 15, 15, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 2, 52, 0, 0, 4, 85, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
+C.List_8co105 = Isolate.makeConstantList([0, 0, 0, 53, 3, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 16, 16, 16, 89, 10, 0, 0, 59, 7, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 16, 89, 9, 5, 5, 6, 72, 70, 70, 18, 18, 21, 21, 21, 21, 21, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 84, 84, 82, 9, 5, 5, 46, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0, 0]);
+C.List_8co106 = Isolate.makeConstantList([0, 0, 0, 0, 0, 4, 86, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 17, 17, 17, 17, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 17, 17, 17, 17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 2, 1, 3, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 81, 10, 53, 3, 80, 14, 14, 14, 14, 14, 14, 14, 14, 14, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 2, 52, 0, 0, 0, 0]);
+C.List_8co107 = Isolate.makeConstantList([0, 0, 0, 4, 86, 87, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 15, 15, 15, 15, 92, 75, 18, 18, 18, 18, 74, 93, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 89, 9, 54, 0, 0, 0, 0, 0, 0, 4, 15, 15, 15, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 10, 0, 55, 6, 86, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 36, 15, 15, 15, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 11, 125, 0, 0, 0, 0]);
+C.List_8co108 = Isolate.makeConstantList([0, 0, 0, 55, 5, 6, 83, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 15, 15, 15, 75, 18, 18, 18, 18, 18, 18, 74, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 16, 16, 88, 11, 50, 52, 0, 0, 0, 0, 0, 53, 3, 15, 15, 15, 15, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 10, 0, 0, 55, 6, 85, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 2, 52, 0, 0, 0]);
+C.List_8co109 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 15, 14, 14, 14, 14, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 84, 82, 9, 54, 0, 0, 0, 0, 0, 0, 59, 8, 7, 16, 16, 77, 18, 18, 18, 18, 65, 17, 17, 17, 17, 17, 17, 17, 17, 67, 18, 63, 17, 17, 17, 67, 76, 18, 18, 73, 17, 17, 17, 2, 52, 0, 0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 16, 16, 16, 15, 15, 15, 15, 15, 14, 82, 9, 54, 0, 0, 0]);
+C.List_8co11 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 55, 56, 7, 85, 16, 17, 17, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 9, 54, 4, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 16, 16, 16, 16, 16, 16, 16, 87, 89, 10, 0, 0, 0, 53, 3, 85, 16, 16, 17, 17, 17, 15, 15, 15, 15, 17, 17, 16, 16, 16, 82, 9, 5, 54, 0, 0, 0, 0, 0]);
+C.List_8co110 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 53, 3, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 2, 52, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 81, 2, 1, 1, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 3, 17, 17, 17, 17, 17, 17, 17, 17, 2, 1, 52, 0, 0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 2, 1, 1, 1, 3, 15, 15, 15, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0]);
+C.List_8co111 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 83, 84, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 81, 11, 61, 5, 54, 53, 3, 15, 15, 15, 15, 15, 15, 15, 9, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 3, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 9, 5, 5, 5, 6, 15, 15, 14, 14, 14, 14, 17, 17, 17, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
+C.List_8co112 = Isolate.makeConstantList([0, 0, 0, 4, 80, 14, 14, 14, 15, 15, 15, 15, 24, 21, 21, 21, 21, 21, 21, 28, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 17, 17, 17, 16, 16, 16, 16, 16, 16, 16, 89, 10, 0, 0, 0, 0, 0, 55, 6, 17, 17, 76, 123, 63, 17, 17, 16, 16, 16, 16, 16, 16, 17, 17, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 17, 17, 17, 16, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 66, 75, 18, 74, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0, 0, 0]);
+C.List_8co113 = Isolate.makeConstantList([0, 0, 0, 0, 53, 3, 85, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 95, 76, 18, 18, 18, 18, 96, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 20, 15, 15, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 14, 81, 10, 0, 0, 0, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 49, 60, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+C.List_8co114 = Isolate.makeConstantList([0, 0, 0, 0, 0, 53, 3, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 81, 49, 60, 83, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 17, 17, 17, 15, 15, 15, 15, 15, 17, 17, 17, 124, 3, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 11, 50, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+C.List_8co115 = Isolate.makeConstantList([0, 0, 0, 0, 0, 53, 3, 85, 16, 16, 16, 16, 88, 20, 15, 15, 9, 56, 47, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 16, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 17, 11, 125, 0, 0, 0, 0, 0, 59, 7, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 81, 10, 0, 0, 0, 55, 6, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 16, 16, 16, 16, 16, 88, 11, 50, 52, 0, 0, 0, 0, 0, 0, 0]);
+C.List_8co116 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 9, 54, 0, 0, 4, 80, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 16, 16, 87, 89, 9, 54, 0, 0, 55, 5, 56, 7, 21, 21, 21, 21, 21, 21, 21, 21, 15, 15, 15, 15, 15, 15, 15, 84, 84, 84, 82, 9, 5, 5, 54, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0]);
+C.List_8co117 = Isolate.makeConstantList([0, 0, 0, 4, 80, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 14, 81, 2, 52, 0, 0, 0, 0, 53, 3, 80, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 88, 2, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 9, 54, 0, 0, 0, 0, 53, 1, 3, 17, 17, 17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 14, 14, 14, 14, 14, 14, 14, 14, 81, 2, 52, 0, 0, 0, 0, 0, 0, 0]);
+C.List_8co118 = Isolate.makeConstantList([0, 0, 0, 0, 0, 55, 5, 6, 83, 84, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 82, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 17, 17, 17, 26, 28, 17, 17, 17, 9, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 5, 6, 86, 87, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 14, 14, 14, 14, 14, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
+C.List_8co119 = Isolate.makeConstantList([0, 0, 0, 4, 83, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 11, 61, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 17, 17, 21, 27, 17, 17, 17, 14, 14, 14, 17, 17, 17, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 17, 17, 17, 16, 16, 16, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 76, 18, 18, 18, 18, 123, 15, 15, 15, 15, 15, 2, 52, 0, 0, 0, 0, 0]);
+C.List_8co12 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 14, 14, 81, 10, 4, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 2, 52, 55, 6, 86, 87, 16, 16, 16, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 9, 5, 5, 54, 0, 0, 0]);
+C.List_8co120 = Isolate.makeConstantList([0, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 81, 11, 125, 0, 0, 0, 53, 116, 17, 111, 26, 21, 21, 28, 101, 103, 103, 99, 17, 17, 2, 52, 53, 1, 1, 1, 58, 1, 1, 1, 52, 53, 3, 71, 18, 18, 74, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 81, 2, 1, 1, 1, 1, 52, 0, 0, 0, 0, 53, 3, 85, 16, 16, 16, 16, 16, 88, 10, 0, 0, 0]);
+C.List_8co121 = Isolate.makeConstantList([0, 0, 0, 4, 80, 14, 14, 15, 15, 15, 15, 15, 15, 15, 26, 21, 21, 28, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 17, 17, 17, 17, 16, 16, 16, 16, 87, 89, 9, 54, 0, 0, 0, 0, 0, 0, 4, 17, 17, 24, 21, 17, 17, 17, 17, 17, 14, 14, 14, 17, 17, 17, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 59, 7, 17, 17, 16, 16, 16, 16, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 75, 18, 18, 18, 18, 18, 18, 73, 15, 15, 2, 52, 0, 0, 0, 0, 0, 0]);
+C.List_8co13 = Isolate.makeConstantList([0, 0, 0, 0, 0, 53, 3, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 81, 2, 1, 1, 62, 5, 6, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 81, 2, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 3, 17, 17, 17, 17, 66, 75, 18, 18, 18, 18, 18, 68, 2, 52, 0, 0, 0, 0, 55, 56, 7, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0, 0, 0]);
+C.List_8co14 = Isolate.makeConstantList([0, 0, 0, 4, 85, 16, 16, 16, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 11, 50, 3, 85, 16, 16, 16, 16, 16, 16, 89, 10, 0, 0, 0, 0, 0, 0, 53, 51, 7, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 2, 52, 0, 0, 4, 85, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 17, 17, 17, 15, 15, 15, 17, 17, 17, 15, 15, 15, 15, 15, 15, 14, 14, 81, 2, 52, 0, 0, 0, 0]);
+C.List_8co15 = Isolate.makeConstantList([0, 0, 0, 53, 1, 3, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 16, 16, 16, 75, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 73, 17, 17, 17, 9, 54, 0, 0, 0, 0, 0, 0, 0, 53, 1, 3, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 17, 17, 14, 14, 84, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 17, 17, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0, 0]);
+C.List_8co16 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 9, 5, 54, 0, 0, 53, 1, 51, 7, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 33, 34, 139, 84, 84, 84, 82, 9, 54, 0, 0, 0, 0, 0, 0, 0, 55, 5, 6, 21, 21, 21, 21, 21, 15, 15, 15, 15, 15, 15, 9, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 6, 21, 21, 21, 21, 21, 21, 21, 27, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 9, 5, 5, 5, 54, 0, 0, 0, 0, 0, 0]);
+C.List_8co17 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 55, 6, 86, 87, 16, 16, 16, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 16, 16, 16, 16, 16, 16, 16, 16, 16, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 55, 6, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 24, 21, 21, 21, 21, 21, 21, 21, 21, 21, 27, 17, 17, 17, 25, 21, 21, 21, 21, 21, 21, 21, 21, 21, 27, 16, 89, 9, 54, 0, 0, 0, 0, 0, 0, 0, 4, 86, 16, 16, 17, 17, 17, 15, 17, 17, 17, 16, 16, 16, 14, 14, 82, 9, 54, 0, 0, 0, 0, 0]);
+C.List_8co18 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 86, 16, 16, 16, 16, 16, 14, 14, 14, 14, 14, 14, 16, 16, 16, 89, 9, 5, 6, 17, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 15, 15, 15, 15, 15, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 9, 6, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 85, 16, 16, 16, 16, 16, 16, 16, 16, 84, 84, 84, 82, 9, 54, 0, 0, 0, 0, 0, 0, 0]);
+C.List_8co19 = Isolate.makeConstantList([0, 0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0, 0, 53, 3, 80, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 84, 82, 9, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 1, 1, 1, 1, 1, 52, 0, 0, 0, 0, 0, 0, 55, 5, 5, 5, 6, 21, 45, 21, 17, 17, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+C.List_8co2 = Isolate.makeConstantList([0, 0, 0, 53, 3, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 81, 49, 60, 80, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 15, 15, 13, 80, 14, 14, 14, 14, 15, 15, 17, 17, 17, 17, 17, 15, 15, 15, 15, 92, 75, 18, 18, 18, 18, 18, 68, 2, 52, 0, 0, 0, 0, 0]);
 C.List_8co20 = Isolate.makeConstantList([0, 0, 0, 0, 55, 5, 5, 5, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 75, 18, 18, 18, 18, 18, 18, 18, 18, 18, 68, 11, 61, 54, 0, 0, 53, 3, 15, 15, 15, 15, 11, 8, 8, 60, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 16, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 84, 84, 82, 11, 47, 21, 21, 21, 28, 14, 14, 14, 14, 14, 14, 17, 17, 14, 81, 2, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0, 0, 0]);
-C.List_8co21 = Isolate.makeConstantList([0, 0, 0, 4, 86, 16, 16, 16, 16, 16, 16, 17, 17, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 67, 76, 18, 18, 18, 123, 90, 16, 16, 16, 16, 16, 15, 15, 15, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 14, 84, 82, 48, 47, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 16, 16, 16, 16, 16, 89, 9, 54, 0, 0, 0, 55, 5, 6, 83, 14, 16, 16, 16, 16, 16, 16, 16, 14, 14, 14, 14, 14, 81, 2, 1, 52, 0, 0, 0, 0, 0]);
-C.List_8co22 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 86, 87, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 89, 20, 86, 14, 16, 16, 16, 16, 15, 15, 15, 15, 15, 9, 5, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 6, 15, 15, 15, 15, 15, 25, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 9, 54, 0, 0, 0, 0, 0, 0, 55, 5, 5, 5, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 85, 16, 25, 21, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-C.List_8co23 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 86, 16, 16, 16, 16, 16, 14, 14, 14, 14, 14, 14, 16, 16, 16, 89, 9, 5, 6, 17, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 15, 15, 15, 15, 15, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 9, 6, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 85, 16, 16, 16, 16, 16, 16, 16, 16, 84, 84, 84, 82, 9, 54, 0, 0, 0, 0, 0, 0, 0]);
-C.List_8co24 = Isolate.makeConstantList([0, 0, 0, 55, 6, 86, 87, 16, 16, 16, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 67, 76, 123, 90, 16, 16, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 9, 56, 47, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 16, 16, 16, 16, 88, 11, 125, 0, 0, 0, 0, 0, 0, 59, 7, 85, 16, 16, 17, 17, 17, 17, 17, 16, 16, 16, 14, 14, 14, 14, 81, 10, 0, 0, 0, 0, 0]);
-C.List_8co25 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 83, 84, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 15, 15, 9, 54, 4, 80, 14, 81, 2, 51, 7, 15, 15, 14, 14, 17, 17, 17, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
-C.List_8co26 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 53, 3, 85, 16, 16, 16, 17, 17, 17, 14, 14, 14, 14, 14, 14, 14, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 9, 54, 0, 4, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 25, 21, 27, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 25, 21, 21, 21, 27, 16, 16, 16, 16, 16, 88, 11, 61, 54, 0, 0, 0, 4, 86, 16, 16, 17, 17, 17, 15, 15, 15, 39, 15, 15, 17, 17, 14, 81, 11, 50, 1, 52, 0, 0, 0, 0, 0]);
-C.List_8co27 = Isolate.makeConstantList([0, 0, 0, 0, 0, 53, 1, 3, 71, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 68, 2, 1, 1, 1, 3, 15, 15, 15, 15, 15, 15, 15, 15, 9, 5, 5, 6, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 15, 15, 15, 15, 15, 9, 5, 5, 5, 54, 0, 0, 0, 0, 0, 59, 7, 21, 21, 28, 14, 14, 14, 14, 14, 14, 14, 15, 15, 17, 17, 14, 14, 81, 2, 52, 0, 0, 0, 0, 0, 0, 0, 0, 53, 3, 15, 15, 15, 15, 12, 15, 15, 15, 15, 15, 16, 16, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0, 0, 0, 0]);
-C.List_8co28 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 4, 86, 16, 16, 16, 16, 17, 17, 14, 14, 14, 14, 14, 14, 14, 14, 14, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 59, 7, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 25, 21, 21, 21, 21, 21, 21, 27, 17, 17, 17, 17, 17, 17, 17, 25, 21, 21, 21, 21, 21, 27, 16, 16, 16, 16, 16, 89, 10, 0, 0, 0, 0, 55, 6, 86, 16, 16, 17, 17, 15, 15, 15, 15, 15, 17, 17, 17, 17, 14, 14, 14, 81, 10, 0, 0, 0, 0, 0]);
-C.List_8co29 = Isolate.makeConstantList([0, 0, 0, 4, 85, 16, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 76, 18, 18, 18, 18, 18, 18, 123, 16, 16, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 14, 14, 14, 82, 20, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 2, 1, 1, 1, 1, 51, 7, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 16, 16, 16, 16, 16, 89, 10, 0, 0, 55, 6, 15, 15, 14, 14, 14, 16, 16, 16, 16, 14, 14, 81, 2, 1, 1, 1, 1, 52, 0, 0, 0, 0, 0, 0, 0]);
-C.List_8co3 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 9, 5, 5, 5, 54, 0, 0, 0, 53, 3, 80, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 14, 14, 14, 30, 31, 14, 14, 84, 82, 9, 5, 5, 5, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 5, 6, 15, 15, 15, 15, 15, 9, 5, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 5, 6, 21, 21, 21, 21, 21, 27, 17, 17, 17, 17, 17, 17, 17, 9, 5, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-C.List_8co30 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 53, 1, 1, 1, 3, 71, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 68, 11, 8, 61, 54, 0, 0, 53, 51, 8, 7, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 9, 5, 5, 5, 54, 0, 4, 21, 21, 21, 21, 28, 14, 14, 14, 14, 14, 14, 17, 17, 17, 17, 17, 81, 11, 125, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 3, 15, 15, 49, 60, 15, 15, 15, 15, 16, 16, 16, 16, 15, 15, 15, 15, 15, 10, 0, 0, 0, 0, 0, 0, 0]);
-C.List_8co31 = Isolate.makeConstantList([0, 0, 0, 4, 80, 14, 14, 15, 15, 15, 15, 15, 15, 25, 21, 21, 21, 21, 21, 27, 15, 15, 15, 15, 15, 17, 17, 17, 17, 14, 14, 14, 14, 44, 17, 17, 15, 15, 15, 16, 16, 16, 88, 10, 0, 0, 0, 0, 0, 4, 17, 17, 67, 18, 18, 123, 63, 17, 17, 16, 16, 16, 16, 17, 17, 2, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 3, 17, 17, 16, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 9, 5, 54, 0, 0, 0, 0]);
-C.List_8co32 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 15, 15, 15, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 81, 10, 0, 0, 0, 0, 0, 4, 17, 17, 17, 17, 17, 17, 17, 17, 17, 75, 123, 63, 17, 17, 17, 77, 18, 18, 18, 18, 18, 18, 73, 17, 67, 18, 65, 17, 18, 17, 17, 17, 2, 52, 0, 0, 0, 55, 5, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 16, 16, 15, 15, 15, 15, 15, 14, 14, 14, 14, 81, 10, 0, 0, 0]);
-C.List_8co33 = Isolate.makeConstantList([0, 0, 0, 0, 55, 5, 6, 86, 87, 16, 17, 17, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 17, 17, 17, 17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 9, 127, 3, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 16, 16, 16, 16, 16, 16, 88, 2, 52, 0, 0, 0, 0, 53, 3, 85, 16, 16, 17, 17, 17, 15, 15, 17, 17, 17, 16, 16, 14, 14, 84, 82, 10, 0, 0, 0, 0, 0]);
-C.List_8co34 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 0, 55, 56, 7, 85, 16, 16, 16, 14, 14, 14, 14, 14, 14, 14, 14, 16, 16, 16, 87, 87, 87, 16, 16, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 85, 16, 16, 17, 17, 15, 17, 17, 16, 16, 16, 14, 14, 82, 9, 54, 0, 0, 0, 0, 0, 0]);
-C.List_8co35 = Isolate.makeConstantList([0, 0, 0, 4, 85, 16, 16, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 18, 18, 18, 18, 18, 18, 18, 74, 15, 15, 15, 15, 15, 17, 17, 17, 2, 3, 17, 17, 17, 17, 15, 15, 14, 14, 14, 14, 81, 48, 47, 14, 14, 14, 14, 2, 1, 1, 1, 1, 52, 0, 0, 55, 5, 6, 15, 15, 15, 15, 15, 136, 137, 137, 138, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 16, 16, 16, 16, 88, 2, 52, 0, 0, 4, 15, 15, 14, 14, 14, 14, 15, 15, 15, 2, 1, 1, 1, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-C.List_8co36 = Isolate.makeConstantList([0, 0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0, 0, 53, 3, 80, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 84, 82, 9, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 1, 1, 1, 1, 1, 52, 0, 0, 0, 0, 0, 0, 55, 5, 5, 5, 6, 21, 45, 21, 17, 17, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-C.List_8co37 = Isolate.makeConstantList([0, 0, 0, 4, 85, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 75, 18, 18, 18, 18, 18, 74, 93, 15, 15, 15, 15, 15, 17, 17, 2, 52, 53, 3, 17, 17, 17, 17, 17, 14, 14, 14, 14, 14, 82, 124, 1, 1, 1, 1, 52, 0, 0, 0, 0, 0, 55, 5, 6, 15, 15, 15, 15, 15, 15, 15, 132, 133, 134, 135, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 16, 16, 88, 2, 52, 0, 0, 55, 6, 15, 15, 15, 26, 28, 15, 15, 15, 49, 61, 5, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-C.List_8co38 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 14, 14, 14, 14, 14, 15, 15, 15, 15, 14, 14, 14, 14, 14, 82, 10, 0, 0, 0, 0, 0, 55, 6, 17, 17, 17, 17, 17, 17, 17, 66, 18, 63, 17, 17, 17, 17, 17, 17, 17, 67, 76, 18, 123, 63, 17, 17, 76, 74, 65, 18, 65, 17, 17, 17, 10, 0, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 16, 16, 15, 15, 15, 15, 15, 14, 14, 14, 82, 10, 0, 0, 0]);
-C.List_8co39 = Isolate.makeConstantList([0, 0, 0, 4, 17, 17, 17, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 49, 60, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 14, 14, 14, 81, 2, 52, 0, 0, 0, 0, 0, 0, 53, 1, 3, 17, 17, 17, 17, 17, 17, 17, 66, 75, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 74, 65, 17, 17, 18, 63, 17, 10, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 16, 16, 16, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 81, 10, 0, 0, 0]);
-C.List_8co4 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 53, 51, 8, 7, 15, 15, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 81, 2, 4, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 17, 17, 17, 17, 15, 15, 15, 15, 15, 17, 17, 17, 2, 52, 59, 8, 7, 15, 15, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 9, 5, 5, 5, 54, 0, 0, 0, 0, 0, 0]);
-C.List_8co40 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 86, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 88, 124, 1, 3, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 9, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 25, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 9, 54, 0, 0, 55, 5, 5, 6, 21, 21, 21, 21, 9, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 86, 16, 16, 16, 25, 21, 9, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-C.List_8co41 = Isolate.makeConstantList([0, 0, 0, 0, 0, 4, 72, 18, 18, 18, 18, 123, 90, 16, 16, 16, 16, 91, 76, 18, 18, 18, 18, 18, 18, 18, 18, 18, 123, 15, 15, 15, 15, 15, 11, 8, 8, 8, 8, 8, 8, 8, 50, 52, 0, 59, 7, 15, 15, 15, 15, 17, 17, 17, 15, 15, 15, 15, 15, 9, 5, 54, 0, 0, 0, 0, 0, 0, 53, 1, 1, 3, 80, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 17, 17, 14, 14, 81, 2, 52, 0, 0, 0, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 49, 60, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0]);
-C.List_8co42 = Isolate.makeConstantList([0, 0, 0, 53, 3, 17, 17, 17, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 81, 12, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 15, 15, 14, 14, 14, 14, 81, 2, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 1, 1, 1, 1, 1, 3, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 67, 76, 68, 10, 0, 0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 14, 81, 2, 1, 52, 0, 0, 0]);
-C.List_8co43 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 70, 70, 69, 9, 5, 5, 127, 1, 3, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 16, 16, 16, 17, 17, 15, 15, 15, 15, 15, 14, 14, 14, 14, 81, 124, 51, 7, 21, 21, 21, 21, 23, 17, 17, 17, 17, 15, 15, 17, 17, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 15, 15, 15, 2, 52, 0, 0, 0, 0, 0, 0]);
-C.List_8co44 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 5, 56, 8, 8, 7, 15, 15, 75, 18, 18, 18, 18, 18, 18, 18, 18, 18, 70, 70, 69, 10, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 49, 8, 8, 8, 8, 8, 8, 7, 16, 16, 16, 16, 16, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 9, 5, 56, 7, 21, 21, 21, 21, 28, 14, 14, 14, 14, 14, 14, 17, 17, 17, 17, 14, 82, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 51, 60, 15, 15, 15, 15, 16, 16, 16, 16, 15, 15, 15, 15, 15, 11, 125, 0, 0, 0, 0, 0, 0, 0]);
-C.List_8co45 = Isolate.makeConstantList([0, 0, 0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 11, 50, 1, 52, 0, 0, 0, 53, 51, 7, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 81, 10, 0, 0, 0, 4, 111, 17, 117, 118, 117, 119, 119, 120, 101, 103, 99, 17, 17, 17, 2, 3, 71, 18, 69, 20, 72, 70, 68, 2, 3, 71, 18, 18, 18, 18, 18, 74, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 21, 45, 21, 10, 0, 0, 0, 53, 3, 85, 16, 16, 16, 16, 16, 16, 88, 10, 0, 0, 0]);
-C.List_8co46 = Isolate.makeConstantList([0, 0, 0, 4, 85, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 95, 18, 18, 18, 74, 93, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 9, 5, 54, 0, 0, 55, 5, 56, 7, 80, 14, 14, 14, 14, 82, 9, 54, 0, 0, 0, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 14, 14, 81, 2, 52, 0, 0, 0, 0, 4, 15, 15, 24, 21, 27, 15, 15, 15, 10, 6, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-C.List_8co47 = Isolate.makeConstantList([0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 75, 18, 18, 18, 18, 18, 18, 18, 18, 18, 70, 69, 9, 5, 5, 54, 53, 1, 3, 15, 15, 15, 15, 15, 15, 15, 11, 8, 8, 8, 8, 8, 7, 16, 16, 16, 16, 16, 16, 16, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 82, 20, 21, 21, 21, 21, 28, 14, 14, 14, 14, 17, 17, 17, 15, 11, 61, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 15, 15, 15, 15, 15, 10, 0, 0, 0, 0, 0, 0]);
-C.List_8co48 = Isolate.makeConstantList([0, 0, 0, 0, 53, 3, 17, 17, 17, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 81, 2, 1, 57, 7, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 81, 2, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 3, 71, 18, 18, 18, 18, 18, 18, 123, 63, 17, 17, 67, 76, 68, 2, 52, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 11, 125, 0, 0, 0, 0, 0]);
-C.List_8co49 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 2, 1, 1, 1, 3, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 81, 10, 0, 0, 0, 4, 117, 111, 14, 76, 18, 74, 14, 101, 122, 100, 99, 66, 75, 18, 18, 18, 18, 68, 9, 126, 5, 6, 71, 18, 18, 18, 18, 18, 18, 18, 18, 18, 74, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 26, 21, 21, 2, 1, 52, 53, 3, 15, 15, 15, 15, 16, 16, 16, 16, 88, 10, 0, 0, 0]);
-C.List_8co5 = Isolate.makeConstantList([0, 0, 0, 4, 85, 16, 16, 16, 16, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 92, 18, 18, 18, 18, 74, 93, 15, 15, 15, 15, 15, 15, 11, 8, 61, 54, 0, 53, 1, 1, 1, 1, 3, 80, 14, 14, 14, 14, 81, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 130, 14, 14, 131, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 14, 14, 81, 2, 52, 0, 0, 0, 4, 15, 15, 15, 26, 21, 27, 15, 15, 2, 4, 15, 15, 15, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-C.List_8co50 = Isolate.makeConstantList([0, 0, 0, 0, 0, 59, 7, 71, 18, 123, 90, 16, 16, 16, 15, 15, 15, 15, 95, 76, 18, 18, 18, 18, 18, 18, 18, 123, 94, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 2, 58, 3, 15, 15, 15, 17, 17, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 53, 1, 1, 1, 1, 3, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 17, 17, 17, 14, 81, 2, 52, 0, 0, 0, 0, 0, 0, 55, 56, 7, 15, 15, 15, 15, 49, 60, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-C.List_8co51 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 55, 56, 7, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 82, 10, 0, 0, 53, 3, 111, 117, 111, 101, 122, 118, 121, 120, 102, 101, 99, 77, 18, 18, 18, 123, 63, 17, 10, 0, 0, 4, 17, 67, 76, 18, 18, 18, 18, 18, 18, 18, 18, 74, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 16, 16, 16, 16, 16, 88, 2, 3, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
-C.List_8co52 = Isolate.makeConstantList([0, 0, 0, 55, 5, 6, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 17, 17, 17, 17, 66, 75, 18, 18, 18, 18, 18, 74, 65, 17, 17, 17, 17, 17, 17, 84, 84, 84, 82, 9, 5, 54, 0, 0, 0, 0, 53, 3, 15, 15, 15, 16, 16, 16, 16, 16, 16, 16, 17, 17, 67, 76, 18, 18, 18, 73, 17, 17, 17, 17, 17, 18, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 17, 17, 17, 2, 52, 0, 0, 0, 0, 0, 55, 5, 5, 6, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0, 0, 0]);
-C.List_8co53 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 15, 14, 14, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 14, 14, 14, 14, 14, 14, 84, 82, 9, 5, 54, 0, 0, 0, 53, 1, 1, 1, 3, 16, 16, 16, 16, 16, 17, 17, 67, 76, 74, 65, 17, 17, 17, 17, 17, 17, 17, 17, 18, 17, 17, 17, 17, 17, 17, 17, 17, 15, 17, 17, 17, 17, 10, 0, 0, 0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0]);
+C.List_8co21 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 5, 5, 5, 5, 5, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 5, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+C.List_8co22 = Isolate.makeConstantList([0, 0, 0, 0, 0, 59, 7, 71, 18, 123, 90, 16, 16, 16, 15, 15, 15, 15, 95, 76, 18, 18, 18, 18, 18, 18, 18, 123, 94, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 2, 58, 3, 15, 15, 15, 17, 17, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 53, 1, 1, 1, 1, 3, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 17, 17, 17, 14, 81, 2, 52, 0, 0, 0, 0, 0, 0, 55, 56, 7, 15, 15, 15, 15, 49, 60, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+C.List_8co23 = Isolate.makeConstantList([0, 0, 0, 0, 0, 4, 72, 18, 18, 18, 18, 123, 90, 16, 16, 16, 16, 91, 76, 18, 18, 18, 18, 18, 18, 18, 18, 18, 123, 15, 15, 15, 15, 15, 11, 8, 8, 8, 8, 8, 8, 8, 50, 52, 0, 59, 7, 15, 15, 15, 15, 17, 17, 17, 15, 15, 15, 15, 15, 9, 5, 54, 0, 0, 0, 0, 0, 0, 53, 1, 1, 3, 80, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 17, 17, 14, 14, 81, 2, 52, 0, 0, 0, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 49, 60, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0]);
+C.List_8co24 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 55, 6, 86, 16, 16, 16, 17, 17, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 16, 16, 16, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 4, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 21, 21, 21, 21, 21, 21, 21, 21, 27, 17, 17, 17, 17, 17, 25, 21, 21, 21, 21, 21, 21, 21, 27, 16, 16, 16, 89, 9, 54, 0, 0, 0, 0, 0, 55, 6, 85, 16, 16, 17, 17, 15, 15, 15, 15, 17, 17, 16, 16, 16, 14, 14, 82, 10, 0, 0, 0, 0, 0]);
+C.List_8co25 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 86, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 88, 124, 1, 3, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 9, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 25, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 9, 54, 0, 0, 55, 5, 5, 6, 21, 21, 21, 21, 9, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 86, 16, 16, 16, 25, 21, 9, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+C.List_8co26 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 86, 16, 16, 16, 16, 16, 14, 14, 14, 14, 16, 16, 16, 88, 11, 125, 0, 59, 7, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0, 0, 0, 0, 55, 5, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 25, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 9, 54, 55, 6, 21, 21, 21, 21, 21, 21, 21, 21, 21, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 86, 16, 16, 16, 16, 16, 25, 21, 21, 9, 5, 5, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0]);
+C.List_8co27 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 14, 14, 14, 14, 14, 15, 15, 15, 15, 14, 14, 14, 14, 14, 82, 10, 0, 0, 0, 0, 0, 55, 6, 17, 17, 17, 17, 17, 17, 17, 66, 18, 63, 17, 17, 17, 17, 17, 17, 17, 67, 76, 18, 123, 63, 17, 17, 76, 74, 65, 18, 65, 17, 17, 17, 10, 0, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 16, 16, 15, 15, 15, 15, 15, 14, 14, 14, 82, 10, 0, 0, 0]);
+C.List_8co28 = Isolate.makeConstantList([0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 75, 18, 18, 18, 18, 18, 18, 18, 18, 18, 70, 69, 9, 5, 5, 54, 53, 1, 3, 15, 15, 15, 15, 15, 15, 15, 11, 8, 8, 8, 8, 8, 7, 16, 16, 16, 16, 16, 16, 16, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 82, 20, 21, 21, 21, 21, 28, 14, 14, 14, 14, 17, 17, 17, 15, 11, 61, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 15, 15, 15, 15, 15, 10, 0, 0, 0, 0, 0, 0]);
+C.List_8co29 = Isolate.makeConstantList([0, 0, 0, 4, 86, 16, 16, 16, 16, 16, 16, 17, 17, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 67, 76, 18, 18, 18, 123, 90, 16, 16, 16, 16, 16, 15, 15, 15, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 14, 84, 82, 48, 47, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 16, 16, 16, 16, 16, 89, 9, 54, 0, 0, 0, 55, 5, 6, 83, 14, 16, 16, 16, 16, 16, 16, 16, 14, 14, 14, 14, 14, 81, 2, 1, 52, 0, 0, 0, 0, 0]);
+C.List_8co3 = Isolate.makeConstantList([0, 0, 0, 0, 0, 55, 6, 86, 16, 16, 16, 16, 16, 16, 16, 16, 16, 14, 14, 14, 14, 16, 16, 16, 16, 16, 16, 16, 17, 17, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 17, 17, 15, 15, 15, 15, 15, 75, 18, 18, 18, 74, 65, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 82, 124, 3, 80, 14, 14, 14, 14, 14, 14, 14, 14, 14, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 2, 52, 0, 0, 0]);
+C.List_8co30 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 86, 87, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 89, 20, 86, 14, 16, 16, 16, 16, 15, 15, 15, 15, 15, 9, 5, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 6, 15, 15, 15, 15, 15, 25, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 9, 54, 0, 0, 0, 0, 0, 0, 55, 5, 5, 5, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 85, 16, 25, 21, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+C.List_8co31 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 0, 55, 56, 7, 85, 16, 16, 16, 14, 14, 14, 14, 14, 14, 14, 14, 16, 16, 16, 87, 87, 87, 16, 16, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 85, 16, 16, 17, 17, 15, 17, 17, 16, 16, 16, 14, 14, 82, 9, 54, 0, 0, 0, 0, 0, 0]);
+C.List_8co32 = Isolate.makeConstantList([0, 0, 0, 55, 6, 86, 87, 16, 16, 16, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 67, 76, 123, 90, 16, 16, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 9, 56, 47, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 16, 16, 16, 16, 88, 11, 125, 0, 0, 0, 0, 0, 0, 59, 7, 85, 16, 16, 17, 17, 17, 17, 17, 16, 16, 16, 14, 14, 14, 14, 81, 10, 0, 0, 0, 0, 0]);
+C.List_8co33 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 53, 1, 1, 1, 3, 71, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 68, 11, 8, 61, 54, 0, 0, 53, 51, 8, 7, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 9, 5, 5, 5, 54, 0, 4, 21, 21, 21, 21, 28, 14, 14, 14, 14, 14, 14, 17, 17, 17, 17, 17, 81, 11, 125, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 3, 15, 15, 49, 60, 15, 15, 15, 15, 16, 16, 16, 16, 15, 15, 15, 15, 15, 10, 0, 0, 0, 0, 0, 0, 0]);
+C.List_8co34 = Isolate.makeConstantList([0, 0, 0, 0, 53, 3, 17, 17, 17, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 81, 2, 1, 57, 7, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 81, 2, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 3, 71, 18, 18, 18, 18, 18, 18, 123, 63, 17, 17, 67, 76, 68, 2, 52, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 11, 125, 0, 0, 0, 0, 0]);
+C.List_8co35 = Isolate.makeConstantList([0, 0, 0, 4, 85, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 75, 18, 18, 18, 18, 18, 74, 93, 15, 15, 15, 15, 15, 17, 17, 2, 52, 53, 3, 17, 17, 17, 17, 17, 14, 14, 14, 14, 14, 82, 124, 1, 1, 1, 1, 52, 0, 0, 0, 0, 0, 55, 5, 6, 15, 15, 15, 15, 15, 15, 15, 132, 133, 134, 135, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 16, 16, 88, 2, 52, 0, 0, 55, 6, 15, 15, 15, 26, 28, 15, 15, 15, 49, 61, 5, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+C.List_8co36 = Isolate.makeConstantList([0, 0, 0, 55, 5, 6, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 17, 17, 17, 17, 66, 75, 18, 18, 18, 18, 18, 74, 65, 17, 17, 17, 17, 17, 17, 84, 84, 84, 82, 9, 5, 54, 0, 0, 0, 0, 53, 3, 15, 15, 15, 16, 16, 16, 16, 16, 16, 16, 17, 17, 67, 76, 18, 18, 18, 73, 17, 17, 17, 17, 17, 18, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 17, 17, 17, 2, 52, 0, 0, 0, 0, 0, 55, 5, 5, 6, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0, 0, 0]);
+C.List_8co37 = Isolate.makeConstantList([0, 0, 0, 0, 0, 53, 1, 3, 71, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 68, 2, 1, 1, 1, 3, 15, 15, 15, 15, 15, 15, 15, 15, 9, 5, 5, 6, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 15, 15, 15, 15, 15, 9, 5, 5, 5, 54, 0, 0, 0, 0, 0, 59, 7, 21, 21, 28, 14, 14, 14, 14, 14, 14, 14, 15, 15, 17, 17, 14, 14, 81, 2, 52, 0, 0, 0, 0, 0, 0, 0, 0, 53, 3, 15, 15, 15, 15, 12, 15, 15, 15, 15, 15, 16, 16, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0, 0, 0, 0]);
+C.List_8co38 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 4, 86, 16, 16, 16, 16, 17, 17, 14, 14, 14, 14, 14, 14, 14, 14, 14, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 59, 7, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 25, 21, 21, 21, 21, 21, 21, 27, 17, 17, 17, 17, 17, 17, 17, 25, 21, 21, 21, 21, 21, 27, 16, 16, 16, 16, 16, 89, 10, 0, 0, 0, 0, 55, 6, 86, 16, 16, 17, 17, 15, 15, 15, 15, 15, 17, 17, 17, 17, 14, 14, 14, 81, 10, 0, 0, 0, 0, 0]);
+C.List_8co39 = Isolate.makeConstantList([0, 0, 0, 4, 85, 16, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 76, 18, 18, 18, 18, 18, 18, 123, 16, 16, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 14, 14, 14, 82, 20, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 2, 1, 1, 1, 1, 51, 7, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 16, 16, 16, 16, 16, 89, 10, 0, 0, 55, 6, 15, 15, 14, 14, 14, 16, 16, 16, 16, 14, 14, 81, 2, 1, 1, 1, 1, 52, 0, 0, 0, 0, 0, 0, 0]);
+C.List_8co4 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 9, 5, 5, 5, 54, 0, 0, 0, 53, 3, 80, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 14, 14, 14, 30, 31, 14, 14, 84, 82, 9, 5, 5, 5, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 5, 6, 15, 15, 15, 15, 15, 9, 5, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 5, 6, 21, 21, 21, 21, 21, 27, 17, 17, 17, 17, 17, 17, 17, 9, 5, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+C.List_8co40 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 4, 83, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 82, 9, 5, 54, 0, 0, 0, 0, 0, 4, 21, 21, 21, 21, 21, 21, 21, 21, 15, 15, 15, 15, 15, 15, 15, 9, 5, 5, 5, 5, 54, 0, 0, 0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 25, 21, 27, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0, 0]);
+C.List_8co41 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 83, 84, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 15, 15, 9, 54, 4, 80, 14, 81, 2, 51, 7, 15, 15, 14, 14, 17, 17, 17, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
+C.List_8co42 = Isolate.makeConstantList([0, 0, 0, 53, 3, 80, 14, 14, 15, 15, 15, 15, 14, 81, 2, 52, 0, 0, 0, 53, 1, 3, 80, 14, 14, 14, 14, 14, 14, 14, 14, 14, 81, 2, 52, 0, 0, 0, 0, 0, 0, 0, 53, 3, 80, 14, 14, 14, 14, 14, 16, 16, 16, 16, 16, 16, 16, 88, 2, 1, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 3, 15, 15, 15, 15, 15, 15, 15, 15, 14, 39, 82, 10, 0, 0, 0, 0, 0, 0, 53, 3, 17, 17, 17, 17, 17, 17, 17, 16, 16, 16, 16, 16, 14, 14, 14, 14, 14, 14, 81, 2, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+C.List_8co43 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 15, 15, 15, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 81, 10, 0, 0, 0, 0, 0, 4, 17, 17, 17, 17, 17, 17, 17, 17, 17, 75, 123, 63, 17, 17, 17, 77, 18, 18, 18, 18, 18, 18, 73, 17, 67, 18, 65, 17, 18, 17, 17, 17, 2, 52, 0, 0, 0, 55, 5, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 16, 16, 15, 15, 15, 15, 15, 14, 14, 14, 14, 81, 10, 0, 0, 0]);
+C.List_8co44 = Isolate.makeConstantList([0, 0, 0, 0, 55, 5, 6, 86, 87, 16, 17, 17, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 17, 17, 17, 17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 9, 127, 3, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 16, 16, 16, 16, 16, 16, 88, 2, 52, 0, 0, 0, 0, 53, 3, 85, 16, 16, 17, 17, 17, 15, 15, 17, 17, 17, 16, 16, 14, 14, 84, 82, 10, 0, 0, 0, 0, 0]);
+C.List_8co45 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 70, 70, 69, 9, 5, 5, 127, 1, 3, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 16, 16, 16, 17, 17, 15, 15, 15, 15, 15, 14, 14, 14, 14, 81, 124, 51, 7, 21, 21, 21, 21, 23, 17, 17, 17, 17, 15, 15, 17, 17, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 15, 15, 15, 2, 52, 0, 0, 0, 0, 0, 0]);
+C.List_8co46 = Isolate.makeConstantList([0, 0, 0, 4, 85, 16, 16, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 18, 18, 18, 18, 18, 18, 18, 74, 15, 15, 15, 15, 15, 17, 17, 17, 2, 3, 17, 17, 17, 17, 15, 15, 14, 14, 14, 14, 81, 48, 47, 14, 14, 14, 14, 2, 1, 1, 1, 1, 52, 0, 0, 55, 5, 6, 15, 15, 15, 15, 15, 136, 137, 137, 138, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 16, 16, 16, 16, 88, 2, 52, 0, 0, 4, 15, 15, 14, 14, 14, 14, 15, 15, 15, 2, 1, 1, 1, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+C.List_8co47 = Isolate.makeConstantList([0, 0, 0, 4, 17, 17, 17, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 14, 14, 81, 20, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 15, 15, 14, 14, 14, 14, 81, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 1, 3, 17, 17, 17, 17, 17, 17, 17, 17, 17, 66, 75, 18, 18, 18, 18, 18, 65, 17, 17, 17, 17, 67, 68, 2, 1, 52, 0, 0, 0, 55, 5, 7, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 81, 10, 0, 0, 0]);
+C.List_8co48 = Isolate.makeConstantList([0, 0, 0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 11, 50, 1, 52, 0, 0, 0, 53, 51, 7, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 81, 10, 0, 0, 0, 4, 111, 17, 117, 118, 117, 119, 119, 120, 101, 103, 99, 17, 17, 17, 2, 3, 71, 18, 69, 20, 72, 70, 68, 2, 3, 71, 18, 18, 18, 18, 18, 74, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 21, 45, 21, 10, 0, 0, 0, 53, 3, 85, 16, 16, 16, 16, 16, 16, 88, 10, 0, 0, 0]);
+C.List_8co49 = Isolate.makeConstantList([0, 0, 0, 0, 53, 3, 80, 14, 14, 14, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 82, 9, 54, 0, 0, 0, 4, 17, 117, 111, 14, 14, 101, 122, 118, 119, 120, 99, 17, 17, 67, 76, 63, 17, 11, 125, 0, 0, 0, 0, 55, 6, 17, 17, 17, 67, 76, 18, 18, 18, 18, 18, 18, 18, 74, 15, 15, 15, 15, 15, 15, 15, 9, 5, 5, 6, 17, 17, 17, 17, 17, 17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
+C.List_8co5 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 53, 51, 8, 7, 15, 15, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 81, 2, 4, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 17, 17, 17, 17, 15, 15, 15, 15, 15, 17, 17, 17, 2, 52, 59, 8, 7, 15, 15, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 9, 5, 5, 5, 54, 0, 0, 0, 0, 0, 0]);
+C.List_8co50 = Isolate.makeConstantList([0, 0, 0, 4, 17, 17, 17, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 49, 60, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 14, 14, 14, 81, 2, 52, 0, 0, 0, 0, 0, 0, 53, 1, 3, 17, 17, 17, 17, 17, 17, 17, 66, 75, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 74, 65, 17, 17, 18, 63, 17, 10, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 16, 16, 16, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 81, 10, 0, 0, 0]);
+C.List_8co51 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 15, 14, 14, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 14, 14, 14, 14, 14, 14, 84, 82, 9, 5, 54, 0, 0, 0, 53, 1, 1, 1, 3, 16, 16, 16, 16, 16, 17, 17, 67, 76, 74, 65, 17, 17, 17, 17, 17, 17, 17, 17, 18, 17, 17, 17, 17, 17, 17, 17, 17, 15, 17, 17, 17, 17, 10, 0, 0, 0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0]);
+C.List_8co52 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 6, 83, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 81, 2, 1, 1, 3, 80, 14, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 9, 127, 1, 1, 1, 62, 6, 15, 15, 14, 14, 14, 17, 17, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
+C.List_8co53 = Isolate.makeConstantList([0, 0, 0, 53, 3, 17, 17, 17, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 81, 12, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 15, 15, 14, 14, 14, 14, 81, 2, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 1, 1, 1, 1, 1, 3, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 67, 76, 68, 10, 0, 0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 14, 81, 2, 1, 52, 0, 0, 0]);
 C.List_8co54 = Isolate.makeConstantList([0, 0, 0, 0, 0, 53, 51, 7, 85, 16, 16, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 16, 16, 16, 16, 89, 9, 6, 83, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 16, 16, 17, 17, 17, 17, 15, 15, 75, 18, 18, 18, 18, 18, 18, 18, 74, 65, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 81, 48, 47, 80, 14, 14, 14, 14, 17, 17, 17, 17, 16, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
-C.List_8co55 = Isolate.makeConstantList([0, 0, 0, 4, 17, 17, 17, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 14, 14, 81, 20, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 15, 15, 14, 14, 14, 14, 81, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 1, 3, 17, 17, 17, 17, 17, 17, 17, 17, 17, 66, 75, 18, 18, 18, 18, 18, 65, 17, 17, 17, 17, 67, 68, 2, 1, 52, 0, 0, 0, 55, 5, 7, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 81, 10, 0, 0, 0]);
-C.List_8co56 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 4, 83, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 82, 9, 5, 54, 0, 0, 0, 0, 0, 4, 21, 21, 21, 21, 21, 21, 21, 21, 15, 15, 15, 15, 15, 15, 15, 9, 5, 5, 5, 5, 54, 0, 0, 0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 25, 21, 27, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0, 0]);
-C.List_8co57 = Isolate.makeConstantList([0, 0, 0, 4, 80, 14, 14, 15, 15, 15, 15, 15, 15, 26, 21, 21, 21, 21, 28, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 17, 17, 17, 16, 16, 16, 16, 16, 16, 16, 89, 9, 54, 0, 0, 0, 0, 0, 53, 3, 17, 17, 29, 17, 17, 17, 17, 17, 17, 16, 17, 17, 17, 17, 17, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 17, 17, 16, 16, 16, 16, 16, 16, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 66, 75, 18, 18, 18, 18, 74, 15, 15, 11, 125, 0, 0, 0, 0, 0, 0, 0]);
-C.List_8co58 = Isolate.makeConstantList([0, 0, 0, 0, 55, 6, 83, 84, 14, 14, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 81, 2, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 17, 17, 26, 21, 21, 21, 21, 23, 17, 17, 17, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 17, 17, 87, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 14, 14, 14, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 2, 52, 0, 0, 0]);
+C.List_8co55 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 5, 56, 8, 8, 7, 15, 15, 75, 18, 18, 18, 18, 18, 18, 18, 18, 18, 70, 70, 69, 10, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 49, 8, 8, 8, 8, 8, 8, 7, 16, 16, 16, 16, 16, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 9, 5, 56, 7, 21, 21, 21, 21, 28, 14, 14, 14, 14, 14, 14, 17, 17, 17, 17, 14, 82, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 51, 60, 15, 15, 15, 15, 16, 16, 16, 16, 15, 15, 15, 15, 15, 11, 125, 0, 0, 0, 0, 0, 0, 0]);
+C.List_8co56 = Isolate.makeConstantList([0, 0, 0, 4, 80, 14, 14, 14, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 16, 16, 88, 2, 52, 0, 0, 0, 0, 55, 6, 17, 17, 18, 18, 18, 18, 18, 123, 17, 17, 17, 16, 16, 17, 17, 17, 10, 0, 0, 0, 0, 0, 0, 0, 55, 6, 17, 17, 17, 67, 76, 18, 18, 18, 123, 15, 15, 15, 15, 11, 61, 54, 0, 53, 1, 1, 3, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
+C.List_8co57 = Isolate.makeConstantList([0, 0, 0, 4, 85, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 95, 18, 18, 18, 74, 93, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 9, 5, 54, 0, 0, 55, 5, 56, 7, 80, 14, 14, 14, 14, 82, 9, 54, 0, 0, 0, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 14, 14, 81, 2, 52, 0, 0, 0, 0, 4, 15, 15, 24, 21, 27, 15, 15, 15, 10, 6, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+C.List_8co58 = Isolate.makeConstantList([0, 0, 0, 4, 80, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 25, 21, 21, 27, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 16, 16, 88, 10, 0, 0, 0, 0, 0, 4, 17, 17, 76, 18, 18, 18, 123, 63, 17, 17, 16, 16, 16, 17, 17, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 6, 17, 17, 17, 16, 16, 16, 16, 16, 15, 15, 15, 15, 2, 1, 1, 3, 17, 17, 17, 17, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0]);
 C.List_8co59 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 53, 3, 85, 16, 88, 49, 8, 60, 15, 15, 15, 15, 48, 50, 1, 1, 3, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 16, 16, 16, 16, 16, 16, 14, 14, 14, 17, 17, 17, 17, 17, 9, 54, 0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 81, 11, 61, 54, 0, 0, 4, 83, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 76, 18, 18, 18, 18, 18, 69, 9, 5, 54, 0, 0, 0, 0, 0, 0]);
-C.List_8co6 = Isolate.makeConstantList([0, 0, 0, 0, 0, 53, 3, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 2, 52, 0, 0, 55, 5, 5, 6, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 82, 9, 54, 0, 0, 0, 0, 116, 111, 21, 114, 115, 21, 105, 103, 104, 1, 1, 1, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 1, 3, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 81, 2, 1, 1, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 3, 85, 16, 16, 16, 16, 88, 10, 0, 0, 0]);
-C.List_8co60 = Isolate.makeConstantList([0, 0, 0, 53, 3, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 81, 49, 60, 80, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 15, 15, 13, 80, 14, 14, 14, 14, 15, 15, 17, 17, 17, 17, 17, 15, 15, 15, 15, 92, 75, 18, 18, 18, 18, 18, 68, 2, 52, 0, 0, 0, 0, 0]);
-C.List_8co61 = Isolate.makeConstantList([0, 0, 0, 4, 80, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 9, 5, 54, 0, 0, 0, 0, 0, 0, 0, 55, 6, 17, 17, 26, 27, 17, 17, 17, 14, 14, 14, 17, 17, 17, 11, 125, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 17, 17, 17, 16, 16, 16, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 77, 18, 18, 18, 18, 18, 18, 123, 15, 15, 15, 15, 10, 0, 0, 0, 0, 0, 0]);
-C.List_8co62 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 55, 5, 6, 83, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 82, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 6, 17, 17, 17, 17, 9, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 14, 14, 14, 14, 14, 14, 14, 14, 14, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
-C.List_8co63 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 84, 82, 9, 5, 6, 86, 87, 16, 16, 16, 16, 16, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 81, 49, 60, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 14, 14, 14, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 2, 52, 0, 4, 83, 14, 14, 14, 14, 14, 17, 17, 17, 75, 18, 18, 18, 18, 18, 18, 18, 18, 123, 94, 95, 76, 18, 18, 18, 68, 10, 0, 0, 0]);
-C.List_8co64 = Isolate.makeConstantList([0, 0, 0, 53, 3, 80, 14, 14, 15, 15, 15, 15, 14, 81, 2, 52, 0, 0, 0, 53, 1, 3, 80, 14, 14, 14, 14, 14, 14, 14, 14, 14, 81, 2, 52, 0, 0, 0, 0, 0, 0, 0, 53, 3, 80, 14, 14, 14, 14, 14, 16, 16, 16, 16, 16, 16, 16, 88, 2, 1, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 3, 15, 15, 15, 15, 15, 15, 15, 15, 14, 39, 82, 10, 0, 0, 0, 0, 0, 0, 53, 3, 17, 17, 17, 17, 17, 17, 17, 16, 16, 16, 16, 16, 14, 14, 14, 14, 14, 14, 81, 2, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-C.List_8co65 = Isolate.makeConstantList([0, 0, 0, 0, 0, 59, 7, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 15, 15, 17, 17, 66, 75, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 74, 65, 17, 17, 17, 17, 9, 5, 5, 5, 5, 54, 0, 0, 0, 0, 53, 1, 3, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 76, 18, 18, 18, 18, 18, 73, 15, 15, 15, 15, 15, 17, 17, 17, 10, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 6, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0, 0, 0]);
-C.List_8co66 = Isolate.makeConstantList([0, 0, 0, 0, 0, 53, 1, 1, 1, 1, 1, 1, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 1, 1, 1, 1, 1, 1, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 1, 1, 1, 1, 1, 1, 1, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 1, 1, 1, 1, 1, 1, 1, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-C.List_8co67 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 16, 75, 18, 18, 18, 18, 18, 18, 18, 37, 38, 18, 18, 18, 18, 70, 64, 17, 9, 5, 127, 1, 1, 1, 1, 1, 1, 1, 1, 3, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 16, 16, 17, 17, 15, 15, 15, 14, 14, 14, 81, 11, 8, 61, 6, 17, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 17, 17, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 51, 7, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 15, 15, 15, 11, 61, 54, 0, 0, 0, 0, 0, 0]);
-C.List_8co68 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-C.List_8co69 = Isolate.makeConstantList([0, 0, 0, 4, 80, 14, 14, 14, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 16, 16, 88, 2, 52, 0, 0, 0, 0, 55, 6, 17, 17, 18, 18, 18, 18, 18, 123, 17, 17, 17, 16, 16, 17, 17, 17, 10, 0, 0, 0, 0, 0, 0, 0, 55, 6, 17, 17, 17, 67, 76, 18, 18, 18, 123, 15, 15, 15, 15, 11, 61, 54, 0, 53, 1, 1, 3, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
-C.List_8co7 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 6, 86, 16, 16, 16, 16, 16, 16, 16, 87, 89, 9, 126, 6, 86, 87, 87, 87, 87, 87, 89, 9, 5, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 5, 5, 6, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 21, 21, 21, 21, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-C.List_8co70 = Isolate.makeConstantList([0, 0, 0, 0, 0, 53, 1, 3, 80, 14, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 82, 9, 54, 0, 0, 4, 17, 111, 14, 117, 120, 79, 18, 74, 14, 101, 122, 99, 67, 76, 18, 123, 63, 17, 9, 54, 0, 0, 55, 6, 17, 17, 67, 76, 18, 18, 18, 18, 18, 18, 18, 18, 74, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
-C.List_8co71 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 6, 83, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 81, 2, 1, 1, 3, 80, 14, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 9, 127, 1, 1, 1, 62, 6, 15, 15, 14, 14, 14, 17, 17, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
-C.List_8co72 = Isolate.makeConstantList([0, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 81, 49, 60, 80, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 17, 17, 17, 17, 15, 15, 15, 15, 11, 8, 47, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 2, 52, 0, 0, 0, 0, 0, 0, 0, 0]);
-C.List_8co73 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 83, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 16, 16, 16, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 84, 82, 9, 54, 53, 1, 1, 1, 1, 1, 1, 1, 52, 0, 0, 0, 0, 0, 55, 5, 5, 5, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 14, 14, 14, 15, 15, 15, 15, 15, 14, 14, 14, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
-C.List_8co74 = Isolate.makeConstantList([0, 0, 0, 0, 0, 4, 85, 16, 16, 16, 16, 16, 88, 49, 8, 8, 50, 3, 85, 16, 16, 16, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 17, 17, 2, 52, 0, 0, 0, 53, 3, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 81, 2, 52, 0, 0, 0, 59, 7, 80, 14, 14, 14, 14, 14, 14, 14, 14, 14, 16, 16, 16, 16, 16, 16, 16, 16, 16, 88, 2, 52, 0, 0, 0, 0, 0, 0]);
-C.List_8co75 = Isolate.makeConstantList([0, 0, 0, 0, 53, 3, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 16, 16, 88, 9, 54, 55, 6, 83, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 17, 17, 17, 66, 70, 70, 70, 18, 18, 18, 18, 18, 18, 21, 21, 21, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 84, 84, 82, 20, 80, 14, 14, 15, 15, 17, 17, 17, 17, 17, 17, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0]);
-C.List_8co76 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 0, 53, 3, 17, 17, 17, 17, 17, 17, 2, 51, 61, 5, 5, 5, 5, 5, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 81, 11, 61, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 2, 52, 4, 83, 84, 82, 9, 56, 7, 15, 15, 14, 14, 17, 17, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
-C.List_8co77 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 81, 12, 80, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 17, 9, 46, 83, 14, 14, 14, 14, 15, 17, 17, 17, 17, 17, 66, 75, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 68, 2, 1, 52, 0, 0, 0]);
-C.List_8co78 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 59, 7, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 15, 15, 95, 76, 18, 18, 123, 94, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 14, 81, 10, 53, 3, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 2, 52, 55, 6, 86, 16, 16, 16, 16, 16, 16, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
-C.List_8co79 = Isolate.makeConstantList([0, 0, 0, 55, 6, 83, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 81, 2, 1, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 17, 17, 26, 21, 21, 27, 17, 17, 14, 14, 14, 17, 17, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 17, 17, 17, 16, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 76, 18, 18, 123, 15, 15, 15, 15, 15, 15, 15, 2, 52, 0, 0, 0, 0]);
-C.List_8co8 = Isolate.makeConstantList([0, 0, 0, 0, 0, 4, 85, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 17, 17, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 17, 17, 17, 17, 17, 17, 17, 16, 16, 16, 16, 17, 17, 17, 17, 17, 17, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 17, 2, 52, 0, 53, 3, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 81, 2, 52, 0, 53, 3, 80, 14, 14, 14, 14, 14, 14, 14, 14, 14, 16, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 2, 52, 0, 0, 0, 0, 0]);
-C.List_8co80 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 55, 56, 8, 8, 8, 60, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 53, 1, 3, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 16, 16, 14, 14, 14, 14, 17, 17, 17, 17, 10, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 15, 15, 15, 9, 54, 0, 53, 3, 80, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 76, 18, 18, 18, 18, 18, 18, 18, 18, 70, 69, 9, 54, 0, 0, 0, 0, 0]);
-C.List_8co81 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 81, 2, 3, 80, 14, 14, 14, 14, 15, 15, 15, 15, 15, 9, 5, 6, 15, 15, 15, 15, 15, 16, 16, 16, 89, 10, 0, 0, 0, 0, 0, 0, 53, 1, 3, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 9, 54, 0, 0, 0, 53, 3, 17, 17, 17, 16, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 81, 10, 0, 0, 0, 0, 0, 0]);
-C.List_8co82 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 83, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 84, 84, 82, 9, 5, 127, 1, 3, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 59, 8, 7, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
-C.List_8co83 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 1, 1, 1, 1, 51, 61, 6, 83, 84, 84, 84, 84, 84, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 84, 82, 9, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 56, 7, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 15, 15, 10, 0, 4, 33, 34, 35, 70, 70, 70, 15, 15, 14, 14, 17, 17, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
-C.List_8co84 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 17, 17, 17, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 81, 2, 1, 52, 53, 1, 3, 80, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 88, 10, 0, 0, 0, 0, 0, 0, 0, 0, 53, 3, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 10, 0, 0, 0, 0, 53, 3, 17, 17, 17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 81, 2, 52, 0, 0, 0, 0, 0, 0]);
-C.List_8co85 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 84, 84, 84, 14, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 81, 12, 83, 14, 15, 15, 15, 15, 15, 16, 16, 16, 16, 15, 15, 15, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 11, 61, 54, 55, 6, 80, 14, 14, 14, 14, 17, 17, 17, 17, 66, 75, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 68, 10, 0, 0, 0]);
-C.List_8co86 = Isolate.makeConstantList([0, 0, 0, 0, 53, 3, 80, 14, 14, 14, 14, 81, 2, 1, 52, 0, 0, 0, 0, 0, 0, 53, 1, 3, 80, 14, 14, 14, 14, 14, 81, 2, 1, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 3, 80, 14, 14, 14, 14, 14, 14, 81, 2, 1, 1, 1, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 1, 3, 15, 15, 15, 15, 15, 14, 14, 81, 10, 0, 0, 0, 0, 0, 0, 0, 53, 1, 1, 1, 1, 3, 80, 14, 14, 14, 14, 14, 14, 14, 14, 81, 2, 1, 1, 1, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-C.List_8co87 = Isolate.makeConstantList([0, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 11, 50, 52, 0, 0, 0, 0, 53, 3, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 84, 82, 9, 5, 54, 0, 0, 107, 108, 109, 106, 106, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 1, 1, 1, 1, 3, 15, 15, 15, 15, 15, 15, 2, 1, 1, 1, 52, 0, 0, 0, 0, 0, 0, 55, 5, 5, 5, 5, 5, 54, 0, 0, 0, 0, 0, 53, 1, 1, 1, 1, 52, 0, 0, 0, 0]);
-C.List_8co88 = Isolate.makeConstantList([0, 0, 0, 4, 85, 16, 16, 16, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 15, 15, 15, 15, 15, 92, 75, 18, 18, 74, 93, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 16, 89, 9, 54, 0, 0, 0, 0, 0, 53, 3, 15, 15, 15, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 2, 52, 0, 4, 86, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 17, 17, 15, 15, 15, 15, 15, 15, 17, 17, 15, 15, 15, 15, 15, 15, 15, 14, 14, 82, 10, 0, 0, 0, 0]);
-C.List_8co89 = Isolate.makeConstantList([0, 0, 0, 4, 80, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 25, 21, 21, 27, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 16, 16, 88, 10, 0, 0, 0, 0, 0, 4, 17, 17, 76, 18, 18, 18, 123, 63, 17, 17, 16, 16, 16, 17, 17, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 6, 17, 17, 17, 16, 16, 16, 16, 16, 15, 15, 15, 15, 2, 1, 1, 3, 17, 17, 17, 17, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0]);
-C.List_8co9 = Isolate.makeConstantList([0, 0, 0, 53, 3, 80, 14, 14, 14, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 16, 16, 88, 11, 125, 0, 0, 0, 0, 55, 6, 17, 117, 119, 119, 120, 79, 18, 18, 18, 17, 17, 17, 17, 16, 16, 17, 17, 10, 0, 0, 0, 0, 0, 55, 5, 6, 17, 17, 67, 76, 18, 18, 18, 18, 18, 18, 123, 15, 15, 15, 15, 15, 9, 5, 54, 0, 0, 59, 7, 17, 17, 17, 17, 17, 17, 17, 16, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
-C.List_8co90 = Isolate.makeConstantList([0, 0, 0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 53, 1, 1, 1, 3, 17, 17, 17, 17, 17, 17, 17, 15, 15, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 16, 16, 16, 14, 14, 14, 14, 14, 14, 81, 2, 62, 5, 5, 6, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 9, 54, 0, 53, 3, 80, 14, 14, 14, 14, 14, 14, 14, 14, 76, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 69, 9, 54, 0, 0, 0, 0]);
-C.List_8co91 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 86, 87, 87, 87, 87, 87, 89, 9, 5, 54, 0, 55, 5, 5, 5, 5, 5, 5, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 9, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 21, 21, 21, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-C.List_8co92 = Isolate.makeConstantList([0, 0, 0, 4, 80, 33, 34, 35, 15, 15, 15, 15, 15, 14, 81, 2, 1, 1, 1, 3, 80, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 14, 14, 81, 2, 52, 0, 0, 0, 0, 0, 0, 4, 80, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 88, 2, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 3, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 82, 9, 54, 0, 0, 0, 0, 0, 53, 3, 17, 17, 17, 17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 14, 14, 14, 14, 14, 14, 81, 2, 1, 1, 52, 0, 0, 0, 0, 0, 0, 0, 0]);
-C.List_8co93 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 53, 3, 17, 17, 17, 15, 15, 15, 15, 15, 15, 2, 1, 1, 52, 0, 0, 55, 56, 7, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 81, 2, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 1, 1, 1, 1, 1, 1, 1, 52, 0, 0, 0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 2, 62, 5, 5, 5, 127, 3, 15, 15, 14, 14, 17, 17, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0]);
-C.List_8co94 = Isolate.makeConstantList([0, 0, 0, 0, 53, 3, 80, 14, 14, 14, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 82, 9, 54, 0, 0, 0, 4, 17, 117, 111, 14, 14, 101, 122, 118, 119, 120, 99, 17, 17, 67, 76, 63, 17, 11, 125, 0, 0, 0, 0, 55, 6, 17, 17, 17, 67, 76, 18, 18, 18, 18, 18, 18, 18, 74, 15, 15, 15, 15, 15, 15, 15, 9, 5, 5, 6, 17, 17, 17, 17, 17, 17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
-C.List_8co95 = Isolate.makeConstantList([0, 0, 0, 55, 5, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0, 0, 0, 0, 53, 3, 17, 17, 17, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 16, 16, 14, 14, 14, 14, 81, 49, 8, 8, 61, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 59, 7, 80, 14, 14, 14, 14, 14, 14, 76, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 69, 9, 54, 0, 0, 0]);
-C.List_8co96 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 55, 6, 83, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 15, 95, 76, 18, 18, 18, 18, 18, 123, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 88, 2, 52, 0, 53, 3, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 2, 52, 0, 4, 86, 16, 16, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
-C.List_8co97 = Isolate.makeConstantList([0, 0, 0, 0, 0, 55, 6, 83, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 15, 15, 76, 18, 18, 18, 43, 18, 18, 18, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 88, 2, 52, 0, 0, 0, 53, 3, 15, 15, 15, 15, 15, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 2, 52, 0, 0, 4, 85, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
-C.List_8co98 = Isolate.makeConstantList([0, 0, 0, 53, 3, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 16, 16, 16, 89, 10, 0, 0, 59, 7, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 16, 89, 9, 5, 5, 6, 72, 70, 70, 18, 18, 21, 21, 21, 21, 21, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 84, 84, 82, 9, 5, 5, 46, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0, 0]);
-C.List_8co99 = Isolate.makeConstantList([0, 0, 0, 0, 0, 4, 86, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 17, 17, 17, 17, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 17, 17, 17, 17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 2, 1, 3, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 81, 10, 53, 3, 80, 14, 14, 14, 14, 14, 14, 14, 14, 14, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 2, 52, 0, 0, 0, 0]);
+C.List_8co6 = Isolate.makeConstantList([0, 0, 0, 4, 85, 16, 16, 16, 16, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 92, 18, 18, 18, 18, 74, 93, 15, 15, 15, 15, 15, 15, 11, 8, 61, 54, 0, 53, 1, 1, 1, 1, 3, 80, 14, 14, 14, 14, 81, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 130, 14, 14, 131, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 14, 14, 81, 2, 52, 0, 0, 0, 4, 15, 15, 15, 26, 21, 27, 15, 15, 2, 4, 15, 15, 15, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+C.List_8co60 = Isolate.makeConstantList([0, 0, 0, 53, 3, 85, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 95, 76, 18, 18, 74, 93, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 9, 5, 126, 6, 17, 17, 15, 15, 15, 15, 14, 14, 14, 82, 9, 54, 0, 0, 0, 0, 0, 55, 56, 7, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 14, 14, 81, 2, 52, 0, 0, 0, 0, 0, 53, 3, 15, 15, 29, 15, 15, 15, 15, 20, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+C.List_8co61 = Isolate.makeConstantList([0, 0, 0, 4, 80, 14, 14, 15, 15, 15, 15, 15, 15, 26, 21, 21, 21, 21, 28, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 17, 17, 17, 16, 16, 16, 16, 16, 16, 16, 89, 9, 54, 0, 0, 0, 0, 0, 53, 3, 17, 17, 29, 17, 17, 17, 17, 17, 17, 16, 17, 17, 17, 17, 17, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 17, 17, 16, 16, 16, 16, 16, 16, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 66, 75, 18, 18, 18, 18, 74, 15, 15, 11, 125, 0, 0, 0, 0, 0, 0, 0]);
+C.List_8co62 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 55, 56, 7, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 82, 10, 0, 0, 53, 3, 111, 117, 111, 101, 122, 118, 121, 120, 102, 101, 99, 77, 18, 18, 18, 123, 63, 17, 10, 0, 0, 4, 17, 67, 76, 18, 18, 18, 18, 18, 18, 18, 18, 74, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 16, 16, 16, 16, 16, 88, 2, 3, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
+C.List_8co63 = Isolate.makeConstantList([0, 0, 0, 0, 0, 59, 7, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 15, 15, 17, 17, 66, 75, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 74, 65, 17, 17, 17, 17, 9, 5, 5, 5, 5, 54, 0, 0, 0, 0, 53, 1, 3, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 76, 18, 18, 18, 18, 18, 73, 15, 15, 15, 15, 15, 17, 17, 17, 10, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 6, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0, 0, 0]);
+C.List_8co64 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 55, 5, 6, 83, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 82, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 6, 17, 17, 17, 17, 9, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 14, 14, 14, 14, 14, 14, 14, 14, 14, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
+C.List_8co65 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 16, 75, 18, 18, 18, 18, 18, 18, 18, 37, 38, 18, 18, 18, 18, 70, 64, 17, 9, 5, 127, 1, 1, 1, 1, 1, 1, 1, 1, 3, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 16, 16, 17, 17, 15, 15, 15, 14, 14, 14, 81, 11, 8, 61, 6, 17, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 17, 17, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 51, 7, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 15, 15, 15, 11, 61, 54, 0, 0, 0, 0, 0, 0]);
+C.List_8co66 = Isolate.makeConstantList([0, 0, 0, 4, 80, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 9, 5, 54, 0, 0, 0, 0, 0, 0, 0, 55, 6, 17, 17, 26, 27, 17, 17, 17, 14, 14, 14, 17, 17, 17, 11, 125, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 17, 17, 17, 16, 16, 16, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 77, 18, 18, 18, 18, 18, 18, 123, 15, 15, 15, 15, 10, 0, 0, 0, 0, 0, 0]);
+C.List_8co67 = Isolate.makeConstantList([0, 0, 0, 0, 0, 53, 1, 1, 1, 1, 1, 1, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 1, 1, 1, 1, 1, 1, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 1, 1, 1, 1, 1, 1, 1, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 1, 1, 1, 1, 1, 1, 1, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+C.List_8co68 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 83, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 16, 16, 16, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 84, 82, 9, 54, 53, 1, 1, 1, 1, 1, 1, 1, 52, 0, 0, 0, 0, 0, 55, 5, 5, 5, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 14, 14, 14, 15, 15, 15, 15, 15, 14, 14, 14, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
+C.List_8co69 = Isolate.makeConstantList([0, 0, 0, 0, 55, 6, 83, 84, 14, 14, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 81, 2, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 17, 17, 26, 21, 21, 21, 21, 23, 17, 17, 17, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 17, 17, 87, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 14, 14, 14, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 2, 52, 0, 0, 0]);
+C.List_8co7 = Isolate.makeConstantList([0, 0, 0, 0, 0, 53, 3, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 2, 52, 0, 0, 55, 5, 5, 6, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 82, 9, 54, 0, 0, 0, 0, 116, 111, 21, 114, 115, 21, 105, 103, 104, 1, 1, 1, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 1, 3, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 81, 2, 1, 1, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 3, 85, 16, 16, 16, 16, 88, 10, 0, 0, 0]);
+C.List_8co70 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 83, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 84, 84, 82, 9, 5, 127, 1, 3, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 59, 8, 7, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
+C.List_8co71 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 1, 1, 1, 1, 51, 61, 6, 83, 84, 84, 84, 84, 84, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 84, 82, 9, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 56, 7, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 15, 15, 10, 0, 4, 33, 34, 35, 70, 70, 70, 15, 15, 14, 14, 17, 17, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
+C.List_8co72 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 84, 82, 9, 5, 6, 86, 87, 16, 16, 16, 16, 16, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 81, 49, 60, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 14, 14, 14, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 2, 52, 0, 4, 83, 14, 14, 14, 14, 14, 17, 17, 17, 75, 18, 18, 18, 18, 18, 18, 18, 18, 123, 94, 95, 76, 18, 18, 18, 68, 10, 0, 0, 0]);
+C.List_8co73 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 84, 84, 84, 14, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 81, 12, 83, 14, 15, 15, 15, 15, 15, 16, 16, 16, 16, 15, 15, 15, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 11, 61, 54, 55, 6, 80, 14, 14, 14, 14, 17, 17, 17, 17, 66, 75, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 68, 10, 0, 0, 0]);
+C.List_8co74 = Isolate.makeConstantList([0, 0, 0, 0, 53, 3, 80, 14, 14, 14, 14, 81, 2, 1, 52, 0, 0, 0, 0, 0, 0, 53, 1, 3, 80, 14, 14, 14, 14, 14, 81, 2, 1, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 3, 80, 14, 14, 14, 14, 14, 14, 81, 2, 1, 1, 1, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 1, 3, 15, 15, 15, 15, 15, 14, 14, 81, 10, 0, 0, 0, 0, 0, 0, 0, 53, 1, 1, 1, 1, 3, 80, 14, 14, 14, 14, 14, 14, 14, 14, 81, 2, 1, 1, 1, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+C.List_8co75 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+C.List_8co76 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0, 0, 0, 0, 53, 3, 85, 16, 16, 16, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 14, 14, 14, 14, 81, 49, 60, 15, 15, 15, 87, 16, 16, 16, 16, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 10, 0, 4, 83, 14, 14, 14, 14, 14, 14, 76, 18, 18, 18, 18, 18, 18, 18, 18, 74, 93, 92, 75, 18, 18, 18, 69, 10, 0, 0, 0]);
+C.List_8co77 = Isolate.makeConstantList([0, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 11, 50, 52, 0, 0, 0, 0, 53, 3, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 84, 82, 9, 5, 54, 0, 0, 107, 108, 109, 106, 106, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 1, 1, 1, 1, 1, 3, 15, 15, 15, 15, 15, 15, 2, 1, 1, 1, 52, 0, 0, 0, 0, 0, 0, 55, 5, 5, 5, 5, 5, 54, 0, 0, 0, 0, 0, 53, 1, 1, 1, 1, 52, 0, 0, 0, 0]);
+C.List_8co78 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 82, 9, 5, 54, 0, 55, 5, 6, 86, 16, 16, 16, 16, 16, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 81, 49, 60, 15, 15, 15, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 14, 14, 14, 14, 15, 15, 16, 16, 16, 16, 16, 16, 16, 2, 52, 55, 6, 83, 14, 14, 14, 14, 14, 14, 14, 18, 18, 18, 18, 18, 18, 18, 18, 18, 94, 15, 15, 95, 18, 18, 18, 68, 10, 0, 0, 0]);
+C.List_8co79 = Isolate.makeConstantList([0, 0, 0, 0, 0, 53, 1, 3, 80, 14, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 82, 9, 54, 0, 0, 4, 17, 111, 14, 117, 120, 79, 18, 74, 14, 101, 122, 99, 67, 76, 18, 123, 63, 17, 9, 54, 0, 0, 55, 6, 17, 17, 67, 76, 18, 18, 18, 18, 18, 18, 18, 18, 74, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
+C.List_8co8 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 6, 86, 16, 16, 16, 16, 16, 16, 16, 87, 89, 9, 126, 6, 86, 87, 87, 87, 87, 87, 89, 9, 5, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 5, 5, 6, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 21, 21, 21, 21, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+C.List_8co80 = Isolate.makeConstantList([0, 0, 0, 4, 80, 14, 14, 15, 15, 15, 15, 15, 15, 25, 21, 21, 21, 21, 21, 27, 15, 15, 15, 15, 15, 17, 17, 17, 17, 14, 14, 14, 14, 44, 17, 17, 15, 15, 15, 16, 16, 16, 88, 10, 0, 0, 0, 0, 0, 4, 17, 17, 67, 18, 18, 123, 63, 17, 17, 16, 16, 16, 16, 17, 17, 2, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 3, 17, 17, 16, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 9, 5, 54, 0, 0, 0, 0]);
+C.List_8co81 = Isolate.makeConstantList([0, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 81, 49, 60, 80, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 17, 17, 17, 17, 15, 15, 15, 15, 11, 8, 47, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 2, 52, 0, 0, 0, 0, 0, 0, 0, 0]);
+C.List_8co82 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 82, 9, 54, 0, 0, 0, 0, 0, 55, 6, 85, 16, 16, 16, 16, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 14, 14, 14, 14, 14, 81, 49, 60, 15, 15, 15, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 16, 16, 16, 16, 16, 16, 16, 2, 52, 55, 6, 80, 14, 14, 14, 14, 14, 14, 18, 18, 18, 18, 18, 18, 18, 18, 18, 93, 15, 15, 92, 18, 18, 18, 68, 10, 0, 0, 0]);
+C.List_8co83 = Isolate.makeConstantList([0, 0, 0, 0, 0, 4, 85, 16, 16, 16, 16, 16, 88, 49, 8, 8, 50, 3, 85, 16, 16, 16, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 17, 17, 2, 52, 0, 0, 0, 53, 3, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 81, 2, 52, 0, 0, 0, 59, 7, 80, 14, 14, 14, 14, 14, 14, 14, 14, 14, 16, 16, 16, 16, 16, 16, 16, 16, 16, 88, 2, 52, 0, 0, 0, 0, 0, 0]);
+C.List_8co84 = Isolate.makeConstantList([0, 0, 0, 0, 53, 3, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 16, 16, 88, 9, 54, 55, 6, 83, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 17, 17, 17, 66, 70, 70, 70, 18, 18, 18, 18, 18, 18, 21, 21, 21, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 84, 84, 82, 20, 80, 14, 14, 15, 15, 17, 17, 17, 17, 17, 17, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 0]);
+C.List_8co85 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 0, 53, 3, 17, 17, 17, 17, 17, 17, 2, 51, 61, 5, 5, 5, 5, 5, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 81, 11, 61, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 2, 52, 4, 83, 84, 82, 9, 56, 7, 15, 15, 14, 14, 17, 17, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
+C.List_8co86 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 81, 12, 80, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 17, 9, 46, 83, 14, 14, 14, 14, 15, 17, 17, 17, 17, 17, 66, 75, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 68, 2, 1, 52, 0, 0, 0]);
+C.List_8co87 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 59, 7, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 15, 15, 95, 76, 18, 18, 123, 94, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 14, 81, 10, 53, 3, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 2, 52, 55, 6, 86, 16, 16, 16, 16, 16, 16, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 10, 0, 0, 0]);
+C.List_8co88 = Isolate.makeConstantList([0, 0, 0, 55, 6, 83, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 17, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 81, 2, 1, 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 17, 17, 26, 21, 21, 27, 17, 17, 14, 14, 14, 17, 17, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 17, 17, 17, 16, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 76, 18, 18, 123, 15, 15, 15, 15, 15, 15, 15, 2, 52, 0, 0, 0, 0]);
+C.List_8co89 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 55, 56, 8, 8, 8, 60, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 53, 1, 3, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 16, 16, 14, 14, 14, 14, 17, 17, 17, 17, 10, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 15, 15, 15, 9, 54, 0, 53, 3, 80, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 76, 18, 18, 18, 18, 18, 18, 18, 18, 70, 69, 9, 54, 0, 0, 0, 0, 0]);
+C.List_8co9 = Isolate.makeConstantList([0, 0, 0, 0, 0, 4, 85, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 17, 17, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 17, 17, 17, 17, 17, 17, 17, 16, 16, 16, 16, 17, 17, 17, 17, 17, 17, 15, 15, 15, 17, 17, 17, 17, 17, 17, 17, 17, 17, 2, 52, 0, 53, 3, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 81, 2, 52, 0, 53, 3, 80, 14, 14, 14, 14, 14, 14, 14, 14, 14, 16, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 2, 52, 0, 0, 0, 0, 0]);
+C.List_8co90 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 81, 2, 3, 80, 14, 14, 14, 14, 15, 15, 15, 15, 15, 9, 5, 6, 15, 15, 15, 15, 15, 16, 16, 16, 89, 10, 0, 0, 0, 0, 0, 0, 53, 1, 3, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 9, 54, 0, 0, 0, 53, 3, 17, 17, 17, 16, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 81, 10, 0, 0, 0, 0, 0, 0]);
+C.List_8co91 = Isolate.makeConstantList([0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 14, 14, 14, 15, 15, 15, 15, 9, 5, 54, 0, 0, 0, 0, 53, 1, 1, 3, 80, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 40, 41, 84, 82, 9, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 5, 5, 5, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 5, 6, 21, 21, 21, 21, 21, 21, 27, 17, 17, 17, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+C.List_8co92 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 17, 17, 17, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 81, 2, 1, 52, 53, 1, 3, 80, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 88, 10, 0, 0, 0, 0, 0, 0, 0, 0, 53, 3, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 10, 0, 0, 0, 0, 53, 3, 17, 17, 17, 16, 16, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 81, 2, 52, 0, 0, 0, 0, 0, 0]);
+C.List_8co93 = Isolate.makeConstantList([0, 0, 0, 4, 17, 17, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 82, 49, 7, 15, 15, 15, 15, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 81, 10, 0, 0, 0, 0, 0, 53, 3, 17, 17, 17, 17, 17, 17, 17, 17, 66, 75, 123, 63, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 67, 76, 74, 17, 17, 18, 17, 17, 2, 52, 0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 16, 16, 16, 15, 15, 15, 15, 15, 14, 14, 14, 14, 81, 10, 0, 0, 0]);
+C.List_8co94 = Isolate.makeConstantList([0, 0, 0, 0, 53, 3, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 81, 20, 83, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 15, 15, 17, 17, 17, 17, 17, 17, 17, 15, 15, 92, 75, 18, 18, 68, 2, 1, 52, 0, 0, 0, 0, 0, 0]);
+C.List_8co95 = Isolate.makeConstantList([0, 0, 0, 4, 15, 15, 15, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 17, 17, 17, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 11, 125, 0, 59, 7, 15, 15, 15, 16, 16, 16, 89, 9, 54, 0, 0, 0, 0, 0, 53, 3, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 11, 125, 0, 0, 0, 0, 4, 86, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 81, 2, 52, 0, 0, 0, 0, 0]);
+C.List_8co96 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 86, 87, 87, 87, 87, 87, 89, 9, 5, 54, 0, 55, 5, 5, 5, 5, 5, 5, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 6, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 9, 5, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 21, 21, 21, 9, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+C.List_8co97 = Isolate.makeConstantList([0, 0, 0, 0, 0, 0, 4, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 2, 1, 1, 1, 3, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 81, 10, 0, 0, 0, 4, 117, 111, 14, 76, 18, 74, 14, 101, 122, 100, 99, 66, 75, 18, 18, 18, 18, 68, 9, 126, 5, 6, 71, 18, 18, 18, 18, 18, 18, 18, 18, 18, 74, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 26, 21, 21, 2, 1, 52, 53, 3, 15, 15, 15, 15, 16, 16, 16, 16, 88, 10, 0, 0, 0]);
+C.List_8co98 = Isolate.makeConstantList([0, 0, 0, 0, 0, 55, 6, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 9, 54, 0, 0, 53, 1, 1, 1, 3, 17, 17, 17, 17, 17, 17, 17, 15, 15, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 16, 16, 16, 14, 14, 14, 14, 14, 14, 81, 2, 62, 5, 5, 6, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 9, 54, 0, 53, 3, 80, 14, 14, 14, 14, 14, 14, 14, 14, 76, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 69, 9, 54, 0, 0, 0, 0]);
+C.List_8co99 = Isolate.makeConstantList([0, 0, 0, 4, 85, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 15, 15, 15, 15, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 10, 53, 3, 85, 16, 16, 16, 16, 16, 88, 9, 54, 0, 0, 0, 0, 0, 0, 4, 17, 17, 17, 15, 15, 15, 15, 15, 15, 15, 15, 15, 17, 17, 17, 2, 52, 0, 0, 0, 59, 7, 85, 16, 16, 16, 16, 16, 16, 16, 16, 15, 15, 15, 15, 15, 15, 17, 17, 17, 17, 17, 15, 15, 15, 15, 15, 15, 14, 14, 14, 14, 81, 10, 0, 0, 0, 0, 0]);
 C.List_A4p = Isolate.makeConstantList([558, 603, 615, 560, 560, 577, 560, 558, 611, 616, 560, 585, 586, 560, 617, 572, 558, 559, 560, 560, 607, 608, 560, 560, 560, 593, 574, 560, 558, 561, 550]);
 C.List_ADx = Isolate.makeConstantList([550, 558, 665, 666, 667, 660, 630, 560, 560, 558, 559, 585, 586, 560, 558, 559, 560, 563, 559, 560, 668, 559, 558, 113, 97, 97, 97, 97, 97, 98, 651]);
 C.List_AKW = Isolate.makeConstantList([797, 561, 797, 810, 794, 789, 879, 880, 828, 787, 857, 790, 828, 797, 561, 550, 550, 675, 139, 454, 651, 550, 823, 810, 811, 812, 810, 797, 562, 557, 113, 97]);
@@ -13960,15 +14990,17 @@ C.List_iDw = Isolate.makeConstantList([827, 789, 789, 789, 789, 789, 789, 789, 7
 C.List_s0t = Isolate.makeConstantList([550, 550, 550, 550, 550, 550, 550, 550, 550, 550, 550, 550, 550, 550, 550, 550, 550, 550, 550, 550, 113, 97, 97, 97, 97, 97, 97, 97, 98, 651, 550, 550]);
 C.List_AmY = Isolate.makeConstantList([C.List_7eO, C.List_mHo, C.List_t0B, C.List_OLP, C.List_upx, C.List_w7S, C.List_VoA, C.List_1Wj, C.List_m5H, C.List_lHj, C.List_693, C.List_mJ1, C.List_4Ky, C.List_mZr, C.List_MmH, C.List_MmH, C.List_QXb, C.List_DXg, C.List_qZ0, C.List_3BG, C.List_kUU, C.List_CyI, C.List_2Zi, C.List_OTV, C.List_AKW, C.List_ibp, C.List_QTd, C.List_GbN, C.List_3Bm, C.List_say, C.List_iDw, C.List_s0t]);
 C.List_BiQ = Isolate.makeConstantList([550, 558, 658, 659, 660, 661, 560, 565, 560, 558, 559, 579, 580, 560, 558, 559, 560, 551, 552, 553, 590, 552, 600, 113, 97, 97, 97, 97, 97, 98, 651]);
+C.List_CbU = Isolate.makeConstantList(["M_Slimer", "M_Ghost", "M_Drakeer", "M_Ghost", "M_RedSlimer"]);
 C.List_Cx3 = Isolate.makeConstantList([458, 566, 553, 553, 553, 553, 553, 553, 553, 578, 587, 670, 671, 588, 578, 553, 553, 578, 553, 553, 578, 553, 571, 113, 97, 97, 97, 97, 97, 98, 651]);
 C.List_E72 = Isolate.makeConstantList([558, 559, 688, 693, 694, 695, 696, 697, 694, 695, 696, 698, 688, 560, 558]);
+C.List_ECG = Isolate.makeConstantList(["M_Ghost", "M_Magician", "M_Magidrakeer", "M_Magidrakeer", "M_Scorpionr"]);
 C.List_oyU0 = Isolate.makeConstantList([558, 684, 685, 685, 686, 685, 685, 686, 685, 685, 686, 685, 685, 685, 558]);
 C.List_bY5 = Isolate.makeConstantList([558, 559, 688, 689, 690, 690, 690, 690, 690, 690, 690, 691, 688, 560, 558]);
 C.List_iDT = Isolate.makeConstantList([558, 559, 688, 693, 697, 697, 697, 697, 697, 697, 697, 698, 688, 560, 558]);
 C.List_gUw = Isolate.makeConstantList([558, 559, 688, 702, 703, 703, 704, 697, 705, 703, 703, 706, 688, 560, 558]);
-C.List_OLv0 = Isolate.makeConstantList([558, 559, 688, 688, 688, 688, 693, 697, 698, 688, 688, 688, 688, 560, 558]);
+C.List_OLv = Isolate.makeConstantList([558, 559, 688, 688, 688, 688, 693, 697, 698, 688, 688, 688, 688, 560, 558]);
 C.List_O9u = Isolate.makeConstantList([558, 559, 560, 560, 560, 707, 693, 697, 698, 707, 560, 560, 560, 560, 558]);
-C.List_OLv = Isolate.makeConstantList([558, 559, 560, 560, 560, 708, 693, 697, 698, 708, 560, 560, 560, 560, 558]);
+C.List_OLv0 = Isolate.makeConstantList([558, 559, 560, 560, 560, 708, 693, 697, 698, 708, 560, 560, 560, 560, 558]);
 C.List_int = Isolate.makeConstantList([558, 559, 560, 560, 560, 626, 693, 697, 698, 630, 560, 560, 560, 560, 558]);
 C.List_Y62 = Isolate.makeConstantList([576, 679, 553, 553, 553, 712, 713, 714, 715, 716, 553, 553, 553, 553, 600]);
 C.List_N1J = Isolate.makeConstantList([558, 684, 685, 685, 685, 718, 719, 720, 721, 722, 685, 685, 685, 685, 558]);
@@ -13976,16 +15008,22 @@ C.List_YaL = Isolate.makeConstantList([558, 559, 560, 560, 560, 560, 560, 723, 5
 C.List_kfn = Isolate.makeConstantList([566, 553, 553, 553, 553, 553, 553, 553, 553, 553, 553, 553, 553, 553, 571]);
 C.List_v7S = Isolate.makeConstantList([726, 685, 685, 685, 685, 685, 685, 685, 685, 685, 685, 685, 685, 685, 727]);
 C.List_ZfX = Isolate.makeConstantList([728, 728, 728, 728, 728, 728, 728, 728, 728, 728, 728, 728, 728, 728, 728]);
-C.List_EYo = Isolate.makeConstantList([C.List_5i60, C.List_oyU0, C.List_bY5, C.List_E72, C.List_AWk, C.List_iDT, C.List_iDT, C.List_iDT, C.List_iDT, C.List_gUw, C.List_OLv0, C.List_O9u, C.List_OLv, C.List_int, C.List_Y62, C.List_N1J, C.List_5i6, C.List_YaL, C.List_kfn, C.List_v7S, C.List_ZfX]);
+C.List_EYo = Isolate.makeConstantList([C.List_5i60, C.List_oyU0, C.List_bY5, C.List_E72, C.List_AWk, C.List_iDT, C.List_iDT, C.List_iDT, C.List_iDT, C.List_gUw, C.List_OLv, C.List_O9u, C.List_OLv0, C.List_int, C.List_Y62, C.List_N1J, C.List_5i6, C.List_YaL, C.List_kfn, C.List_v7S, C.List_ZfX]);
 C.List_Hn1 = Isolate.makeConstantList([576, 552, 553, 553, 553, 600, 559, 558, 594, 595, 560, 585, 586, 560, 596, 597, 558, 559, 560, 563, 601, 602, 563, 559, 560, 563, 559, 560, 558, 561, 550]);
+C.List_J7y = Isolate.makeConstantList(["M_Skeletonr", "M_Warlockr", "M_MetalScorpionr", "M_Wolfr", "M_Wolfr"]);
 C.List_Jgx = Isolate.makeConstantList([550, 558, 559, 653, 653, 560, 560, 560, 560, 558, 559, 560, 560, 560, 558, 559, 560, 560, 560, 560, 560, 560, 558, 654, 655, 655, 655, 655, 656, 657, 651]);
 C.List_Jwp = Isolate.makeConstantList([550, 576, 552, 567, 574, 560, 570, 553, 554, 644, 645, 646, 647, 648, 630, 551, 649, 574, 560, 560, 560, 560, 558, 643, 643, 643, 643, 643, 558, 611, 550]);
+C.List_MMm = Isolate.makeConstantList(["M_RedSlimer", "M_RedSlimer", "M_Drakeer", "M_Ghost", "M_Magician"]);
 C.List_MYA = Isolate.makeConstantList([672, 673, 674, 651, 550, 550, 550, 550, 550, 550, 550, 550, 550, 550, 550, 550, 550, 550, 550, 550, 550, 675, 676, 666, 97, 97, 97, 97, 97, 98, 677]);
 C.List_MgR = Isolate.makeConstantList([551, 575, 553, 553, 553, 554, 574, 558, 559, 560, 560, 560, 560, 560, 560, 560, 576, 552, 567, 577, 570, 553, 578, 553, 567, 568, 570, 553, 554, 555, 550]);
 C.List_OBT = Isolate.makeConstantList(["o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "g", "f", "h", "m", "s", "x", "b", "w", "x", "w", "w", "w", "w", "w", "w", "w", "g", "g", "x", "g", "g", "g", "g", "s", "s", "g", "g", "g", "x", "s", "g", "w", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "o", "m", "m", "m", "m", "m", "s", "s", "s", "s", "s", "s", "s", "s", "s", "s", "x", "s", "g", "g", "g", "g", "g", "h", "h", "h", "h", "h", "h", "h", "f", "f", "f", "f", "f", "x", "x", "m", "g", "g", "g", "m", "m", "m", "m", "g", "g", "g", "g", "g", "w", "w", "w", "w", "m", "g", "g", "g", "g", "g", "g", "s", "o", "o", "o", "o", "x", "x", "g", "g", "g", "g", "g", "g", "g", "g", "g", "g"]);
 C.List_P50 = Isolate.makeConstantList([566, 623, 624, 553, 553, 571, 559, 563, 625, 626, 627, 628, 628, 629, 630, 617, 566, 553, 553, 578, 553, 553, 589, 552, 553, 571, 559, 570, 600, 611, 550]);
 C.List_Tjc = Isolate.makeConstantList([550, 558, 559, 560, 560, 560, 560, 558, 561, 557, 550, 557, 557, 550, 557, 550, 558, 559, 560, 560, 560, 560, 558, 561, 558, 559, 558, 562, 550, 550, 550]);
 C.List_Wrv = Isolate.makeConstantList([558, 559, 560, 560, 560, 593, 574, 558, 594, 595, 560, 579, 580, 560, 596, 597, 558, 559, 560, 558, 598, 599, 558, 559, 560, 558, 559, 560, 558, 561, 550]);
+C.List_ijt = Isolate.makeConstantList(["M_RedSlimer", "M_Slimer", "M_RedSlimer", "M_Drakeer", "M_RedSlimer"]);
+C.List_a5W = Isolate.makeConstantList(["M_Ghost", "M_Magician", "M_Magidrakeer", "M_Scorpionr", "M_Skeletonr"]);
+C.List_kYz = Isolate.makeConstantList(["M_Magidrakeer", "M_Scorpionr", "M_Skeletonr", "M_Warlockr", "M_Wolfr"]);
+C.List_XaM = Isolate.makeConstantList([C.List_5VY, C.List_ijt, C.List_CbU, C.List_MMm, C.List_ECG, C.List_a5W, C.List_kYz, C.List_J7y]);
 C.List_YWh = Isolate.makeConstantList([550, 558, 559, 560, 560, 560, 560, 560, 558, 559, 560, 560, 560, 560, 560, 558, 559, 560, 560, 560, 560, 560, 558, 559, 560, 560, 560, 560, 558, 611, 550]);
 C.List_wYn = Isolate.makeConstantList([550, 558, 559, 560, 560, 560, 560, 558, 561, 550, 550, 550, 550, 550, 550, 550, 558, 559, 560, 560, 560, 560, 558, 561, 563, 564, 563, 561, 550, 550, 550]);
 C.List_axI = Isolate.makeConstantList([550, 558, 559, 560, 565, 560, 560, 566, 553, 553, 567, 568, 569, 570, 553, 553, 571, 559, 560, 565, 560, 560, 558, 561, 550, 550, 572, 572, 550, 550, 550]);
@@ -14001,12 +15039,12 @@ C.List_oyU = Isolate.makeConstantList([550, 558, 113, 97, 97, 98, 661, 560, 560,
 C.List_zPV = Isolate.makeConstantList([113, 97, 98, 651, 550, 550, 550, 550, 550, 550, 550, 550, 550, 550, 550, 550, 550, 550, 550, 550, 550, 675, 113, 97, 97, 97, 97, 97, 97, 98, 651]);
 C.List_aJC = Isolate.makeConstantList([C.List_2Yi, C.List_Tjc, C.List_wYn, C.List_axI, C.List_k9A, C.List_goM, C.List_MgR, C.List_69t, C.List_gT2, C.List_w5B, C.List_Wrv, C.List_Hn1, C.List_coJ, C.List_sy0, C.List_A4p, C.List_mdt, C.List_P50, C.List_2xM, C.List_5aZ, C.List_Jwp, C.List_YWh, C.List_2z6, C.List_eAf, C.List_Jgx, C.List_BiQ, C.List_ADx, C.List_oyU, C.List_69P, C.List_Cx3, C.List_MYA, C.List_zPV]);
 C.List_empty = Isolate.makeConstantList([]);
-C.List_mBP = Isolate.makeConstantList([C.List_8co68, C.List_8co68, C.List_8co68, C.List_8co66, C.List_8co86, C.List_8co64, C.List_8co92, C.List_8co109, C.List_8co84, C.List_8co81, C.List_8co117, C.List_8co116, C.List_8co13, C.List_8co88, C.List_8co114, C.List_8co100, C.List_8co97, C.List_8co96, C.List_8co78, C.List_8co11, C.List_8co4, C.List_8co106, C.List_8co72, C.List_8co, C.List_8co60, C.List_8co77, C.List_8co85, C.List_8co63, C.List_8co118, C.List_8co121, C.List_8co1, C.List_8co95, C.List_8co90, C.List_8co80, C.List_8co59, C.List_8co107, C.List_8co74, C.List_8co8, C.List_8co99, C.List_8co2, C.List_8co54, C.List_8co75, C.List_8co98, C.List_8co101, C.List_8co56, C.List_8co15, C.List_8co3, C.List_8co120, C.List_8co36, C.List_8co87, C.List_8co115, C.List_8co6, C.List_8co112, C.List_8co45, C.List_8co49, C.List_8co51, C.List_8co70, C.List_8co94, C.List_8co9, C.List_8co69, C.List_8co89, C.List_8co31, C.List_8co104, C.List_8co57, C.List_8co113, C.List_8co61, C.List_8co111, C.List_8co79, C.List_8co58, C.List_8co110, C.List_8co62, C.List_8co73, C.List_8co82, C.List_8co108, C.List_8co71, C.List_8co25, C.List_8co83, C.List_8co76, C.List_8co93, C.List_8co102, C.List_8co12, C.List_8co48, C.List_8co42, C.List_8co55, C.List_8co39, C.List_8co119, C.List_8co32, C.List_8co38, C.List_8co103, C.List_8co53, C.List_8co52, C.List_8co65, C.List_8co14, C.List_8co67, C.List_8co43, C.List_8co47, C.List_8co20, C.List_8co44, C.List_8co30, C.List_8co27, C.List_8co41, C.List_8co50, C.List_8co105, C.List_8co0, C.List_8co46, C.List_8co5, C.List_8co37, C.List_8co35, C.List_8co29, C.List_8co21, C.List_8co24, C.List_8co33, C.List_8co10, C.List_8co26, C.List_8co28, C.List_8co18, C.List_8co16, C.List_8co34, C.List_8co23, C.List_8co19, C.List_8co40, C.List_8co22, C.List_8co7, C.List_8co91, C.List_8co17, C.List_8co68, C.List_8co68, C.List_8co68]);
+C.List_mBP = Isolate.makeConstantList([C.List_8co75, C.List_8co75, C.List_8co75, C.List_8co67, C.List_8co74, C.List_8co42, C.List_8co100, C.List_8co117, C.List_8co92, C.List_8co90, C.List_8co95, C.List_8co99, C.List_8co14, C.List_8co0, C.List_8co107, C.List_8co108, C.List_8co104, C.List_8co103, C.List_8co87, C.List_8co12, C.List_8co5, C.List_8co114, C.List_8co81, C.List_8co94, C.List_8co2, C.List_8co86, C.List_8co73, C.List_8co72, C.List_8co78, C.List_8co82, C.List_8co76, C.List_8co102, C.List_8co98, C.List_8co89, C.List_8co59, C.List_8co115, C.List_8co83, C.List_8co9, C.List_8co106, C.List_8co3, C.List_8co54, C.List_8co84, C.List_8co105, C.List_8co116, C.List_8co40, C.List_8co16, C.List_8co4, C.List_8co91, C.List_8co19, C.List_8co77, C.List_8co, C.List_8co7, C.List_8co120, C.List_8co48, C.List_8co97, C.List_8co62, C.List_8co79, C.List_8co49, C.List_8co10, C.List_8co56, C.List_8co58, C.List_8co80, C.List_8co112, C.List_8co61, C.List_8co121, C.List_8co66, C.List_8co119, C.List_8co88, C.List_8co69, C.List_8co118, C.List_8co64, C.List_8co68, C.List_8co70, C.List_8co111, C.List_8co52, C.List_8co41, C.List_8co71, C.List_8co85, C.List_8co101, C.List_8co110, C.List_8co13, C.List_8co34, C.List_8co53, C.List_8co47, C.List_8co50, C.List_8co93, C.List_8co43, C.List_8co27, C.List_8co109, C.List_8co51, C.List_8co36, C.List_8co63, C.List_8co15, C.List_8co65, C.List_8co45, C.List_8co28, C.List_8co20, C.List_8co55, C.List_8co33, C.List_8co37, C.List_8co23, C.List_8co22, C.List_8co113, C.List_8co60, C.List_8co57, C.List_8co6, C.List_8co35, C.List_8co46, C.List_8co39, C.List_8co29, C.List_8co32, C.List_8co44, C.List_8co11, C.List_8co1, C.List_8co38, C.List_8co24, C.List_8co17, C.List_8co31, C.List_8co18, C.List_8co26, C.List_8co25, C.List_8co30, C.List_8co8, C.List_8co96, C.List_8co21, C.List_8co75, C.List_8co75, C.List_8co75]);
 C.Window_methods = $.Window.prototype;
 $.CharacterSprite__duration = 500;
 $.CharacterSprite__spriteData = null;
 $.ImageCache__imgs = null;
-$.HeroSprite_velocity = 0.15;
+$.HeroSprite_velocity = 0.125;
 $.NPC_velocity = 0.05;
 $.TreasureChest_chestOpenSpriteSX = 0;
 $.TreasureChest_chestOpenSpriteSY = 0;
@@ -14162,135 +15200,159 @@ Isolate.$lazy($, "additionalGrowth", "HeroStats_additionalGrowth", "get$HeroStat
 });
 Isolate.$lazy($, "WeaponData", "stats_WeaponData", "get$stats_WeaponData", function() {
   var t1, t2, t3, t4, t5, t6, t7, t8;
-  t1 = new $.Weapon(null, null, null, null);
+  t1 = new $.Weapon(null, null, null, false, null);
   t1._name = "Bamboo Pole";
   t1._isEquip = false;
   t1._cost = 10;
   t1._pow = 2;
-  t2 = new $.Weapon(null, null, null, null);
+  t1._isEquipable = true;
+  t2 = new $.Weapon(null, null, null, false, null);
   t2._name = "Club";
   t2._isEquip = false;
   t2._cost = 60;
   t2._pow = 4;
-  t3 = new $.Weapon(null, null, null, null);
+  t2._isEquipable = true;
+  t3 = new $.Weapon(null, null, null, false, null);
   t3._name = "Copper Sword";
   t3._isEquip = false;
   t3._cost = 180;
   t3._pow = 10;
-  t4 = new $.Weapon(null, null, null, null);
+  t3._isEquipable = true;
+  t4 = new $.Weapon(null, null, null, false, null);
   t4._name = "Hand axe";
   t4._isEquip = false;
   t4._cost = 560;
   t4._pow = 15;
-  t5 = new $.Weapon(null, null, null, null);
+  t4._isEquipable = true;
+  t5 = new $.Weapon(null, null, null, false, null);
   t5._name = "Broad Sword";
   t5._isEquip = false;
   t5._cost = 1500;
   t5._pow = 20;
-  t6 = new $.Weapon(null, null, null, null);
+  t5._isEquipable = true;
+  t6 = new $.Weapon(null, null, null, false, null);
   t6._name = "Flame Sword";
   t6._isEquip = false;
   t6._cost = 9800;
   t6._pow = 28;
-  t7 = new $.Weapon(null, null, null, null);
+  t6._isEquipable = true;
+  t7 = new $.Weapon(null, null, null, false, null);
   t7._name = "Erdrick's Sword";
   t7._isEquip = false;
   t7._cost = 0;
   t7._pow = 40;
-  t8 = new $.Weapon(null, null, null, null);
+  t7._isEquipable = true;
+  t8 = new $.Weapon(null, null, null, false, null);
   t8._name = "Nothing";
   t8._isEquip = false;
   t8._cost = 0;
   t8._pow = 0;
+  t8._isEquipable = true;
   return $.makeLiteralMap(["Bamboo Pole", t1, "Club", t2, "Copper Sword", t3, "Hand axe", t4, "Broad Sword", t5, "Flame Sword", t6, "Erdrick's Sword", t7, "Nothing", t8]);
 });
 Isolate.$lazy($, "ShieldData", "stats_ShieldData", "get$stats_ShieldData", function() {
   var t1, t2, t3, t4;
-  t1 = new $.Shield(null, null, null, null);
+  t1 = new $.Shield(null, null, null, false, null);
   t1._name = "Small Shield";
   t1._isEquip = false;
   t1._cost = 90;
   t1._def = 4;
-  t2 = new $.Shield(null, null, null, null);
+  t1._isEquipable = true;
+  t2 = new $.Shield(null, null, null, false, null);
   t2._name = "Large Shield Shield";
   t2._isEquip = false;
   t2._cost = 800;
   t2._def = 10;
-  t3 = new $.Shield(null, null, null, null);
+  t2._isEquipable = true;
+  t3 = new $.Shield(null, null, null, false, null);
   t3._name = "Silver Shield";
   t3._isEquip = false;
   t3._cost = 14800;
   t3._def = 25;
-  t4 = new $.Shield(null, null, null, null);
+  t3._isEquipable = true;
+  t4 = new $.Shield(null, null, null, false, null);
   t4._name = "Nothing";
   t4._isEquip = false;
   t4._cost = 0;
   t4._def = 0;
+  t4._isEquipable = true;
   return $.makeLiteralMap(["Small Shield", t1, "Large Shield", t2, "Silver Shield", t3, "Nothing", t4]);
 });
 Isolate.$lazy($, "ArmorData", "stats_ArmorData", "get$stats_ArmorData", function() {
   var t1, t2, t3, t4, t5, t6, t7, t8;
-  t1 = new $.Armor(null, null, null, null);
+  t1 = new $.Armor(null, null, null, false, null);
   t1._name = "Clothes";
   t1._isEquip = false;
   t1._cost = 20;
   t1._def = 2;
-  t2 = new $.Armor(null, null, null, null);
+  t1._isEquipable = true;
+  t2 = new $.Armor(null, null, null, false, null);
   t2._name = "Leather Armor";
   t2._isEquip = false;
   t2._cost = 70;
   t2._def = 4;
-  t3 = new $.Armor(null, null, null, null);
+  t2._isEquipable = true;
+  t3 = new $.Armor(null, null, null, false, null);
   t3._name = "Chain Mail";
   t3._isEquip = false;
   t3._cost = 300;
   t3._def = 10;
-  t4 = new $.Armor(null, null, null, null);
+  t3._isEquipable = true;
+  t4 = new $.Armor(null, null, null, false, null);
   t4._name = "Half Plate";
   t4._isEquip = false;
   t4._cost = 1000;
   t4._def = 16;
-  t5 = new $.Armor(null, null, null, null);
+  t4._isEquipable = true;
+  t5 = new $.Armor(null, null, null, false, null);
   t5._name = "Full Plate";
   t5._isEquip = false;
   t5._cost = 3000;
   t5._def = 24;
-  t6 = new $.Armor(null, null, null, null);
+  t5._isEquipable = true;
+  t6 = new $.Armor(null, null, null, false, null);
   t6._name = "Magic Armor";
   t6._isEquip = false;
   t6._cost = 7700;
   t6._def = 24;
-  t7 = new $.Armor(null, null, null, null);
+  t6._isEquipable = true;
+  t7 = new $.Armor(null, null, null, false, null);
   t7._name = "Erdrick's Armor";
   t7._isEquip = false;
   t7._cost = 0;
   t7._def = 28;
-  t8 = new $.Armor(null, null, null, null);
+  t7._isEquipable = true;
+  t8 = new $.Armor(null, null, null, false, null);
   t8._name = "Nothing";
   t8._isEquip = false;
   t8._cost = 0;
   t8._def = 0;
+  t8._isEquipable = true;
   return $.makeLiteralMap(["Clothes", t1, "Leather Armor", t2, "Chain Mail", t3, "Half Plate", t4, "Full Plate", t5, "Magic Armor", t6, "Erdrick's Armor", t7, "Nothing", t8]);
 });
 Isolate.$lazy($, "ItemData", "stats_ItemData", "get$stats_ItemData", function() {
-  var t1, t2, t3, t4;
-  t1 = new $.Item(null, null, null);
+  var t1, t2, t3, t4, t5;
+  t1 = new $.Item(null, null, false, null);
   t1._name = "Herb";
   t1._isEquip = false;
   t1._cost = 24;
-  t2 = new $.Item(null, null, null);
+  t2 = new $.Item(null, null, false, null);
   t2._name = "Key";
   t2._isEquip = false;
   t2._cost = 38;
-  t3 = new $.Item(null, null, null);
+  t3 = new $.Item(null, null, false, null);
   t3._name = "Torch";
   t3._isEquip = false;
   t3._cost = 8;
-  t4 = new $.Item(null, null, null);
+  t4 = new $.Item(null, null, false, null);
   t4._name = "Wings";
   t4._isEquip = false;
   t4._cost = 70;
-  return $.makeLiteralMap(["Herb", t1, "Key", t2, "Torch", t3, "Wings", t4]);
+  t5 = new $.Item(null, null, false, null);
+  t5._name = "Holy Water";
+  t5._isEquip = false;
+  t5._cost = 120;
+  return $.makeLiteralMap(["Herb", t1, "Key", t2, "Torch", t3, "Wings", t4, "Holy Water", t5]);
 });
 Isolate.$lazy($, "ExpTable", "stats_ExpTable", "get$stats_ExpTable", function() {
   return [0, 0, 7, 23, 47, 110, 220, 450, 800, 1300, 2000, 2900, 4000, 5500, 7500, 10000, 13000, 17000, 21000, 25000, 29000, 33000, 37000, 41000, 45000, 49000, 53000, 57000, 61000, 65000, 65535];
