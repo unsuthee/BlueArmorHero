@@ -95,8 +95,26 @@ class RadotomeCastle2 extends MapData {
           gm.AddRequest(new PushRequest(gm, new YesNoMsgBox(gm, initMsg:msg, yesMsg:msgYes, noMsg:msgNo)));
         }));
     
-    npcs.add(new NPC(gm, "Soldier", name:"Soldier1", px:528, py:800, talkHandler:handleTalk));
-    npcs.add(new NPC(gm, "Soldier", name:"Soldier2", px:594, py:800, talkHandler:handleTalk));
+    npcs.add(new NPC(gm, "Soldier", name:"Soldier1", px:528, py:800, talkHandler:
+      (Game gm, HeroSprite talker, NPC talkee) {
+      talkee.ResetToIdle();
+      talkee.characterSprite.setAnimation(DEF.OppositeDirection(talker.direction));
+      gm.AddRequest(new RedrawRequest(gm));
+      
+      String msg1 = "*: Save up your money,;so that you can buy more expensive weapons are armor.";
+      String msg2 = "*: If you do that,;you will become stronger.";
+      gm.AddRequest(new PushRequest(gm, new MsgBox(gm, "${msg1};${msg2}")));  
+    }));
+    
+    npcs.add(new NPC(gm, "Soldier", name:"Soldier2", px:594, py:800, talkHandler:
+      (Game gm, HeroSprite talker, NPC talkee) {
+      talkee.ResetToIdle();
+      talkee.characterSprite.setAnimation(DEF.OppositeDirection(talker.direction));
+      gm.AddRequest(new RedrawRequest(gm));
+      
+      String msg1 = "*: You should listen to people's stories, for they will often provide you with some good information.";
+      gm.AddRequest(new PushRequest(gm, new MsgBox(gm, msg1)));  
+    }));
     
     npcs.add(new TreasureChest(gm,px:533,py:640));
     npcs.add(new TreasureChest(gm,px:565,py:640));

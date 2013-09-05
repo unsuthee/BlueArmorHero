@@ -61,11 +61,51 @@ class RadotomeCastle1 extends MapData {
     return "TownImage";
   }
   
+  // entrace position: 699:1293
+  
+  //Solidier : Welcome to Radotome Castle! 644:1278 , 751:1278
+  // 938:1010 Sol : When you enter a cave,;it's good to have a torch because caves are filled with the powers of the darkness.
+  // *: And, there are more monsters in caves than out in the countryside.
+  // 1021:1245 old man: When the dragon of darkness spreads its wings,;it marks the arrival of the descendant of Erdrick.
+  // *: May the light shine upon the hero of legend, ${heroname}!"
+  // 618:797 girl : Oh, Princess Gwaelin...;Where could she be?;Could it be that she is dead?"
+  // 751:860 bman: This is Radotome castle.;Many people would gather here, since this place was a paradise.
+  // Then all the demons appeared.;;...[sigh]..."
+  // 431:1107 Merchant: I'm a traveling merchant.;Many of my colleagues were killed by minions of the Dragonlord";
+  // Because of this, I've collected mortifying and sorrowful memories of those times.
+  // 566:1217 kid: Did you hear?
+  // yes: I'm shocked!
+  // no: Rumor has it that there is a town that was destroyed by the demons.
+  
+  // 386:670 Knight: TO gain experience and levels,;you must fight monsters;
+  // When you do that noble {heroname},;you may rise to the next level, and you'll become stronger.
+  // 914:537 sol: A key is necessary to open this door.
+  // Also, I hear that the key will break after just one use.
+  
+  // 624:477 man: My girlfriend and I will be together until the day we die.
+  // But will the day come that my feelings will be shattered by demons?
+  // 594:477 girl: When I am together with my boyfriend...
+  // I forget about the darkness that continues to blanket our world.
+  // However, that is a lie... If the world is destroyed, he says that our love will be too.
+  
+  // 799:607 sol: when you want to rest from your travles, come back.
+  // The king will record your journey for you in the Imperial Scrolls of Honor.
+  
+  // 796:672 Sol: A record of your journey can be written in the Imperial Scrolls of Honor.
+  // When you return from a break, it can be resumed where you left off.
+  
+  // Chancelor: 989:752
+  // woman: 1009:832
+  // merchant: 1136:432
+  // sol: 466:894
   Map<String,Trigger> getTriggeMap() {
     Map<String,Trigger> triggers = new Map<String,Trigger>();
     Trigger Castle2ndFloorEnterTrigger = new EnterTownTrigger("172:149", townName:"RadotomeCastle2");
-    //triggers["48:39"] = Castle2ndFloorEnterTrigger;
     triggers["49:39"] = Castle2ndFloorEnterTrigger;
+    
+    Trigger exitTownTrigger = new ExitTownTrigger("43:28");
+    AddTriggerByRange(triggers, new Rect(42,82,3,0), exitTownTrigger);
+    AddTriggerByRange(triggers, new Rect(37,24,14,0), exitTownTrigger);
     
     return triggers;
   }
