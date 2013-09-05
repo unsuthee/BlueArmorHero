@@ -99,6 +99,7 @@ class BuySellMenu extends Layer {
         _state = POST_PENDING_STATE;
         break;
       case SELL_PENDING_STATE:
+        _gm.AddRequest(new PushRequest(_gm, new SellItemListMenu(_gm)));
         _state = POST_PENDING_STATE;
         break;
       case POST_PENDING_STATE:

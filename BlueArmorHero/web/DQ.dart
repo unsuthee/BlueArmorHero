@@ -20,6 +20,7 @@ part 'layers/quest/spell_menu.dart';
 part 'layers/quest/itemUsageDecisionMenu.dart';
 part 'layers/quest/BuySellMenu.dart';
 part 'layers/quest/BuyItemListMenu.dart';
+part 'layers/quest/SellItemListMenu.dart';
 part 'layers/quest/People/Thing.dart';
 part 'layers/quest/People/TreasureChest.dart';
 part 'layers/quest/People/HeroSprite.dart';

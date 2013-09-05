@@ -27,8 +27,11 @@ class GameState {
   // Equipments
   GameState() {
     _stats = new HeroStats("Suthee");
-    AddItem(new Item("Wings"));
-    AddItem(new Item("Herb"));
+    AddItem(stats.ItemData["Wings"]);
+    AddItem(stats.ItemData["Wings"]);
+    AddItem(stats.ItemData["Herb"]);
+    AddItem(stats.ItemData["Herb"]);
+    AddItem(stats.ItemData["Herb"]);
     AddItem(stats.WeaponData["Erdrick's Sword"]);
     AddItem(stats.ArmorData["Erdrick's Armor"]);
     AddItem(stats.ShieldData["Silver Shield"]);

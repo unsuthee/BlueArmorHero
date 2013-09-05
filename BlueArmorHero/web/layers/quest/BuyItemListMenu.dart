@@ -144,11 +144,11 @@ class BuyItemListMenu extends Layer {
               yesMsg:yesMsg,
               noMsg:noMsg,
               yesHandler:(Game gm) {
-                _gm.gameState.AddItem(toBuyItem);
-                _gm.gameState.Stats.Equip(toBuyItem);
+                gm.gameState.AddItem(toBuyItem);
+                gm.gameState.Stats.Equip(toBuyItem);
               },
               noHandler: (Game gm) {
-                _gm.gameState.AddItem(toBuyItem);
+                gm.gameState.AddItem(toBuyItem);
               })));
           
           _state = DISMISSAL_STATE;

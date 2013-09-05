@@ -31,6 +31,13 @@ class stats {
     "Nothing"         : new Armor("Nothing")
   };
   
+  static Map<String,Item> ItemData = {
+    "Herb"  : new Item("Herb",cost:24),
+    "Key"   : new Item("Key",cost:38),
+    "Torch"  : new Item("Torch",cost:8),
+    "Wings"  : new Item("Wings",cost:70)
+  };
+                                        
   static List<int> ExpTable = [0,0,7,23,47,110,
                    220,450,800,1300,2000,
                    2900,4000,5500,7500,10000,
