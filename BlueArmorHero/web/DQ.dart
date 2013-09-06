@@ -3,6 +3,7 @@ library DQ;
 import 'dart:html';
 import 'dart:json' as JSON;
 import 'dart:math' as MATH;
+import 'dart:async' as ASYNC;
 part 'def.dart';
 part 'core/imageCache.dart';
 part 'core/sprite.dart';
@@ -112,17 +113,13 @@ class Game extends LayerManager {
     spriteCanvas = query("#sprite_canvas");
     spriteCanvasCtx = spriteCanvas.context2D;
     
-    query('#start_btn').onClick.listen((MouseEvent me) {
-      startNewGame();
-    });
-    
     window.onKeyDown.listen(keyboardDownHandler);
     window.onKeyUp.listen(keyboardUpHandler);
     
     _gameState = new GameState();
-    LoadImages();
     
-    
+    List imgLoadingTasks = LoadImages();
+    ASYNC.Future.wait(imgLoadingTasks).then((_)=> startNewGame());
   }
   
   void startNewGame()
@@ -135,7 +132,7 @@ class Game extends LayerManager {
     window.requestAnimationFrame(tick);
   }
      
-  void LoadImages() 
+  List LoadImages() 
   {
     ImageCache imgCache = new ImageCache();
 
@@ -168,6 +165,7 @@ class Game extends LayerManager {
                 "M_Scorpionr":      {"width": 40, "height": 41, "src": "res/mons/scorpionr.gif"},
                 "M_MetalScorpionr": {"width": 40, "height": 41, "src": "res/mons/metalscorpionr.gif"}};
                
+    var tasks = [];
     for(String name in data.keys) {
       Map info = data[name];
       ImageElement imgElement = new Element.tag('img'); 
@@ -175,7 +173,11 @@ class Game extends LayerManager {
       imgElement.height = info["height"];
       imgElement.src = info["src"];
       imgCache.setImageElement(name, imgElement);
+      
+      tasks.add(imgElement.onLoad.first);
     }
+    
+    return tasks;
   }
   
   CanvasRenderingContext2D getCanvasCtx() 
