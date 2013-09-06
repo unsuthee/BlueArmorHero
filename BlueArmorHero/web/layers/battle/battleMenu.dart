@@ -147,13 +147,6 @@ class battleMenu extends Layer {
   
   void draw(CanvasRenderingContext2D ctx) {
     
-    if (_tasks.isNotEmpty) {
-      if (!_tasks[0].isComplete()) {
-        _tasks[0].draw(ctx);
-      }
-      return;
-    }
-    
     if (_bgDirty) {
       // background draw to the character canvas
       _game.spriteCanvasCtx.clearRect(bgRect.left, bgRect.top, bgRect.width, bgRect.height);
@@ -162,6 +155,13 @@ class battleMenu extends Layer {
         drawMonster(_game.spriteCanvasCtx);
       }
       _bgDirty = false;
+    }
+    
+    if (_tasks.isNotEmpty) {
+      if (!_tasks[0].isComplete()) {
+        _tasks[0].draw(ctx);
+      }
+      return;
     }
     
     switch(_state) {
@@ -248,6 +248,7 @@ class battleMenu extends Layer {
         if (grows[3] > 0)
           _tasks.add(new AnnotateTask(_game,["Your Max MP is incremented by ${grows[3]}."]));
       }
+      setDirty();
       ko = true;
     }
     return ko;
