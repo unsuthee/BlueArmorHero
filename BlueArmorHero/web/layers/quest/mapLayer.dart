@@ -138,11 +138,11 @@ class MapLayer extends Layer {
     }
     else {
       // check for encounter
-      if (!DEF.NO_ENCOUNTER) {
-        int zoneId = MonsterStats.getZoneByPos((_heroSprite.mapPx - 461) ~/ 512, (_heroSprite.mapPy - 537) ~/ 512);
-        List monsList = MonsterStats.getMonsterByZone(zoneId);
-        
+      if (_mapData.hasEncounter()) {
         if (_rng.nextInt(48) == 0) {
+          int zoneId = MonsterStats.getZoneByPos((_heroSprite.mapPx - 461) ~/ 512, (_heroSprite.mapPy - 537) ~/ 512);
+          List monsList = MonsterStats.getMonsterByZone(zoneId);
+
           HeroSprite hero = HeroInfo;
           hero.ResetToIdle();
           LaunchBattle(monsList[_rng.nextInt(5)], stats.getOverworldTerranByTileId(_heroSprite.getCurrentTileId()));  

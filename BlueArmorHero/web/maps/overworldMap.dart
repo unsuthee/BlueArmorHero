@@ -140,6 +140,10 @@ class overworldMap extends MapData {
   int getInitPosX() => 1855;
   int getInitPosY() => 1938;
   
+  bool hasEncounter() {
+    return !DEF.NO_ENCOUNTER;
+  }
+  
   Map<String,Trigger> getTriggeMap() {
     Map<String,Trigger> triggers = new Map<String,Trigger>();
     Trigger RadotomeTownEnterTrigger = new EnterTownTrigger("172:149", townName:"RadotomeTown");

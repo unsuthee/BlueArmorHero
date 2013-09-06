@@ -23,6 +23,10 @@ abstract class MapData {
     return true;
   }
   
+  bool hasEncounter() {
+    return false;
+  }
+  
   void AddTriggerByRange(Map<String,Trigger> triggerContainer, Rect range, Trigger trigger) {
     for (int c=range.left; c<=range.right; c++) {
       for (int r=range.top; r<=range.bottom; r++) {
