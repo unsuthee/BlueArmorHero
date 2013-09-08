@@ -64,7 +64,7 @@ class HerbItem extends BattleAction {
     int range = maxDamage - minDamage;
     int damage = rng.nextInt(range) + minDamage + 1;
     print("Heal = ${damage}");
-    defender.decHP(-1 * damage);
+    attacker.decHP(-1 * damage);
     
     List<BattleTask> tasks = new List<BattleTask>();
     String msg1 = "${attacker.name} uses Herb.";
