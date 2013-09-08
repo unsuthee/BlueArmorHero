@@ -35,6 +35,9 @@ class GameState {
     AddItem(stats.WeaponData["Erdrick's Sword"]);
     AddItem(stats.ArmorData["Erdrick's Armor"]);
     AddItem(stats.ShieldData["Silver Shield"]);
+    _stats.Equip(stats.WeaponData["Erdrick's Sword"]);
+    _stats.Equip(stats.ArmorData["Erdrick's Armor"]);
+    _stats.Equip(stats.ShieldData["Silver Shield"]);
   }
       
   HeroBattler createHeroBattler() {
@@ -83,4 +86,8 @@ class GameState {
     _inventory.remove(item);  
   }
   
+  Map toJSON() {
+    return {"Stat": _stats.toJSON(),
+            "Inventory": ["Herb"]};
+  }
 }

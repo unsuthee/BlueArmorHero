@@ -8,6 +8,38 @@ class HeroStats {
     initEquipment();
   }
 
+  HeroStats.fromJSON(Map data) {
+    _name = data["Name"];
+
+    initAttributeByName(_name);
+    initEquipment();
+    
+    _EXP = data["XP"];
+    _Level = data["Level"];
+    _NextLV = data["NextLV"];
+    
+    /**
+    _HP = initVal[2];
+    _MP = initVal[3];
+    _MaxHP = initVal[2];
+    _MaxMP = initVal[3];
+    _STR = initVal[0];
+    _AGI = initVal[1];
+    _Level = 1;
+    Gold = 0;
+    _EXP = 0;
+    _NextLV = 7;
+    _growType = initVal[4];
+    **/
+  }
+  
+  Map toJSON() {
+    return {"Name" : _name,
+            "Level": _Level,
+            "XP": _EXP,
+            "NextLV": _NextLV};
+  }
+  
   void initAttributeByName(String heroName) {
     
     var rng = new MATH.Random();
