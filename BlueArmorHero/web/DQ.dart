@@ -82,6 +82,13 @@ part 'Request.dart';
 part 'trigger.dart';
 part 'item.dart';
 
+/**
+ * Credit:
+ * http://media.io/progress.jsp  For converting mp3 to ogg format
+ * Google and Dartium team
+ * Square-Enix for inspiration
+ */
+
 void main() {
   new Game();
 }
