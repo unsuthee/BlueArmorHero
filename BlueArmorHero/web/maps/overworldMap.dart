@@ -144,6 +144,10 @@ class overworldMap extends MapData {
     return !DEF.NO_ENCOUNTER;
   }
   
+  String getThemeMusic() {
+    return "World";
+  }
+  
   Map<String,Trigger> getTriggeMap() {
     Map<String,Trigger> triggers = new Map<String,Trigger>();
     Trigger RadotomeTownEnterTrigger = new EnterTownTrigger("172:149", townName:"RadotomeTown");

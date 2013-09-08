@@ -46,6 +46,10 @@ class RadotomeTown extends MapData {
   int getInitPosX() => 336;
   int getInitPosY() => 875;
   
+  String getThemeMusic() {
+    return "Village";
+  }
+  
   // -43:28 to -43:25 West Entrace
   Map<String,Trigger> getTriggeMap() {
     Map<String,Trigger> triggers = new Map<String,Trigger>();

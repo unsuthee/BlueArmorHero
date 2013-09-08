@@ -4,12 +4,16 @@ import 'dart:html';
 import 'dart:json' as JSON;
 import 'dart:math' as MATH;
 import 'dart:async' as ASYNC;
+import 'dart:web_audio';
+
 part 'def.dart';
 part 'core/imageCache.dart';
 part 'core/sprite.dart';
 part 'core/animation.dart';
 part 'core/TextWriter.dart';
 part 'core/TextWriter2.dart';
+part 'core/CookieUtil.dart';
+part 'core/audioUtil.dart';
 part 'gameState.dart';
 part 'layers/quest/mapLayer.dart';
 part 'layers/quest/statusbar.dart';
@@ -76,7 +80,6 @@ part 'layers/LayerManager.dart';
 part 'MonsStats.dart';
 part 'Request.dart';
 part 'trigger.dart';
-part 'core/Pos2D.dart';
 part 'item.dart';
 
 void main() {
@@ -102,6 +105,9 @@ class Game extends LayerManager {
   questMenu _questMenu = null;
   attributeMenu _attrMenu = null;
   
+  MyAudioPlayer _audioPlayer = null;
+  MyAudioPlayer get AudioPlayer => _audioPlayer;
+  
   Game() 
   {
     canvas = query("#canvas");
@@ -119,7 +125,7 @@ class Game extends LayerManager {
     _gameState = new GameState();
     
     List imgLoadingTasks = LoadImages();
-    ASYNC.Future.wait(imgLoadingTasks).then((_)=> startNewGame());
+    ASYNC.Future.wait(imgLoadingTasks).then((_)=> LoadAudio());
   }
   
   void startNewGame()
@@ -131,7 +137,13 @@ class Game extends LayerManager {
     
     window.requestAnimationFrame(tick);
   }
-     
+
+  void LoadAudio() {
+    _audioPlayer = new MyAudioPlayer(new ApplicationContext(readyCallback:() {
+      startNewGame();
+    }));
+  }
+  
   List LoadImages() 
   {
     ImageCache imgCache = new ImageCache();
@@ -220,5 +232,11 @@ class Game extends LayerManager {
   void keyboardUpHandler(KeyboardEvent e)
   {
     _layers.last.OnKeyboardUp(e); 
+  }
+  
+  void SaveGameState() {
+  }
+  
+  void LoadGameState() {
   }
 }

@@ -35,6 +35,10 @@ class RadotomeCastle2 extends MapData {
   int getInitPosX() => 497;
   int getInitPosY() => 575;
   
+  String getThemeMusic() {
+    return "Castle";
+  }
+  
   RadotomeCastle2() {
     _maxPX = world[0].length;
     _maxPY = world.length;

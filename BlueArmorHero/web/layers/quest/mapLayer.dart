@@ -66,6 +66,15 @@ class MapLayer extends Layer {
   }
   
   void activate({Map<String,dynamic> args: null}) {
+    String song = _mapData.getThemeMusic();
+    if (song.length > 0) {
+      if (_game.AudioPlayer.CurrentSong != song) {
+        _game.AudioPlayer.stop();
+        _game.AudioPlayer.play(song);
+      }
+      
+    }
+    
     drawBackground(_bgContext);
     
     if (args != null && args.containsKey("UserSelection")) {
@@ -238,11 +247,15 @@ class MapLayer extends Layer {
         //LaunchBattle("M_Magician","Forest");
         break;
       case DEF.KEYBOARD_ATL_1: // Talk
-        _pendingHandleTalk = true;
+        //_pendingHandleTalk = true;
+        print("Loading...");
+        _game.LoadGameState();
         break;
         
       case DEF.KEYBOARD_ATL_2: // Search
         _pendingSearch = true;
+        print("Saving...");
+        _game.SaveGameState();
         break;
     }
   }

@@ -67,7 +67,6 @@ class battleMenu extends Layer {
     _HpBarTextWriter.color = DEF.COLOR_WHITE;
   }
   
-  
   bool IsHeroStartFirst() {
     // HeroAgility * Random # < EnemyAgility * Random # * GroupFactor
     
@@ -182,7 +181,18 @@ class battleMenu extends Layer {
     _game.AddRequest(new PushRequest(_game, new BattleCmdMenu(_game, this)));
   }
   
+  void playSong(String song, {bool loop:true}) {
+    if (_game.AudioPlayer.CurrentSong != song) {      
+      _game.AudioPlayer.stop();
+      _game.AudioPlayer.play(song, loop:loop);
+    }
+  }
+  
   void activate({Map<String,dynamic> args: null}) { 
+    if (_state != STATE_PLAYER_WIN && _state != STATE_PLAYER_LOSE) {
+      playSong("Battle");  
+    }
+    
     if (_state == STATE_FIRST_THINKING || _state == STATE_SECOND_THINKING) {
       if (args != null && args.containsKey("UserSelection")) {
         BattleAction action = args["UserSelection"];
@@ -215,6 +225,8 @@ class battleMenu extends Layer {
       ko = true;
     }
     else if (_monsterBattler.HP <= 0) {
+      playSong("Victory", loop:false);
+      
       // Hero has won the battle
       _state = STATE_PLAYER_WIN;
       

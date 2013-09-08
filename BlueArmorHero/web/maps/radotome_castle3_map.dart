@@ -26,6 +26,10 @@ class RadotomeCastle3 extends MapData {
     _maxPY = world.length;
   }
   
+  String getThemeMusic() {
+    return "Castle";
+  }
+  
   int getSrcTileSize() {
     return _srcTileSize;
   }

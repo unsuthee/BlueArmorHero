@@ -51,6 +51,10 @@ class RadotomeCastle1 extends MapData {
   static int stairTriggerPosX = 767;
   static int stairTriggerPosY = 638;  
   
+  String getThemeMusic() {
+    return "Castle";
+  }
+  
   RadotomeCastle1() {
     _maxPX = world[0].length;
     _maxPY = world.length;
