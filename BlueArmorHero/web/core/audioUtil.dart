@@ -70,7 +70,7 @@ class ApplicationContext {
     // There is also example.ogg and example.wav.
     "Castle"    : "res/music/03.ogg",
     "Village"   : "res/music/04.ogg",
-    "World"     : "res/music/05.ogg",
+    "World"       : "res/music/05.ogg",
     "Battle"    : "res/music/06.ogg",
     "Victory"   : "res/music/18.ogg"
   };
@@ -105,13 +105,21 @@ class MyAudioPlayer {
   ApplicationContext appCtx;
   AudioBufferSourceNode _source = null;
 
-  String _currentSong;
+  String _currentSong = "";
   String get CurrentSong => _currentSong;
   
   MyAudioPlayer(this.appCtx) {
   }
 
   void play(String song, {bool loop:true}) {
+    if (appCtx == null) {
+      return;
+    }
+    
+    if (!appCtx.buffers.containsKey(song)) {
+      return;
+    }
+    
     _currentSong = song;
     
     // Create the source.
@@ -127,6 +135,10 @@ class MyAudioPlayer {
   }
 
   void stop() {
+    if (appCtx == null) {
+      return;
+    }
+    
     if (_source != null) {
       _source.stop(0);
     }

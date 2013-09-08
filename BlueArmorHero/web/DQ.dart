@@ -132,7 +132,12 @@ class Game extends LayerManager {
     _gameState = new GameState();
     
     List imgLoadingTasks = LoadImages();
-    ASYNC.Future.wait(imgLoadingTasks).then((_)=> LoadAudio());
+    //ASYNC.Future.wait(imgLoadingTasks).then((_)=> LoadAudio());
+    
+    // Quick fix until we can host those ogg files on the webserver.
+    // No music for production :(
+    _audioPlayer = new MyAudioPlayer(null);
+    ASYNC.Future.wait(imgLoadingTasks).then((_)=> startNewGame());
   }
   
   void startNewGame()
