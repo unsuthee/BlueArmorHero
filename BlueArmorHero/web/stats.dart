@@ -208,7 +208,7 @@ class stats {
   
   static bool isPassableVillageTerran(int tileId) {
     int tile = 0;
-    if (tileId >=0 && tileId < Terrans.length) {
+    if (tileId >=0 && tileId < VillageTerrans.length) {
       tile = VillageTerrans[tileId];
     }
     return (tile == 0);

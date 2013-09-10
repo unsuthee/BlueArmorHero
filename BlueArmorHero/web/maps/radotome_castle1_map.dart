@@ -295,4 +295,7 @@ class RadotomeCastle1 extends MapData {
     return (tileId / _tilePerRow).toInt() * _srcTileSize;  
   }
   
+  bool isPassable(int tileId) {
+    return stats.isPassableVillageTerran(tileId);
+  }
 }
