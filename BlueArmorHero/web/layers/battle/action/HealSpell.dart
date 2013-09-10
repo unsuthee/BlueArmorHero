@@ -1,9 +1,5 @@
 part of DQ;
 
-/**
- *     HEAL recovers 20 - 27 HP
-    HEALMORE recovers 85 - 100 HP
- */
 class HealSpell extends BattleAction {
   
   Battler attacker;
@@ -32,8 +28,7 @@ class HealSpell extends BattleAction {
     }
     int range = maxDamage - minDamage;
     int damage = rng.nextInt(range) + minDamage + 1;
-    print("Heal = ${damage}");
-    defender.decHP(-1 * damage);
+    attacker.decHP(-1 * damage);
     
     List<BattleTask> tasks = new List<BattleTask>();
     String spellName = (_healMore)? "HealMore": "Heal";
@@ -63,7 +58,6 @@ class HerbItem extends BattleAction {
     int maxDamage = 35;
     int range = maxDamage - minDamage;
     int damage = rng.nextInt(range) + minDamage + 1;
-    print("Heal = ${damage}");
     attacker.decHP(-1 * damage);
     
     List<BattleTask> tasks = new List<BattleTask>();
