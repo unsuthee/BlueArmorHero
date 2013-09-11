@@ -33,6 +33,10 @@ class DEF {
   static const bool NO_ENCOUNTER = false;
   static const double HERO_SPEED = (125/1000); // pcx per ms
   
+  // Local development resource directory
+  //static const String MusicPathname = "res/music/";
+  static const String MusicPathname = "http://192.168.1.8:8888/music?id=";
+  
   static int OppositeDirection(int direction)
   {
     switch (direction)

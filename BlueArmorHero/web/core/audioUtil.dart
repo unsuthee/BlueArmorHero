@@ -66,13 +66,12 @@ class ApplicationContext {
   
   readyCallback _callback;
   
-  static const buffersToLoad = const {
-    // There is also example.ogg and example.wav.
-    "Castle"    : "res/music/03.ogg",
-    "Village"   : "res/music/04.ogg",
-    "World"       : "res/music/05.ogg",
-    "Battle"    : "res/music/06.ogg",
-    "Victory"   : "res/music/18.ogg"
+  var buffersToLoad = {
+    "Castle"    : "${DEF.MusicPathname}03.ogg",
+    "Village"   : "${DEF.MusicPathname}04.ogg",
+    "World"     : "${DEF.MusicPathname}05.ogg",
+    "Battle"    : "${DEF.MusicPathname}06.ogg",
+    "Victory"   : "${DEF.MusicPathname}18.ogg"
   };
   
   ApplicationContext({readyCallback:null}) {
